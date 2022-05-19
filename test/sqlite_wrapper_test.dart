@@ -1,6 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
+//import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+import 'package:test/test.dart';
 
 import 'user.dart';
 
@@ -23,7 +24,16 @@ _createTableAndInsertSampleValues({createOnly = false}) async {
   await SQLiteWrapper().execute("INSERT INTO users (name) VALUES ('Pippo')");
 }
 
-void main() async {
+void main() {
+  setUp(() async {
+    SQLiteWrapper().openDB(inMemoryDatabasePath);
+    //SQLiteWrapper().openDB("dbProva.sqlite");
+  });
+
+  tearDown(() async {
+    SQLiteWrapper().closeDB();
+  });
+
   final sqlWrapper = SQLiteWrapper();
 
   test('create and test it\'s a singleton', () {
