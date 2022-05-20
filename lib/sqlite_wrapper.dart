@@ -3,12 +3,34 @@ library sqlite_wrapper;
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:sqlite3/sqlite3.dart';
 
 const String inMemoryDatabasePath = ':memory:';
 
 typedef FromMap = dynamic Function(Map<String, dynamic> map);
+
+typedef OnUpgrade = Future<void> Function(int fromVersion, int toVersion);
+
+typedef OnCreate = Future<void> Function();
+
+const defaultDBName = "mainDB";
+
+class DatabaseInfo {
+  final String path;
+  final bool created;
+  final int version;
+  final String sqliteVersion;
+  final String dbName;
+
+  DatabaseInfo(
+      {required this.path,
+      required this.created,
+      required this.version,
+      required this.sqliteVersion,
+      required this.dbName});
+}
 
 class StreamInfo {
   String sql;
@@ -17,80 +39,110 @@ class StreamInfo {
   List<Object?> params;
   FromMap? fromMap;
   bool singleResult;
+  String dbName;
   StreamInfo(
       {required this.sql,
       required this.tables,
       required this.controller,
       this.params = const [],
       this.fromMap,
+      required this.dbName,
       this.singleResult = false});
 }
 
 class SQLiteWrapper {
   static final SQLiteWrapper _singleton = SQLiteWrapper._internal();
   static final List<StreamInfo> streams = [];
+  static final _dbs = {};
   bool debugMode = false;
 
-  late Database _db;
-
   factory SQLiteWrapper() {
-    // print('Using sqlite3 ${sqlite3.version}');
     return _singleton;
   }
 
   SQLiteWrapper._internal();
 
-  /// Open the Database
-  void openDB(String path) {
+  /// Open the Database and returns true if the Database has been created
+  Future<DatabaseInfo> openDB(String path,
+      {int version = 0,
+      OnCreate? onCreate,
+      OnUpgrade? onUpgrade,
+      dbName = defaultDBName}) async {
+    bool missingDB = true;
     if (path == inMemoryDatabasePath) {
-      _db = sqlite3.openInMemory();
-      return;
+      _dbs[dbName] = sqlite3.openInMemory();
+    } else {
+      final File f = File(path);
+      missingDB = !f.existsSync();
+      _dbs[dbName] = sqlite3.open(path);
+      if (debugMode) {
+        // ignore: avoid_print
+        print("DB location: ${_dbs[dbName]}");
+      }
     }
-    _db = sqlite3.open(path);
-    if (debugMode) {
-      // ignore: avoid_print
-      print("DB location: $_db");
+    // Execute the onCreate method if is set
+    if (missingDB && onCreate != null) {
+      await onCreate();
     }
+    // Execute the onUpdate method if the version is set
+    int currentVersion = await getVersion(dbName: dbName);
+    if (onUpgrade != null && version != currentVersion) {
+      await onUpgrade(currentVersion, version);
+    }
+    // Set the version
+    if (version != currentVersion) {
+      await setVersion(version, dbName: dbName);
+    }
+    return DatabaseInfo(
+        path: path,
+        created: missingDB,
+        version: version,
+        dbName: dbName,
+        sqliteVersion: sqlite3.version.toString());
   }
 
   /// Close the Database
-  void closeDB() {
-    return _db.dispose();
+  void closeDB({dbName = defaultDBName}) {
+    _dbs[dbName].dispose();
+    _dbs.remove(dbName);
   }
 
-  /// Database accessible from outside (map the internal _db variable)
-  get database {
-    return _db;
+  /// Database accessible from outside (map the internal db instance)
+  Database getDatabase({dbName = defaultDBName}) {
+    return _dbs[dbName];
   }
 
   /// Executes an SQL Query with no return value
   /// params - an optional list of parameters to pass to the query
   /// tables - an optional list of tables affected by the query
   Future<dynamic>? execute(String sql,
-      {List<String>? tables, List<Object?> params = const []}) async {
+      {List<String>? tables,
+      List<Object?> params = const [],
+      dbName = defaultDBName}) async {
     if (debugMode) {
       // ignore: avoid_print
       print("execute: $sql - params: $params - tables: $tables");
     }
     final String sqlCommand = sql.substring(0, sql.indexOf(" ")).toUpperCase();
+    final db = _getDB(dbName);
     switch (sqlCommand) {
       case "INSERT":
         // Return the ID of last inserted row
-        _db.execute(sql, params);
+        db.execute(sql, params);
         _updateStreams(tables);
-        return _db.lastInsertRowId;
+        return db.lastInsertRowId;
       case "UPDATE":
         // Return number of changes made
-        _db.execute(sql, params);
+        db.execute(sql, params);
         _updateStreams(tables);
-        return _db.getUpdatedRows();
+        return db.getUpdatedRows();
       case "DELETE":
         // Return number of changes made
-        _db.execute(sql, params);
+        db.execute(sql, params);
         _updateStreams(tables);
-        return _db.getUpdatedRows();
+        return db.getUpdatedRows();
       default:
-        return _db.execute(sql, params);
+        return db.execute(sql, params);
     }
   }
 
@@ -101,8 +153,9 @@ class SQLiteWrapper {
   Future<dynamic> query(String sql,
       {List<Object?> params = const [],
       FromMap? fromMap,
-      bool singleResult = false}) async {
-    final List<Map> results = _db.select(sql, params);
+      bool singleResult = false,
+      String dbName = defaultDBName}) async {
+    final List<Map> results = _getDB(dbName).select(sql, params);
     if (singleResult) {
       if (results.isEmpty) {
         return null;
@@ -142,7 +195,7 @@ class SQLiteWrapper {
   }
 
   Future<int> update(Map<String, dynamic> map, String table,
-      {required List<String> keys}) async {
+      {required List<String> keys, String dbName = defaultDBName}) async {
     //VALUES
     String updateClause = "";
     final List params = [];
@@ -161,13 +214,15 @@ class SQLiteWrapper {
     }
 
     final String sql = "UPDATE $table SET $updateClause WHERE $whereClause";
-    final res = await execute(sql, tables: [table], params: params);
+    final res =
+        await execute(sql, tables: [table], params: params, dbName: dbName);
     return res;
   }
 
   /// Insert a new record in the passed table based on the map object
   /// and return the new id
-  Future<int> insert(Map<String, dynamic> map, String table) async {
+  Future<int> insert(Map<String, dynamic> map, String table,
+      {String dbName = defaultDBName}) async {
     //VALUES
     String insertClause = "";
     String insertValues = "";
@@ -183,13 +238,14 @@ class SQLiteWrapper {
       params.add(map[value]);
     }
     String sql = "INSERT INTO $table ($insertClause) VALUES ($insertValues)";
-    final int res = await execute(sql, tables: [table], params: params);
+    final int res =
+        await execute(sql, tables: [table], params: params, dbName: dbName);
     return res;
   }
 
   /// DELETE the item building the SQL query using the table and the id passed
   Future<int> delete(Map<String, dynamic> map, String table,
-      {required List<String> keys}) async {
+      {required List<String> keys, String dbName = defaultDBName}) async {
     final List params = [];
     // KEYS
     String whereClause = "";
@@ -200,7 +256,8 @@ class SQLiteWrapper {
     }
 
     final String sql = "DELETE FROM $table WHERE $whereClause";
-    final res = await execute(sql, tables: [table], params: params);
+    final res =
+        await execute(sql, tables: [table], params: params, dbName: dbName);
     return res;
   }
 
@@ -212,7 +269,8 @@ class SQLiteWrapper {
       {List<Object?> params = const [],
       FromMap? fromMap,
       bool singleResult = false,
-      required List<String> tables}) {
+      required List<String> tables,
+      String dbName = defaultDBName}) {
     final StreamController sc = StreamController();
     // Initial values
     final StreamInfo streamInfo = StreamInfo(
@@ -221,6 +279,7 @@ class SQLiteWrapper {
         tables: tables,
         params: params,
         fromMap: fromMap,
+        dbName: dbName,
         singleResult: singleResult);
     streams.add(streamInfo);
     _updateStream(streamInfo);
@@ -234,7 +293,8 @@ class SQLiteWrapper {
     dynamic results = await query(streamInfo.sql,
         params: streamInfo.params,
         singleResult: streamInfo.singleResult,
-        fromMap: streamInfo.fromMap);
+        fromMap: streamInfo.fromMap,
+        dbName: streamInfo.dbName);
     streamInfo.controller.add(results);
   }
 
@@ -251,11 +311,17 @@ class SQLiteWrapper {
     }
   }
 
-  Future<int> getVersion() async {
-    return await query("PRAGMA schema_version;", singleResult: true);
+  Future<int> getVersion({String dbName = defaultDBName}) async {
+    return await query("PRAGMA user_version;",
+        singleResult: true, dbName: dbName);
   }
 
-  Future<void> setVersion(int version) async {
-    await execute("PRAGMA schema_version=$version;");
+  Future<void> setVersion(int version, {String dbName = defaultDBName}) async {
+    await execute("PRAGMA user_version=$version;", dbName: dbName);
+  }
+
+  // Return the database instance with the passed name
+  Database _getDB(String dbName) {
+    return _dbs[dbName];
   }
 }

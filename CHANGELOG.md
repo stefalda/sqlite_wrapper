@@ -11,3 +11,10 @@
 ## 0.0.3
 
 * Autoremove the stream from the streams array when the subscription is cancelled
+
+## 0.0.4
+
+* Fixed the version call to use the "user_version" instead of the "schema_version"
+* Added onCreate and onUpgrade callback to simplify migrations
+* Added support for opening multiple databases
+* Now the openDB method returns some information about the database

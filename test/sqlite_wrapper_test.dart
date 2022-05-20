@@ -44,6 +44,33 @@ void main() {
     expect(sqlWrapper, equals(secondWrapper));
   });
 
+  test('open a secondary database and perform a migration', () async {
+    const dbName = "secondaryDB";
+    await SQLiteWrapper().openDB(inMemoryDatabasePath,
+        version: 1, dbName: dbName, onCreate: () async {
+      await SQLiteWrapper().execute(""" 
+      CREATE TABLE characters ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+          "name" varchar(128) NOT NULL);
+      INSERT INTO characters (name) VALUES ('Donald Duck');
+      INSERT INTO characters (name) VALUES ('Mickey Mouse');
+      """, dbName: dbName);
+    }, onUpgrade: (fromVersion, toVersion) async {
+      if (fromVersion == 0 && toVersion == 1) {
+        await SQLiteWrapper().execute("""
+          ALTER TABLE characters ADD COLUMN "animal" varchar(128);
+          UPDATE characters SET animal = 'DUCK' WHERE id = 1;
+          UPDATE characters SET animal = 'MOUSE' WHERE id = 2;
+          """, dbName: dbName);
+      }
+    });
+    final int count = await SQLiteWrapper().query(
+        "SELECT COUNT(*) FROM characters WHERE animal='DUCK'",
+        singleResult: true,
+        dbName: dbName);
+    expect(count, 1);
+    expect(await SQLiteWrapper().getVersion(dbName: dbName), 1);
+  });
+
   test('create a DB instance and check for version', () async {
     expect(await sqlWrapper.getVersion(), 0);
     // Set version

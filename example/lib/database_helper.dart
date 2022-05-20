@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
@@ -12,21 +13,25 @@ class DatabaseHelper {
   DatabaseHelper._internal() {}
 
   initDB({inMemory = false}) async {
-    if (inMemory) {
-      SQLiteWrapper().openDB(inMemoryDatabasePath);
-    } else {
+    String dbPath = inMemoryDatabasePath;
+    if (!inMemory) {
       final docDir = await getApplicationDocumentsDirectory();
       if (!await docDir.exists()) {
         await docDir.create(recursive: true);
       }
-      SQLiteWrapper().openDB(p.join(docDir.path, "todoDatabase.sqlite"));
+      dbPath = p.join(docDir.path, "todoDatabase.sqlite");
     }
-    const String sql = """CREATE TABLE IF NOT EXISTS "todos" (
-          "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-          "title" varchar(255) NOT NULL,
-          "done" int default 0
-        );""";
-    await SQLiteWrapper().execute(sql);
+    final DatabaseInfo dbInfo =
+        await SQLiteWrapper().openDB(dbPath, onCreate: () async {
+      const String sql = """CREATE TABLE IF NOT EXISTS "todos" (
+            "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+            "title" varchar(255) NOT NULL,
+            "done" int default 0
+          );""";
+      await SQLiteWrapper().execute(sql);
+    });
+    // Print where the database is stored
+    debugPrint("Database path: ${dbInfo.path}");
   }
 
   /// Return a list of all todos

@@ -22,7 +22,8 @@ This package provide just a few methods that allow to:
 * execute sql statements on it
 * work with the DB using encoded and decoded maps or model objects
 * watch (via streams) for a particular query, getting results reactively and instantly updated
-
+* connect to multiple databases by providing a dbName
+* execute a callback when the database is created or when should be migrated to a new schema version
 
 ## Getting started
 
@@ -33,11 +34,15 @@ This package provide just a few methods that allow to:
 
 A full working Flutter **Todos** example (what else!) is provided in the `/example` folder but here's some information about the available methods (check even the `/test` folder for additional examples).
 
+***sqlite_wrapper*** must be invoked as a singleton (the class returns always the same instance) so there's no need to create or store it in a variable, `SQLiteWrapper()` always returns the same instance.
+
 Most of the methods accept a sql string, an optional list of parameters and an optional list of tables.
 
 **Parameters** can be included in the SQL query as ? (`SELECT * from users where id = ?`).	
 
 The **list of tables** is used by the *reactive* part of the library to know what tables are included in a query (via the `watch` command) and what tables are affected by a particular sql operation (via the `execute` method that is called by all the other *simplified* methods: `insert`, `update`, `delete`.
+
+The optional **dbName** parameter, available in all the methods, allows to manage different databases at the same time, if the database is just one just ignore it, otherwise pass it to declare on which database you want to operate.
 
 ### execute
 
@@ -54,7 +59,8 @@ It returns different results depending of the performed action:
 Future<dynamic>? execute(
  	String sql,
     {List<String>? tables, 
-    List<Object?> params = const []})
+    List<Object?> params = const [],
+    String dbName=defaultDBName})
 ```
 
 ### query
@@ -74,7 +80,8 @@ Parameters:
  	String sql,
     {List<Object?> params = const [],
     FromMap? fromMap,
-    bool singleResult = false})
+    bool singleResult = false,
+    String dbName=defaultDBName})
 ```
 
 ### watch
@@ -91,7 +98,8 @@ Parameters:
     {List<Object?> params = const [],
     FromMap? fromMap,
     bool singleResult = false,
-    required List<String> tables})
+    required List<String> tables,
+    String dbName=defaultDBName})
 ```
 
 
@@ -102,7 +110,7 @@ This is syntactic sugar for the execute method, just pass a map object and the t
 ```dart
   Future<int> insert(
   	Map<String, dynamic> map, 
-  	String table)
+  	String table, {String dbName=defaultDBName})
 ```
 
 ### update
@@ -113,7 +121,7 @@ Works just like the `insert` but requires a list of key fields (usually just the
 Future<int> update(
 	Map<String, dynamic> map, 
 	String table,
-    {required List<String> keys})
+    {required List<String> keys, String dbName=defaultDBName})
 ```
 
 ### delete
@@ -124,7 +132,7 @@ This is the method called to get some results from the DB.
 Future<int> delete(
 	Map<String, dynamic> map, 
 	String table,
-    {required List<String> keys}) 
+    {required List<String> keys, String dbName=defaultDBName}) 
 ```
 
 ### openDB
@@ -132,12 +140,21 @@ Last but not least the first method that should be called to access the database
 
 Parameters:
 - path - full path and name of the database
+- version - the custom version of the database schema (default to 0)
+- onCreate - a callback that can be used to execute code when the database if firstly created
+- onUpdate - a callback that can be used to perform migration (it provides a fromVersion and a toVersion parameter useful to decide which statements must be executed)
 
 if the path is equal to the constant `const String inMemoryDatabasePath = ':memory:';` the database is created in memory (useful for writing tests).
 
+The method returns some information about the database, like if it's just been created and the SQLite library version used.
 
 ```dart
-  void openDB(String path) {
+  Future<DatabaseInfo> openDB(String path,       
+  	{
+  		int version = 0,
+      OnCreate? onCreate,
+   	  OnUpgrade? onUpgrade,
+      dbName = defaultDBName}) {
 ```
 
 ### closeDB
@@ -152,7 +169,7 @@ Well, you know, it just closes the database
 The library exposes the internal database variable just in case you need to do something else with it... 
 
 ```dart
- get database
+ getDatabase({String dbName=defaultDBName}}
  ```
 
 
@@ -173,7 +190,7 @@ initDB() async {
     if (!await docDir.exists()) {
       await docDir.create(recursive: true);
     }
-    SQLiteWrapper().openDB(p.join(docDir.path, "todoDatabase.sqlite"));
+    await SQLiteWrapper().openDB(p.join(docDir.path, "todoDatabase.sqlite"));
   }
 ```
 
