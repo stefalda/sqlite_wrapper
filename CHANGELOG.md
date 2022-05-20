@@ -7,3 +7,7 @@
 
 * Removed dependency from Flutter for tests
 * Tested under Windows (both tests and examples)
+
+## 0.0.3
+
+* Autoremove the stream from the streams array when the subscription is cancelled
