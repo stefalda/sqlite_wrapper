@@ -10,7 +10,7 @@ This are the main principles that guide the development of this library:
 * a simpler API to converting from and to model objects
 * full access to SQL language features without the need to learn new paradings
 * fully tested code
-* multi-platform (currently tested on iOS, Android, MacOS) - `Web is not supported`
+* multi-platform (currently tested on iOS, Android, MacOS, Windows) - `Web is not supported`
 * no (extreme) magic, but a nice and simple API
 
 
