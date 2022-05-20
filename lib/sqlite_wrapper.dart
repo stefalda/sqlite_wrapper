@@ -224,6 +224,8 @@ class SQLiteWrapper {
         singleResult: singleResult);
     streams.add(streamInfo);
     _updateStream(streamInfo);
+    // Remove from list of streams
+    sc.done.then((value) => streams.remove(streamInfo));
     return sc.stream;
   }
 

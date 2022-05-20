@@ -1,4 +1,6 @@
 //import 'package:flutter_test/flutter_test.dart';
+import 'dart:async';
+
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:test/test.dart';
@@ -224,5 +226,19 @@ void main() {
             ]
           ]));
     });
+  });
+
+  test("Check if the stream is removed by the streams array", () async {
+    await _createTableAndInsertSampleValues();
+    Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
+        singleResult: false, fromMap: User.fromMap, tables: ["users"]);
+    // Check if the stream has been added to the array
+    expect(SQLiteWrapper.streams.length, 1);
+
+    final StreamSubscription sub = userStream.listen((event) {});
+
+    await sub.cancel();
+
+    expect(SQLiteWrapper.streams.length, 0);
   });
 }
