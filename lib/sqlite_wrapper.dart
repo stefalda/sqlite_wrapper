@@ -322,6 +322,7 @@ class SQLiteWrapper {
 
   // Return the database instance with the passed name
   Database _getDB(String dbName) {
+    assert(_dbs.isNotEmpty, "It seems the openDB method has not been called!");
     return _dbs[dbName];
   }
 }
