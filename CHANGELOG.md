@@ -18,3 +18,6 @@
 * Added onCreate and onUpgrade callback to simplify migrations
 * Added support for opening multiple databases
 * Now the openDB method returns some information about the database
+
+## 0.0.5
+* Added assert to throw an error when the database has not been opened yet and you're trying to use it
