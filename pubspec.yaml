@@ -1,6 +1,6 @@
 name: sqlite_wrapper
 description: A simple way to easily use the SQLite library (even in a reactive way)
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/stefalda/sqlite_wrapper
 issue_tracker: https://github.com/stefalda/sqlite_wrapper/issues
 

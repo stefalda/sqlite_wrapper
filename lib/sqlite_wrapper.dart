@@ -223,6 +223,20 @@ class SQLiteWrapper {
   /// and return the new id
   Future<int> insert(Map<String, dynamic> map, String table,
       {String dbName = defaultDBName}) async {
+    return _insertOrUpdate(map, table, dbName: dbName);
+  }
+
+  // Perform an INSERT or an UPDATE depending on the record state (UPSERT)
+  Future<int> save(Map<String, dynamic> map, String table,
+      {List<String>? keys, String dbName = defaultDBName}) async {
+    return _insertOrUpdate(map, table, keys: keys, dbName: dbName);
+  }
+
+  /// Method called internally to perform an insert or to perform an UPSERT
+  /// if a keys list is provided
+  /// (if a value is already present is performed an update instead of an insert)
+  Future<int> _insertOrUpdate(Map<String, dynamic> map, String table,
+      {List<String>? keys, String dbName = defaultDBName}) async {
     //VALUES
     String insertClause = "";
     String insertValues = "";
@@ -238,6 +252,18 @@ class SQLiteWrapper {
       params.add(map[value]);
     }
     String sql = "INSERT INTO $table ($insertClause) VALUES ($insertValues)";
+    // CREATE AN UPSERT
+    if (keys != null) {
+      final keysValue = keys.join(", ");
+      String updateClause = "";
+      final values = map.keys.where((element) => !keys.contains(element));
+      for (String value in values) {
+        if (updateClause.isNotEmpty) updateClause += ", ";
+        updateClause += "$value=?";
+        params.add(map[value]);
+      }
+      sql = "$sql ON CONFLICT ($keysValue) DO UPDATE SET $updateClause";
+    }
     final int res =
         await execute(sql, tables: [table], params: params, dbName: dbName);
     return res;

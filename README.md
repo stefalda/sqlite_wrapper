@@ -124,6 +124,18 @@ Future<int> update(
     {required List<String> keys, String dbName=defaultDBName})
 ```
 
+### save
+
+Try to perform an INSERT or, if a row with the same key already exists, an UPDATE (this function is usually defined as an UPSERT).
+It requires a list of key fields (usually just the id - `keys: const['id']`) to perform the update to a single row.
+
+```dart
+Future<int> save(
+	Map<String, dynamic> map, 
+	String table,
+    {required List<String> keys, String dbName=defaultDBName})
+```
+
 ### delete
 Works just like the `insert` but requires a list of key fields (usually just the id - `keys: const['id']`) to perform the delete of a single row.
 

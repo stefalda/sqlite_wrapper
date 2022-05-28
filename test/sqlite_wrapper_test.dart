@@ -180,6 +180,29 @@ void main() {
       expect(user.name, "Paperone");
     });
 
+    test("Create an upsert instead on an INSERT", () async {
+      await _createTableAndInsertSampleValues();
+      User user = User();
+      user.name = "Paperone";
+      user.id = await sqlWrapper.insert(user.toMap(), "users");
+      // Now save again to get an error
+      user.name = "Archimede";
+      expect(() async => await sqlWrapper.insert(user.toMap(), "users"),
+          throwsException);
+      //Now save with an upsert
+      await sqlWrapper.save(user.toMap(), "users", keys: ["id"]);
+      user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",
+          params: [user.id], singleResult: true, fromMap: User.fromMap);
+      expect(user.name, "Archimede");
+      // And perform a new INSERT
+      User user2 = User();
+      user2.name = "Paperone";
+      user2.id = await sqlWrapper.save(user2.toMap(), "users", keys: ["id"]);
+      user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",
+          params: [user2.id], singleResult: true, fromMap: User.fromMap);
+      expect(user.name, "Paperone");
+    });
+
     test("DELETE a record from the table", () async {
       await _createTableAndInsertSampleValues();
       User user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",

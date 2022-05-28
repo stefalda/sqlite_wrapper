@@ -21,3 +21,6 @@
 
 ## 0.0.5
 * Added assert to throw an error when the database has not been opened yet and you're trying to use it
+
+## 0.0.6
+* Added method save to perform an upsert
