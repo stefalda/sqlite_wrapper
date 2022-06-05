@@ -10,7 +10,7 @@ class DatabaseHelper {
     return _singleton;
   }
 
-  DatabaseHelper._internal() {}
+  DatabaseHelper._internal();
 
   initDB({inMemory = false}) async {
     String dbPath = inMemoryDatabasePath;

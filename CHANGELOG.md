@@ -24,3 +24,6 @@
 
 ## 0.0.6
 * Added method save to perform an upsert
+
+## 0.0.7
+* dbName param can now be null instead of having a default value set in every method call
