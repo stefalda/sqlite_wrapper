@@ -27,3 +27,6 @@
 
 ## 0.0.7
 * dbName param can now be null instead of having a default value set in every method call
+
+## 0.0.8
+* fixed a warning

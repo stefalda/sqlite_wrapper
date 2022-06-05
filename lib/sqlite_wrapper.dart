@@ -98,7 +98,7 @@ class SQLiteWrapper {
         path: path,
         created: missingDB,
         version: version,
-        dbName: dbName ?? defaultDBName,
+        dbName: dbName,
         sqliteVersion: sqlite3.version.toString());
   }
 
