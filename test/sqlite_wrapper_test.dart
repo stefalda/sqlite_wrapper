@@ -1,6 +1,6 @@
 //import 'package:flutter_test/flutter_test.dart';
 import 'dart:async';
-
+import 'dart:io';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:test/test.dart';
@@ -29,7 +29,6 @@ _createTableAndInsertSampleValues({createOnly = false}) async {
 void main() {
   setUp(() async {
     SQLiteWrapper().openDB(inMemoryDatabasePath);
-    //SQLiteWrapper().openDB("dbProva.sqlite");
   });
 
   tearDown(() async {
@@ -290,5 +289,18 @@ void main() {
     await sub.cancel();
 
     expect(SQLiteWrapper.streams.length, 0);
+  });
+
+  test("Create one or more subfolders in the base folder to store the DB",
+      () async {
+    const String path =
+        "/59976040-a675-11ec-8ee4-1f922f66b681/test2/prova.sqlite";
+    const dbName = "TESTDB";
+    SQLiteWrapper().openDB(path, dbName: dbName);
+    File f = File.fromUri(Uri(path: path));
+    expect(f.existsSync(), true);
+    SQLiteWrapper().closeDB(dbName: dbName);
+    f = File.fromUri(Uri(path: "/59976040-a675-11ec-8ee4-1f922f66b681"));
+    f.deleteSync(recursive: true);
   });
 }

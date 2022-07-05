@@ -75,6 +75,13 @@ class SQLiteWrapper {
     } else {
       final File f = File(path);
       missingDB = !f.existsSync();
+      if (missingDB) {
+        // Create the path to the DB file if it's missing
+        var dir = Directory.fromUri(Uri.directory(path));
+        if (!dir.parent.existsSync()) {
+          dir.parent.createSync(recursive: true);
+        }
+      }
       _dbs[dbName] = sqlite3.open(path);
       if (debugMode) {
         // ignore: avoid_print

@@ -30,3 +30,6 @@
 
 ## 0.0.8
 * fixed a warning
+
+## 0.0.9
+* create the parent folders of the DB file if they are missing
