@@ -34,7 +34,8 @@ This package provide just a few methods that allow to:
 
 A full working Flutter **Todos** example (what else!) is provided in the `/example` folder but here's some information about the available methods (check even the `/test` folder for additional examples).
 
-***sqlite_wrapper*** must be invoked as a singleton (the class returns always the same instance) so there's no need to create or store it in a variable, `SQLiteWrapper()` always returns the same instance.
+***sqlite_wrapper*** can be invoked as a singleton (the class returns always the same instance) so there's no need to create or store it in a variable, `SQLiteWrapper()` always returns the same instance.
+Otherwise, it is possible to instantiate locally an `SQLiteWrapperCore` instance, the parent class of SQLiteWrapper, that can be subclassed and used instead of the singleton implementation.
 
 Most of the methods accept a sql string, an optional list of parameters and an optional list of tables.
 

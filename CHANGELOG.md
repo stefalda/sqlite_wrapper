@@ -33,3 +33,6 @@
 
 ## 0.0.9
 * create the parent folders of the DB file if they are missing
+
+## 0.1.0
+* created a parent class SQLiteWrapperCore that can be instantiated/subclassed and used instead of the Singleton implementation
