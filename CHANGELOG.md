@@ -36,3 +36,6 @@
 
 ## 0.1.0
 * created a parent class SQLiteWrapperCore that can be instantiated/subclassed and used instead of the Singleton implementation
+
+## 0.1.1
+* the method updateStreams is now public to be able to force externally a refresh of one or more data streams

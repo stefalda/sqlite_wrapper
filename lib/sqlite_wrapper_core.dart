@@ -130,17 +130,17 @@ class SQLiteWrapperCore {
       case "INSERT":
         // Return the ID of last inserted row
         db.execute(sql, params);
-        _updateStreams(tables);
+        updateStreams(tables);
         return db.lastInsertRowId;
       case "UPDATE":
         // Return number of changes made
         db.execute(sql, params);
-        _updateStreams(tables);
+        updateStreams(tables);
         return db.getUpdatedRows();
       case "DELETE":
         // Return number of changes made
         db.execute(sql, params);
-        _updateStreams(tables);
+        updateStreams(tables);
         return db.getUpdatedRows();
       default:
         return db.execute(sql, params);
@@ -316,7 +316,7 @@ class SQLiteWrapperCore {
   }
 
   /// Reload data in stream emitting the new result
-  _updateStream(StreamInfo streamInfo) async {
+  Future<void> _updateStream(StreamInfo streamInfo) async {
     dynamic results = await query(streamInfo.sql,
         params: streamInfo.params,
         singleResult: streamInfo.singleResult,
@@ -326,12 +326,12 @@ class SQLiteWrapperCore {
   }
 
   /// Update all the streams connected to one of the table in the list
-  _updateStreams(List<String>? tables) {
+  Future<void> updateStreams(List<String>? tables) async {
     if (tables == null || tables.isEmpty) return;
     for (StreamInfo s in streams) {
       for (String table in tables) {
         if (s.tables.contains(table)) {
-          _updateStream(s);
+          await _updateStream(s);
           continue;
         }
       }
