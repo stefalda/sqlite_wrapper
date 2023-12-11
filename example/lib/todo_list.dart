@@ -5,7 +5,7 @@ import 'package:sqlite_wrapper_sample/models.dart';
 import 'package:sqlite_wrapper_sample/todo_item.dart';
 
 class TodoList extends StatelessWidget {
-  const TodoList({Key? key}) : super(key: key);
+  const TodoList({super.key});
 
   @override
   Widget build(BuildContext context) {

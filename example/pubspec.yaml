@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+2
+version: 1.0.1+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -33,7 +33,7 @@ dependencies:
     path: ..
   path_provider: # Required to find the system documents directory
   path: # Required to compute path
-  sqlite3_flutter_libs: ^0.5.7 # Required by Android
+  sqlite3_flutter_libs: # Required by Android
 
 dev_dependencies:
   flutter_test:
@@ -44,7 +44,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
