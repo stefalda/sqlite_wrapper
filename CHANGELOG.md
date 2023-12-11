@@ -1,3 +1,7 @@
+## 0.1.2
+* Fixed some dependencies,lint problems and compiled with latest Flutter version
+* Updated sqlite version dependency and sdk constraint
+
 ## 0.0.1
 
 * First release of the library in a complete (?) state.
