@@ -43,3 +43,6 @@
 
 ## 0.1.1
 * the method updateStreams is now public to be able to force externally a refresh of one or more data streams
+
+## 0.1.3
+* bug fix for update and delete not working with tables having multiple primary keys
