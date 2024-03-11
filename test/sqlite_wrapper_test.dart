@@ -304,4 +304,46 @@ void main() {
     f = File.fromUri(Uri(path: "./59976040-a675-11ec-8ee4-1f922f66b681"));
     f.deleteSync(recursive: true);
   });
+
+  test('Update and delete from a table with multiple primary keys', () async {
+    const dbName = "thirdDB";
+    await SQLiteWrapper().openDB(inMemoryDatabasePath,
+        version: 1, dbName: dbName, onCreate: () async {
+      await SQLiteWrapper().execute(""" 
+      CREATE TABLE IF NOT EXISTS "Characters" (
+          "id" integer NOT NULL,
+          "name" varchar(100) NOT NULL,
+          "description" text,
+          PRIMARY KEY("id", "name")
+        );
+      INSERT INTO characters (id, name, description) VALUES (1, 'Donald Duck', 'Paperino');
+      INSERT INTO characters (id, name, description) VALUES (2, 'Mickey Mouse', 'Topolino');
+      """, dbName: dbName);
+    });
+
+    // PERFORM UPDATE
+    await SQLiteWrapper().update(
+        {"description": "Paperino modificato", "id": 1, "name": "Donald Duck"},
+        "characters",
+        keys: ["id", "name"],
+        dbName: dbName);
+    final String description = await SQLiteWrapper().query(
+        "SELECT description FROM characters WHERE id=1 AND name='Donald Duck'",
+        singleResult: true,
+        dbName: dbName);
+    expect(description, "Paperino modificato");
+
+    // PERFORM DELETE
+    await SQLiteWrapper().delete(
+        {"description": "Paperino modificato", "id": 1, "name": "Donald Duck"},
+        "characters",
+        keys: ["id", "name"],
+        dbName: dbName);
+    final int count = await SQLiteWrapper().query(
+        "SELECT COUNT(*) FROM characters WHERE name='Donald Duck'",
+        singleResult: true,
+        dbName: dbName);
+    expect(count, 0);
+    expect(await SQLiteWrapper().getVersion(dbName: dbName), 1);
+  });
 }

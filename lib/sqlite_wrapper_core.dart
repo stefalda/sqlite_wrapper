@@ -207,17 +207,24 @@ class SQLiteWrapperCore {
       params.add(map[value]);
     }
     // KEYS
-    String whereClause = "";
-    for (String key in keys) {
-      if (whereClause.isNotEmpty) whereClause += ", ";
-      whereClause += "$key=?";
-      params.add(map[key]);
-    }
+    String whereClause = _getWhereClause(keys, params, map);
 
     final String sql = "UPDATE $table SET $updateClause WHERE $whereClause";
     final res =
         await execute(sql, tables: [table], params: params, dbName: dbName);
     return res;
+  }
+
+  /// Create the where clause for the update or delete sql
+  String _getWhereClause(
+      List<String> keys, List<dynamic> params, Map<String, dynamic> map) {
+    String whereClause = "";
+    for (String key in keys) {
+      if (whereClause.isNotEmpty) whereClause += " AND ";
+      whereClause += "$key=?";
+      params.add(map[key]);
+    }
+    return whereClause;
   }
 
   /// Insert a new record in the passed table based on the map object
@@ -275,13 +282,7 @@ class SQLiteWrapperCore {
       {required List<String> keys, String? dbName}) async {
     final List params = [];
     // KEYS
-    String whereClause = "";
-    for (String key in keys) {
-      if (whereClause.isNotEmpty) whereClause += ", ";
-      whereClause += "$key=?";
-      params.add(map[key]);
-    }
-
+    String whereClause = _getWhereClause(keys, params, map);
     final String sql = "DELETE FROM $table WHERE $whereClause";
     final res =
         await execute(sql, tables: [table], params: params, dbName: dbName);
