@@ -1,6 +1,6 @@
 name: sqlite_wrapper
 description: A simple way to easily use the SQLite library (even in a reactive way)
-version: 0.1.3
+version: 0.1.4
 homepage: https://github.com/stefalda/sqlite_wrapper
 issue_tracker: https://github.com/stefalda/sqlite_wrapper/issues
 
@@ -11,5 +11,5 @@ dependencies:
   sqlite3: ^2.4.0
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   test: ^1.21.1
