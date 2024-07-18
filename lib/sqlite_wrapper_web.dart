@@ -3,9 +3,6 @@ library sqlite_wrapper;
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
-import 'dart:io';
-
-import 'package:sqlite3/sqlite3.dart';
 
 import 'sqlite_wrapper_base.dart';
 
@@ -19,7 +16,7 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
       String? dbName}) async {
     dbName ??= defaultDBName;
     bool missingDB = true;
-    if (path == inMemoryDatabasePath) {
+/*    if (path == inMemoryDatabasePath) {
       SQLiteWrapperBase.databases.add(db: sqlite3.openInMemory(), name: dbName);
     } else {
       final File f = File(path);
@@ -49,13 +46,13 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
     // Set the version
     if (version != currentVersion) {
       await setVersion(version, dbName: dbName);
-    }
+    }*/
     return DatabaseInfo(
         path: path,
         created: missingDB,
         version: version,
         dbName: dbName,
-        sqliteVersion: sqlite3.version.toString());
+        sqliteVersion: "unknown");
   }
 
   @override

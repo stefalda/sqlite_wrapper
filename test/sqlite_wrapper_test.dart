@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper_base.dart';
 import 'package:test/test.dart';
 
 import 'user.dart';
@@ -48,7 +49,7 @@ void main() {
     const dbName = "secondaryDB";
     await SQLiteWrapper().openDB(inMemoryDatabasePath,
         version: 1, dbName: dbName, onCreate: () async {
-      await SQLiteWrapper().execute(""" 
+      await SQLiteWrapper().execute("""
       CREATE TABLE characters ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           "name" varchar(128) NOT NULL);
       INSERT INTO characters (name) VALUES ('Donald Duck');
@@ -283,13 +284,13 @@ void main() {
     Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
         singleResult: false, fromMap: User.fromMap, tables: ["users"]);
     // Check if the stream has been added to the array
-    expect(SQLiteWrapperCore.streams.length, 1);
+    expect(SQLiteWrapperBase.streams.length, 1);
 
     final StreamSubscription sub = userStream.listen((event) {});
 
     await sub.cancel();
 
-    expect(SQLiteWrapperCore.streams.length, 0);
+    expect(SQLiteWrapperBase.streams.length, 0);
   });
 
   test("Create one or more subfolders in the base folder to store the DB",
@@ -309,7 +310,7 @@ void main() {
     const dbName = "thirdDB";
     await SQLiteWrapper().openDB(inMemoryDatabasePath,
         version: 1, dbName: dbName, onCreate: () async {
-      await SQLiteWrapper().execute(""" 
+      await SQLiteWrapper().execute("""
       CREATE TABLE IF NOT EXISTS "Characters" (
           "id" integer NOT NULL,
           "name" varchar(100) NOT NULL,
