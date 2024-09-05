@@ -34,6 +34,7 @@ This package provide just a few methods that allow to:
   $ dart run sqflite_common_ffi_web:setup --force
 </pre>
 
+
 ## Usage
 
 A full working Flutter **Todos** example (what else!) is provided in the `/example` folder but here's some information about the available methods (check even the `/test` folder for additional examples).
