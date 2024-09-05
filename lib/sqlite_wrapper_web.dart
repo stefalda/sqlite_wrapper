@@ -3,9 +3,8 @@ library sqlite_wrapper;
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 import 'sqlite_wrapper_base.dart';
 
@@ -20,22 +19,12 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
     dbName ??= defaultDBName;
     bool missingDB = true;
     if (path == inMemoryDatabasePath) {
-      SQLiteWrapperBase.databases.add(db: sqlite3.openInMemory(), name: dbName);
+      //SQLiteWrapperBase.databases.add(db: sqlite3.openInMemory(), name: dbName);
+      throw UnimplementedError();
     } else {
-      final File f = File(path);
-      missingDB = !f.existsSync();
-      if (missingDB) {
-        // Create the path to the DB file if it's missing
-        var dir = Directory.fromUri(Uri.directory(path));
-        if (!dir.parent.existsSync()) {
-          dir.parent.createSync(recursive: true);
-        }
-      }
-      SQLiteWrapperBase.databases.add(db: sqlite3.open(path), name: dbName);
-      if (debugMode) {
-        // ignore: avoid_print
-        print("DB location: ${SQLiteWrapperBase.databases.get(dbName)}");
-      }
+      final factory = databaseFactoryFfiWeb;
+      final db = await factory.openDatabase(path);
+      SQLiteWrapperBase.databases.add(db: db, name: dbName);
     }
     // Execute the onCreate method if is set
     if (missingDB && onCreate != null) {
@@ -55,7 +44,7 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
         created: missingDB,
         version: version,
         dbName: dbName,
-        sqliteVersion: sqlite3.version.toString());
+        sqliteVersion: "unknown");
   }
 
   @override

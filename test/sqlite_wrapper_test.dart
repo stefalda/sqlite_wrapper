@@ -29,7 +29,7 @@ _createTableAndInsertSampleValues({createOnly = false}) async {
 
 void main() {
   setUp(() async {
-    SQLiteWrapper().openDB(inMemoryDatabasePath);
+    await SQLiteWrapper().openDB(inMemoryDatabasePath);
   });
 
   tearDown(() async {
@@ -48,7 +48,7 @@ void main() {
     const dbName = "secondaryDB";
     await SQLiteWrapper().openDB(inMemoryDatabasePath,
         version: 1, dbName: dbName, onCreate: () async {
-      await SQLiteWrapper().execute(""" 
+      await SQLiteWrapper().execute("""
       CREATE TABLE characters ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           "name" varchar(128) NOT NULL);
       INSERT INTO characters (name) VALUES ('Donald Duck');
@@ -222,9 +222,10 @@ void main() {
       // Add a user
       User user = User();
       user.name = "Paperone";
-      sqlWrapper.insert(user.toMap(), "users");
+      await sqlWrapper.insert(user.toMap(), "users");
       // Delete a user
-      sqlWrapper.execute('DELETE FROM users WHERE id=1', tables: ['users']);
+      await sqlWrapper
+          .execute('DELETE FROM users WHERE id=1', tables: ['users']);
       expect(stream, emitsInOrder([2, 3, 2]));
       //
       /*
@@ -283,13 +284,13 @@ void main() {
     Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
         singleResult: false, fromMap: User.fromMap, tables: ["users"]);
     // Check if the stream has been added to the array
-    expect(SQLiteWrapperCore.streams.length, 1);
+    expect(SQLiteWrapperBase.streams.length, 1);
 
     final StreamSubscription sub = userStream.listen((event) {});
 
     await sub.cancel();
 
-    expect(SQLiteWrapperCore.streams.length, 0);
+    expect(SQLiteWrapperBase.streams.length, 0);
   });
 
   test("Create one or more subfolders in the base folder to store the DB",
@@ -297,7 +298,7 @@ void main() {
     const String path =
         "./59976040-a675-11ec-8ee4-1f922f66b681/test2/prova.sqlite";
     const dbName = "TESTDB";
-    SQLiteWrapper().openDB(path, dbName: dbName);
+    await SQLiteWrapper().openDB(path, dbName: dbName);
     File f = File.fromUri(Uri(path: path));
     expect(f.existsSync(), true);
     SQLiteWrapper().closeDB(dbName: dbName);
@@ -309,7 +310,7 @@ void main() {
     const dbName = "thirdDB";
     await SQLiteWrapper().openDB(inMemoryDatabasePath,
         version: 1, dbName: dbName, onCreate: () async {
-      await SQLiteWrapper().execute(""" 
+      await SQLiteWrapper().execute("""
       CREATE TABLE IF NOT EXISTS "Characters" (
           "id" integer NOT NULL,
           "name" varchar(100) NOT NULL,

@@ -34,7 +34,7 @@ dependencies:
   path_provider: # Required to find the system documents directory
   path: # Required to compute path
   sqlite3_flutter_libs: # Required by Android
-
+  sqflite_common_ffi_web: ">=0.1.0-dev.1" # Required by Web - dart run sqflite_common_ffi_web:setup --force
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -44,7 +44,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

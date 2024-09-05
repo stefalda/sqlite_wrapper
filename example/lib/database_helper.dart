@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
@@ -14,12 +14,16 @@ class DatabaseHelper {
 
   initDB({inMemory = false}) async {
     String dbPath = inMemoryDatabasePath;
-    if (!inMemory) {
-      final docDir = await getApplicationDocumentsDirectory();
-      if (!await docDir.exists()) {
-        await docDir.create(recursive: true);
+    if (kIsWeb) {
+      dbPath = 'todoDatabase';
+    } else {
+      if (!inMemory) {
+        final docDir = await getApplicationDocumentsDirectory();
+        if (!await docDir.exists()) {
+          await docDir.create(recursive: true);
+        }
+        dbPath = p.join(docDir.path, "todoDatabase.sqlite");
       }
-      dbPath = p.join(docDir.path, "todoDatabase.sqlite");
     }
     final DatabaseInfo dbInfo =
         await SQLiteWrapper().openDB(dbPath, onCreate: () async {
