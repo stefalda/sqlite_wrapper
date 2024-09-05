@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
-import 'package:sqlite_wrapper/sqlite_wrapper_base.dart';
 import 'package:test/test.dart';
 
 import 'user.dart';
@@ -30,7 +29,7 @@ _createTableAndInsertSampleValues({createOnly = false}) async {
 
 void main() {
   setUp(() async {
-    SQLiteWrapper().openDB(inMemoryDatabasePath);
+    await SQLiteWrapper().openDB(inMemoryDatabasePath);
   });
 
   tearDown(() async {
@@ -223,9 +222,10 @@ void main() {
       // Add a user
       User user = User();
       user.name = "Paperone";
-      sqlWrapper.insert(user.toMap(), "users");
+      await sqlWrapper.insert(user.toMap(), "users");
       // Delete a user
-      sqlWrapper.execute('DELETE FROM users WHERE id=1', tables: ['users']);
+      await sqlWrapper
+          .execute('DELETE FROM users WHERE id=1', tables: ['users']);
       expect(stream, emitsInOrder([2, 3, 2]));
       //
       /*

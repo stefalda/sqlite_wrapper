@@ -4,6 +4,8 @@ library sqlite_wrapper;
 
 import 'dart:async';
 
+import './helpers/platform/platform.dart';
+
 const String inMemoryDatabasePath = ':memory:';
 
 typedef FromMap = dynamic Function(Map<String, dynamic> map);
@@ -15,9 +17,8 @@ typedef OnCreate = Future<void> Function();
 const defaultDBName = "mainDB";
 
 abstract class DatabaseCore {
-  Future? get lastInsertRowId => null;
   void execute(String sql, List<Object?> params);
-  Future? getUpdatedRows();
+
   List<Map> select(String sql, List<Object?> params);
   void dispose();
 }
@@ -81,6 +82,10 @@ abstract class SQLiteWrapperBase {
 
   bool debugMode = false;
 
+  bool isWeb() {
+    return isRunningOnWeb();
+  }
+
   /// Open the Database and returns true if the Database has been created
   Future<DatabaseInfo> openDB(String path,
       {int version = 0,
@@ -99,6 +104,15 @@ abstract class SQLiteWrapperBase {
     return databases.get(dbName ?? defaultDBName);
   }
 
+  /// Convert boolean in integer (true = 1 - false = 0)
+  fixBoolParams(List<Object?> params) {
+    for (int i = 0; i < params.length; i++) {
+      if (params[i].runtimeType == bool) {
+        params[i] = params[i] == true ? 1 : 0;
+      }
+    }
+  }
+
   /// Executes an SQL Query with no return value
   /// params - an optional list of parameters to pass to the query
   /// tables - an optional list of tables affected by the query
@@ -112,24 +126,30 @@ abstract class SQLiteWrapperBase {
     }
     final String sqlCommand = sql.substring(0, sql.indexOf(" ")).toUpperCase();
     final db = _getDB(dbName);
-    switch (sqlCommand) {
-      case "INSERT":
-        // Return the ID of last inserted row
-        db.execute(sql, params);
-        updateStreams(tables);
-        return db.lastInsertRowId;
-      case "UPDATE":
-        // Return number of changes made
-        db.execute(sql, params);
-        updateStreams(tables);
-        return db.getUpdatedRows();
-      case "DELETE":
-        // Return number of changes made
-        db.execute(sql, params);
-        updateStreams(tables);
-        return db.getUpdatedRows();
-      default:
-        return db.execute(sql, params);
+    fixBoolParams(params);
+    try {
+      switch (sqlCommand) {
+        case "INSERT":
+          // Return the ID of last inserted row
+          await db.execute(sql, params);
+          return await query("SELECT last_insert_rowid()",
+              dbName: dbName, singleResult: true);
+        case "UPDATE":
+          // Return number of changes made
+          await db.execute(sql, params);
+          return await query("SELECT changes()",
+              dbName: dbName, singleResult: true);
+        case "DELETE":
+          // Return number of changes made
+          await db.execute(sql, params);
+          return await query("SELECT changes()",
+              dbName: dbName, singleResult: true);
+        default:
+          return await db.execute(sql, params);
+      }
+    } finally {
+      // Check if should update some subscribed streams
+      await updateStreams(tables);
     }
   }
 
@@ -142,7 +162,13 @@ abstract class SQLiteWrapperBase {
       FromMap? fromMap,
       bool singleResult = false,
       String? dbName}) async {
-    final List<Map> results = _getDB(dbName).select(sql, params);
+    late List<Map> results;
+    if (isWeb()) {
+      results = await _getDB(dbName).rawQuery(sql, params);
+    } else {
+      results = _getDB(dbName).select(sql, params);
+    }
+    //final List<dynamic> results = await _getDB(dbName).rawQuery(sql, params);
     if (singleResult) {
       if (results.isEmpty) {
         return null;
