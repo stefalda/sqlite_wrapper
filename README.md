@@ -29,7 +29,10 @@ This package provide just a few methods that allow to:
 
 * Install the **sqlite_wrapper** package
 * Install the [sqlite3\_flutter_libs](https://pub.dev/packages/sqlite3_flutter_libs) to include the latest version of SQLite on iOS and MacOS (optional) or to make the sqllite3 package work in Android, Windows and Linux (required).
-* Install and **configure** (generate sqlite.wasm) [sqflite_common_ffi_web](https://pub.dev/packages/sqflite_common_ffi_web) package if you want to use the library in flutter web.
+* Install and **configure** (generate sqlite.wasm) [sqflite_common_ffi_web](https://pub.dev/packages/sqflite_common_ffi_web) package if you want to use the library in flutter web. In particular you should run this command to generate or update the required files in your web folder.
+<pre>
+  $ dart run sqflite_common_ffi_web:setup --force
+</pre>
 
 ## Usage
 
