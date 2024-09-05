@@ -10,7 +10,7 @@ This are the main principles that guide the development of this library:
 * a simpler API to converting from and to model objects
 * full access to SQL language features without the need to learn new paradings
 * fully tested code
-* multi-platform (currently tested on iOS, Android, MacOS, Windows) - `Web is not supported`
+* multi-platform (currently tested on iOS, Android, MacOS, Windows, Web)
 * no (extreme) magic, but a nice and simple API
 
 
@@ -29,6 +29,7 @@ This package provide just a few methods that allow to:
 
 * Install the **sqlite_wrapper** package
 * Install the [sqlite3\_flutter_libs](https://pub.dev/packages/sqlite3_flutter_libs) to include the latest version of SQLite on iOS and MacOS (optional) or to make the sqllite3 package work in Android, Windows and Linux (required).
+* Install and **configure** (generate sqlite.wasm) [sqflite_common_ffi_web](https://pub.dev/packages/sqflite_common_ffi_web) package if you want to use the library in flutter web.
 
 ## Usage
 
