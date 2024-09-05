@@ -298,7 +298,7 @@ void main() {
     const String path =
         "./59976040-a675-11ec-8ee4-1f922f66b681/test2/prova.sqlite";
     const dbName = "TESTDB";
-    SQLiteWrapper().openDB(path, dbName: dbName);
+    await SQLiteWrapper().openDB(path, dbName: dbName);
     File f = File.fromUri(Uri(path: path));
     expect(f.existsSync(), true);
     SQLiteWrapper().closeDB(dbName: dbName);

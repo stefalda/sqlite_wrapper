@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqlite_wrapper_sample/Database_Helper.dart';
+import 'package:sqlite_wrapper_sample/database_helper.dart';
 import 'package:sqlite_wrapper_sample/instructions.dart';
 import 'package:sqlite_wrapper_sample/models.dart';
 import 'package:sqlite_wrapper_sample/todo_item.dart';
