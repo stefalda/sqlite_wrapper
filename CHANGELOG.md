@@ -46,3 +46,9 @@
 
 ## 0.1.3
 * bug fix for update and delete not working with tables having multiple primary keys
+
+## 0.2.0-dev-1
+* added support for flutter web
+* new lint rules
+* added CI pipeline
+* review of class structures
