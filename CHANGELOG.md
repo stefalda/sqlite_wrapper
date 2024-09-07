@@ -52,3 +52,6 @@
 * new lint rules
 * added CI pipeline
 * review of class structures
+
+## 0.2.0
+* bumped sqflite_common_ffi_web to latest version
