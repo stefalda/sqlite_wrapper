@@ -55,3 +55,6 @@
 
 ## 0.2.0
 * bumped sqflite_common_ffi_web to latest version
+
+## 0.2.1
+* exported isRunningOnWeb from platform
