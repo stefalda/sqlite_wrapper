@@ -166,6 +166,7 @@ abstract class SQLiteWrapperBase {
     if (isWeb()) {
       results = await _getDB(dbName).rawQuery(sql, params);
     } else {
+      assert(_getDB(dbName) != null);
       results = _getDB(dbName).select(sql, params);
     }
     //final List<dynamic> results = await _getDB(dbName).rawQuery(sql, params);
