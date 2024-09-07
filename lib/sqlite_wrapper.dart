@@ -4,6 +4,7 @@ import 'sqlite_wrapper_stub.dart'
     if (dart.library.io) 'sqlite_wrapper_core.dart'
     if (dart.library.js_interop) 'sqlite_wrapper_web.dart';
 
+export './helpers/platform/platform.dart';
 export 'sqlite_wrapper_base.dart';
 export 'sqlite_wrapper_stub.dart'
     if (dart.library.io) 'sqlite_wrapper_core.dart'
