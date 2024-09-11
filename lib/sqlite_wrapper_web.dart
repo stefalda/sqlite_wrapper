@@ -5,8 +5,11 @@ library sqlite_wrapper;
 import 'dart:async';
 
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper_types.dart';
 
 import 'sqlite_wrapper_base.dart';
+
+SQLiteWrapperBase getInstance() => SQLiteWrapperCore();
 
 class SQLiteWrapperCore extends SQLiteWrapperBase {
   /// Open the Database and returns true if the Database has been created

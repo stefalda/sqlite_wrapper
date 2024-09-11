@@ -58,3 +58,6 @@
 
 ## 0.2.1
 * exported isRunningOnWeb from platform
+
+## 0.2.2
+* code reorganization and introduction of factory method getInstance

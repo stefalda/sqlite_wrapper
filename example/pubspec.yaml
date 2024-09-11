@@ -31,9 +31,9 @@ dependencies:
     sdk: flutter
   sqlite_wrapper:
     path: ..
-  path_provider: # Required to find the system documents directory
-  path: # Required to compute path
-  sqlite3_flutter_libs: # Required by Android
+  path_provider: ^2.1.4 # Required to find the system documents directory
+  path: ^1.9.0 # Required to compute path
+  sqlite3_flutter_libs: ^0.5.24 # Required by Android
   sqflite_common_ffi_web: "^0.4.5+2" # Required by Web - dart run sqflite_common_ffi_web:setup --force
 dev_dependencies:
   flutter_test:
