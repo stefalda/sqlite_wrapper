@@ -61,3 +61,6 @@
 
 ## 0.2.2
 * code reorganization and introduction of factory method getInstance
+
+## 0.2.3
+* created automation for publishing to github
