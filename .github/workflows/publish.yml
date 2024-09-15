@@ -30,14 +30,14 @@ jobs:
       - name: 📦 Install dependencies
         shell: ${{ inputs.shell }}
         run: flutter pub get
-        working-directory: ${{ inputs.working-directory }}
+        # working-directory: ${{ inputs.working-directory }}
 
       - name: 🌵 Dry Run
         shell: ${{ inputs.shell }}
         run: flutter pub publish --dry-run
-        working-directory: ${{ inputs.working-directory }}
+        # working-directory: ${{ inputs.working-directory }}
 
       - name: 📢 Publish
         shell: ${{ inputs.shell }}
         run: flutter pub publish -f
-        working-directory: ${{ inputs.working-directory }}
+        # working-directory: ${{ inputs.working-directory }}
