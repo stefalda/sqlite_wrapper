@@ -4,21 +4,25 @@ library sqlite_wrapper;
 
 import 'dart:async';
 
+import 'package:sqlite_wrapper/interfaces/sqlite_wrapper_interface.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper_types.dart';
 
 import './helpers/platform/platform.dart';
 
-abstract class SQLiteWrapperBase {
+abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   static final List<StreamInfo> streams = [];
   static final Databases databases = Databases();
 
   bool debugMode = false;
+  // Set the use or remote procedure call
+  bool useGRPC = false;
 
   bool isWeb() {
     return isRunningOnWeb();
   }
 
   /// Open the Database and returns true if the Database has been created
+  @override
   Future<DatabaseInfo> openDB(String path,
       {int version = 0,
       OnCreate? onCreate,
@@ -26,12 +30,14 @@ abstract class SQLiteWrapperBase {
       String? dbName});
 
   /// Close the Database
+  @override
   void closeDB({String? dbName}) {
     databases.get(dbName ?? defaultDBName).dispose();
     databases.remove(dbName ?? defaultDBName);
   }
 
   /// Database accessible from outside (map the internal db instance)
+  @override
   dynamic getDatabase({String? dbName}) {
     return databases.get(dbName ?? defaultDBName);
   }
@@ -48,6 +54,7 @@ abstract class SQLiteWrapperBase {
   /// Executes an SQL Query with no return value
   /// params - an optional list of parameters to pass to the query
   /// tables - an optional list of tables affected by the query
+  @override
   Future<dynamic>? execute(String sql,
       {List<String>? tables,
       List<Object?> params = const [],
@@ -94,12 +101,14 @@ abstract class SQLiteWrapperBase {
       FromMap? fromMap,
       bool singleResult = false,
       String? dbName}) async {
-    late List<Map> results;
-    if (isWeb()) {
+    late List<dynamic> results;
+    if (isWeb() && !useGRPC) {
       results = await _getDB(dbName).rawQuery(sql, params);
     } else {
       assert(_getDB(dbName) != null);
-      results = _getDB(dbName).select(sql, params);
+      // If it's an rpc call it's a future
+      final res = _getDB(dbName).select(sql, params);
+      results = res is Future ? await res : res;
     }
     //final List<dynamic> results = await _getDB(dbName).rawQuery(sql, params);
     if (singleResult) {
@@ -140,6 +149,7 @@ abstract class SQLiteWrapperBase {
     return results;
   }
 
+  @override
   Future<int> update(Map<String, dynamic> map, String table,
       {required List<String> keys, String? dbName}) async {
     //VALUES
@@ -174,12 +184,14 @@ abstract class SQLiteWrapperBase {
 
   /// Insert a new record in the passed table based on the map object
   /// and return the new id
+  @override
   Future<int> insert(Map<String, dynamic> map, String table,
       {String? dbName}) async {
     return _insertOrUpdate(map, table, dbName: dbName);
   }
 
   // Perform an INSERT or an UPDATE depending on the record state (UPSERT)
+  @override
   Future<int> save(Map<String, dynamic> map, String table,
       {List<String>? keys, String? dbName}) async {
     return _insertOrUpdate(map, table, keys: keys, dbName: dbName);
@@ -223,6 +235,7 @@ abstract class SQLiteWrapperBase {
   }
 
   /// DELETE the item building the SQL query using the table and the id passed
+  @override
   Future<int> delete(Map<String, dynamic> map, String table,
       {required List<String> keys, String? dbName}) async {
     final List params = [];
@@ -238,6 +251,7 @@ abstract class SQLiteWrapperBase {
   /// params - an optional list of parameters to pass to the query
   /// fromMap - a function that convert the result map to the returned object
   /// singleResult - return an object instead of a list of objects
+  @override
   Stream watch(String sql,
       {List<Object?> params = const [],
       FromMap? fromMap,
@@ -272,6 +286,7 @@ abstract class SQLiteWrapperBase {
   }
 
   /// Update all the streams connected to one of the table in the list
+  @override
   Future<void> updateStreams(List<String>? tables) async {
     if (tables == null || tables.isEmpty) return;
     for (StreamInfo s in streams) {
@@ -284,11 +299,13 @@ abstract class SQLiteWrapperBase {
     }
   }
 
+  @override
   Future<int> getVersion({String? dbName}) async {
     return await query("PRAGMA user_version;",
         singleResult: true, dbName: dbName);
   }
 
+  @override
   Future<void> setVersion(int version, {String? dbName}) async {
     await execute("PRAGMA user_version=$version;", dbName: dbName);
   }
