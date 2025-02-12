@@ -15,7 +15,7 @@ package sqlite_wrapper;
 // get/set database versions, and even watch for changes via server streaming.
 //
 
-service SqliteService {
+service SqliteWrapperService {
   // Opens (or creates) a database.
   rpc OpenDB(OpenDBRequest) returns (OpenDBResponse);
 

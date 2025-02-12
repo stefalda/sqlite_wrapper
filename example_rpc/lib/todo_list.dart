@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sqlite_wrapper_sample/database_helper.dart';
+import 'package:inject_x/inject_x.dart';
 import 'package:sqlite_wrapper_sample/instructions.dart';
 import 'package:sqlite_wrapper_sample/models.dart';
+import 'package:sqlite_wrapper_sample/services/database_service.dart';
 import 'package:sqlite_wrapper_sample/todo_item.dart';
 
 class TodoList extends StatelessWidget {
@@ -9,11 +10,12 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final databaseService = inject<DatabaseService>();
     return Column(
       children: [
         // To-do - COUNT
         StreamBuilder(
-          stream: DatabaseHelper().getTodoCount(),
+          stream: databaseService.getTodoCount(),
           initialData: const [],
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -25,7 +27,7 @@ class TodoList extends StatelessWidget {
         ),
         // Todos
         StreamBuilder(
-          stream: DatabaseHelper().getTodos(),
+          stream: databaseService.getTodos(),
           initialData: const [],
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {

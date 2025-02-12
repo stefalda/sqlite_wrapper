@@ -1,82 +1,81 @@
 import 'dart:convert';
 
 import 'package:grpc/grpc.dart';
+import 'package:inject_x/inject_x.dart';
 import 'package:sqlite_wrapper/generated/google/protobuf/any.pb.dart';
 import 'package:sqlite_wrapper/generated/google/protobuf/wrappers.pb.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
-
-//import 'generated/sqlite_wrapper_rpc.pbgrpc.dart';
-/*
-/// A token-based interceptor that validates the "authorization" metadata header.
-class AuthInterceptor extends ServerInterceptor {
-  @override
-  Future<GrpcError?> intercept(
-    ServiceCall call,
-    ServiceMethod method,
-    Future<void> Function(ServiceCall call) continuation,
-  ) async {
-    // Retrieve metadata from the incoming call.
-    final metadata = call.clientMetadata;
-    if (metadata == null || !metadata.containsKey('authorization')) {
-      return GrpcError.unauthenticated('Missing authorization metadata');
-    }
-
-    // Metadata values are lists; here we take the first value.
-    final token = metadata['authorization']!.first;
-    if (!isValidToken(token)) {
-      return GrpcError.permissionDenied('Invalid token');
-    }
-
-    // Token is valid; continue processing the RPC.
-    return await continuation(call);
-  }
-
-  bool isValidToken(String token) {
-    // Replace this logic with your actual token validation.
-    return token == 'Bearer valid_token';
-  }
-}*/
+import 'package:sqlite_wrapper_server/constants.dart';
+import 'package:sqlite_wrapper_server/services/database_service.dart';
 
 /// Implementation of the SqliteService defined in your sqlite.proto.
-class SqliteServiceImpl extends SqliteServiceBase {
+class SQLiteWrapperServerImpl extends SqliteWrapperServiceBase {
   static final List<StreamInfo> streams = [];
   final sqliteWrapper = SQLiteWrapperCore();
+  final databaseService = inject<DatabaseService>();
 
+  /// The DB Name is created appending to the dbName the user UUID
+  String _getDBName({required ServiceCall call, required String dbName}) {
+    final String? uuid = call.clientMetadata!['user_uuid'];
+    if (uuid == null) {
+      if (Constants.sharedDB == "true") {
+        return dbName;
+      } else {
+        throw ("Something is wrong... why isn't the user logged in?");
+      }
+    }
+    return "${dbName}_$uuid";
+  }
+
+  String _getDBPath(String dbName) {
+    String dbPath = Constants.dbPath;
+    return "$dbPath/$dbName.sqlite";
+  }
+
+  // Allow all connections without token authentication
+  static bool runUnauthenticated = false;
   @override
   Future<OpenDBResponse> openDB(ServiceCall call, OpenDBRequest request) async {
-    print(
-        "OpenDB called: path=${request.path}, version=${request.version}, dbName=${request.dbName}");
+    //TODO remove request and response path... or decide if the DB Name should be passed
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
 
-    final res = await sqliteWrapper.openDB(request.path,
-        dbName: request.dbName, version: request.version);
+    print(
+        "OpenDB called: path=${request.path}, version=${request.version}, dbName=$dbName");
+
+    final res = await sqliteWrapper.openDB(_getDBPath(dbName),
+        version: request.version); //dbName: dbName,
+
+    sqliteWrapper.closeDB();
+
     // Dummy response; replace with actual database opening logic.
     return OpenDBResponse(
-      created: res.created,
-      version: res.version,
-      sqliteVersion: res.sqliteVersion,
-      dbName: res.dbName,
-      path: res.path,
-    );
+        created: res.created,
+        version: res.version,
+        sqliteVersion: res.sqliteVersion,
+        dbName: dbName);
   }
 
   @override
   Future<CloseDBResponse> closeDB(
       ServiceCall call, CloseDBRequest request) async {
-    sqliteWrapper.closeDB(dbName: request.dbName);
-    print("CloseDB called: dbName=${request.dbName}");
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
+    sqliteWrapper.closeDB(dbName: dbName);
+    print("CloseDB called: dbName=$dbName");
     return CloseDBResponse(success: true);
   }
 
   @override
   Future<SqlQueryResponse> execute(
       ServiceCall call, SqlQueryRequest request) async {
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
     print(
-        "Execute called: sql=${request.sql}, params=${request.params}, dbName=${request.dbName}");
+        "Execute called: sql=${request.sql}, params=${request.params}, dbName=$dbName");
+    await sqliteWrapper.openDB(_getDBPath(dbName));
     final res = await sqliteWrapper.execute(
       request.sql,
       params: _unpack(request.params.toList()),
-      dbName: request.dbName,
     );
+    sqliteWrapper.closeDB();
 
     // Replace with actual SQL command execution.
     return SqlQueryResponse(result: jsonEncode(res));
@@ -85,10 +84,14 @@ class SqliteServiceImpl extends SqliteServiceBase {
   @override
   Future<SqlQueryResponse> select(
       ServiceCall call, SqlQueryRequest request) async {
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
     print(
-        "Select called: sql=${request.sql}, params=${request.params}, dbName=${request.dbName}");
-    final db = sqliteWrapper.getDatabase(dbName: request.dbName);
-    final res = db.select(request.sql, _unpack(request.params.toList()));
+        "Select called: sql=${request.sql}, params=${request.params}, dbName=$dbName");
+    await sqliteWrapper.openDB(_getDBPath(dbName));
+    final db = sqliteWrapper.getDatabase(); //dbName: dbName
+    final res = db.select(
+        request.sql, _unpack(request.params.toList())); // dbName: dbName
+    sqliteWrapper.closeDB();
     return SqlQueryResponse(result: jsonEncode(res));
   }
 
@@ -112,8 +115,11 @@ class SqliteServiceImpl extends SqliteServiceBase {
   @override
   Future<GetVersionResponse> getVersion(
       ServiceCall call, GetVersionRequest request) async {
-    print("GetVersion called: dbName=${request.dbName}");
-    final version = await sqliteWrapper.getVersion();
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
+
+    print("GetVersion called: dbName=$dbName");
+
+    final version = await sqliteWrapper.getVersion(dbName: dbName);
     // Replace with logic to retrieve the database version.
     return GetVersionResponse(version: version);
   }
@@ -121,9 +127,9 @@ class SqliteServiceImpl extends SqliteServiceBase {
   @override
   Future<SetVersionResponse> setVersion(
       ServiceCall call, SetVersionRequest request) async {
-    print(
-        "SetVersion called: dbName=${request.dbName}, version=${request.version}");
-    await sqliteWrapper.setVersion(request.version);
+    final String dbName = _getDBName(call: call, dbName: request.dbName);
+    print("SetVersion called: dbName=$dbName, version=${request.version}");
+    await sqliteWrapper.setVersion(request.version, dbName: dbName);
     // Replace with logic to set the database version.
     return SetVersionResponse(success: true);
   }

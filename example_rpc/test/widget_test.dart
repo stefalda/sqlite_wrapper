@@ -7,15 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqlite_wrapper_sample/database_helper.dart';
+import 'package:inject_x/inject_x.dart';
 import 'package:sqlite_wrapper_sample/main.dart';
+import 'package:sqlite_wrapper_sample/services/database_service.dart';
 
 void main() {
   testWidgets('Todos basic test', (WidgetTester tester) async {
     // Init the database
     // WidgetsFlutterBinding.ensureInitialized();
     // Init the DB
-    await DatabaseHelper().initDB(inMemory: true);
+    await inject<DatabaseService>().initDB(inMemory: true);
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());

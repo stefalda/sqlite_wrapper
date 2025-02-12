@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:sqlite_wrapper_sample/database_helper.dart';
+import 'package:inject_x/inject_x.dart';
 import 'package:sqlite_wrapper_sample/models.dart';
+import 'package:sqlite_wrapper_sample/services/database_service.dart';
 
 class TodoItem extends StatelessWidget {
   final Todo todo;
@@ -9,10 +10,11 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final databaseService = inject<DatabaseService>();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => DatabaseHelper().toggleDone(todo),
-      onLongPress: () => DatabaseHelper().deleteTodo(todo),
+      onTap: () => databaseService.toggleDone(todo),
+      onLongPress: () => databaseService.deleteTodo(todo),
       child: Text(
         "${todo.title} ${(todo.id!)}",
         style: TextStyle(

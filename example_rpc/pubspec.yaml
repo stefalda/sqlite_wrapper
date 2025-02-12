@@ -35,8 +35,9 @@ dependencies:
   path: ^1.9.0 # Required to compute path
   sqlite3_flutter_libs: ^0.5.24 # Required by Android
   sqflite_common_ffi_web: "^0.4.5+2" # Required by Web - dart run sqflite_common_ffi_web:setup --force
-  build_grpc_channel: ^0.5.0
-
+  shared_preferences: ^2.5.2
+  inject_x: ^0.0.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

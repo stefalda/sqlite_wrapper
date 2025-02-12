@@ -19,38 +19,38 @@ import 'sqlite_wrapper_rpc.pb.dart' as $0;
 
 export 'sqlite_wrapper_rpc.pb.dart';
 
-@$pb.GrpcServiceName('sqlite_wrapper.SqliteService')
-class SqliteServiceClient extends $grpc.Client {
+@$pb.GrpcServiceName('sqlite_wrapper.SqliteWrapperService')
+class SqliteWrapperServiceClient extends $grpc.Client {
   static final _$openDB = $grpc.ClientMethod<$0.OpenDBRequest, $0.OpenDBResponse>(
-      '/sqlite_wrapper.SqliteService/OpenDB',
+      '/sqlite_wrapper.SqliteWrapperService/OpenDB',
       ($0.OpenDBRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.OpenDBResponse.fromBuffer(value));
   static final _$closeDB = $grpc.ClientMethod<$0.CloseDBRequest, $0.CloseDBResponse>(
-      '/sqlite_wrapper.SqliteService/CloseDB',
+      '/sqlite_wrapper.SqliteWrapperService/CloseDB',
       ($0.CloseDBRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.CloseDBResponse.fromBuffer(value));
   static final _$execute = $grpc.ClientMethod<$0.SqlQueryRequest, $0.SqlQueryResponse>(
-      '/sqlite_wrapper.SqliteService/Execute',
+      '/sqlite_wrapper.SqliteWrapperService/Execute',
       ($0.SqlQueryRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.SqlQueryResponse.fromBuffer(value));
   static final _$select = $grpc.ClientMethod<$0.SqlQueryRequest, $0.SqlQueryResponse>(
-      '/sqlite_wrapper.SqliteService/Select',
+      '/sqlite_wrapper.SqliteWrapperService/Select',
       ($0.SqlQueryRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.SqlQueryResponse.fromBuffer(value));
   static final _$getVersion = $grpc.ClientMethod<$0.GetVersionRequest, $0.GetVersionResponse>(
-      '/sqlite_wrapper.SqliteService/GetVersion',
+      '/sqlite_wrapper.SqliteWrapperService/GetVersion',
       ($0.GetVersionRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.GetVersionResponse.fromBuffer(value));
   static final _$setVersion = $grpc.ClientMethod<$0.SetVersionRequest, $0.SetVersionResponse>(
-      '/sqlite_wrapper.SqliteService/SetVersion',
+      '/sqlite_wrapper.SqliteWrapperService/SetVersion',
       ($0.SetVersionRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.SetVersionResponse.fromBuffer(value));
   static final _$echo = $grpc.ClientMethod<$0.EchoRequest, $0.EchoResponse>(
-      '/sqlite_wrapper.SqliteService/Echo',
+      '/sqlite_wrapper.SqliteWrapperService/Echo',
       ($0.EchoRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.EchoResponse.fromBuffer(value));
 
-  SqliteServiceClient($grpc.ClientChannel channel,
+  SqliteWrapperServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
       $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options,
@@ -85,11 +85,11 @@ class SqliteServiceClient extends $grpc.Client {
   }
 }
 
-@$pb.GrpcServiceName('sqlite_wrapper.SqliteService')
-abstract class SqliteServiceBase extends $grpc.Service {
-  $core.String get $name => 'sqlite_wrapper.SqliteService';
+@$pb.GrpcServiceName('sqlite_wrapper.SqliteWrapperService')
+abstract class SqliteWrapperServiceBase extends $grpc.Service {
+  $core.String get $name => 'sqlite_wrapper.SqliteWrapperService';
 
-  SqliteServiceBase() {
+  SqliteWrapperServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.OpenDBRequest, $0.OpenDBResponse>(
         'OpenDB',
         openDB_Pre,

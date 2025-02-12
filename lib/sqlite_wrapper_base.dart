@@ -42,6 +42,11 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
     return databases.get(dbName ?? defaultDBName);
   }
 
+  /// Expose the databases object
+  Databases getDatabases() {
+    return databases;
+  }
+
   /// Convert boolean in integer (true = 1 - false = 0)
   fixBoolParams(List<Object?> params) {
     for (int i = 0; i < params.length; i++) {
@@ -149,7 +154,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
     return results;
   }
 
-  @override
   Future<int> update(Map<String, dynamic> map, String table,
       {required List<String> keys, String? dbName}) async {
     //VALUES
@@ -184,14 +188,12 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
 
   /// Insert a new record in the passed table based on the map object
   /// and return the new id
-  @override
   Future<int> insert(Map<String, dynamic> map, String table,
       {String? dbName}) async {
     return _insertOrUpdate(map, table, dbName: dbName);
   }
 
   // Perform an INSERT or an UPDATE depending on the record state (UPSERT)
-  @override
   Future<int> save(Map<String, dynamic> map, String table,
       {List<String>? keys, String? dbName}) async {
     return _insertOrUpdate(map, table, keys: keys, dbName: dbName);
@@ -235,7 +237,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   }
 
   /// DELETE the item building the SQL query using the table and the id passed
-  @override
   Future<int> delete(Map<String, dynamic> map, String table,
       {required List<String> keys, String? dbName}) async {
     final List params = [];
@@ -251,7 +252,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   /// params - an optional list of parameters to pass to the query
   /// fromMap - a function that convert the result map to the returned object
   /// singleResult - return an object instead of a list of objects
-  @override
   Stream watch(String sql,
       {List<Object?> params = const [],
       FromMap? fromMap,
@@ -286,7 +286,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   }
 
   /// Update all the streams connected to one of the table in the list
-  @override
   Future<void> updateStreams(List<String>? tables) async {
     if (tables == null || tables.isEmpty) return;
     for (StreamInfo s in streams) {

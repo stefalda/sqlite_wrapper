@@ -68,4 +68,9 @@ class Databases {
   bool get isNotEmpty {
     return _dbs.isNotEmpty;
   }
+
+  /// Return all db names
+  List<String> getNames() {
+    return _dbs.keys.map((item) => item.toString()).toList();
+  }
 }

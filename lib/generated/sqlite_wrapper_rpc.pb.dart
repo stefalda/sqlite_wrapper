@@ -13,7 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/any.pb.dart' as $1;
+import 'google/protobuf/any.pb.dart' as $2;
 
 class OpenDBRequest extends $pb.GeneratedMessage {
   factory OpenDBRequest({
@@ -313,7 +313,7 @@ class CloseDBResponse extends $pb.GeneratedMessage {
 class SqlQueryRequest extends $pb.GeneratedMessage {
   factory SqlQueryRequest({
     $core.String? sql,
-    $core.Iterable<$1.Any>? params,
+    $core.Iterable<$2.Any>? params,
     $core.String? dbName,
   }) {
     final $result = create();
@@ -334,7 +334,7 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SqlQueryRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'sql')
-    ..pc<$1.Any>(2, _omitFieldNames ? '' : 'params', $pb.PbFieldType.PM, subBuilder: $1.Any.create)
+    ..pc<$2.Any>(2, _omitFieldNames ? '' : 'params', $pb.PbFieldType.PM, subBuilder: $2.Any.create)
     ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
     ..hasRequiredFields = false
   ;
@@ -372,7 +372,7 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
 
   /// Parameters for the SQL statement (passed as strings for simplicity).
   @$pb.TagNumber(2)
-  $core.List<$1.Any> get params => $_getList(1);
+  $core.List<$2.Any> get params => $_getList(1);
 
   /// The database name to use.
   @$pb.TagNumber(3)

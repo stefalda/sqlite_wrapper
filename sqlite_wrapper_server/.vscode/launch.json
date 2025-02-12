@@ -8,7 +8,11 @@
             "name": "Dart",
             "type": "dart",
             "request": "launch",
-            "program": "bin/main.dart"
+            "program": "bin/main.dart", 
+            "toolArgs": [
+                "--define=SERVER_PORT=50051",
+                "--define=RUN_UNATHENTICATED=false",
+                "--define=SECRET_KEY=a1b2c33d4e5f6g7h8i9jakblc"]
         },
         {
             "name": "sqlite_wrapper_server",
