@@ -118,8 +118,9 @@ class SQLiteWrapperServerImpl extends SqliteWrapperServiceBase {
     final String dbName = _getDBName(call: call, dbName: request.dbName);
 
     print("GetVersion called: dbName=$dbName");
-
-    final version = await sqliteWrapper.getVersion(dbName: dbName);
+    await sqliteWrapper.openDB(_getDBPath(dbName));
+    final version = await sqliteWrapper.getVersion();
+    sqliteWrapper.closeDB();
     // Replace with logic to retrieve the database version.
     return GetVersionResponse(version: version);
   }
@@ -129,7 +130,9 @@ class SQLiteWrapperServerImpl extends SqliteWrapperServiceBase {
       ServiceCall call, SetVersionRequest request) async {
     final String dbName = _getDBName(call: call, dbName: request.dbName);
     print("SetVersion called: dbName=$dbName, version=${request.version}");
-    await sqliteWrapper.setVersion(request.version, dbName: dbName);
+    await sqliteWrapper.openDB(_getDBPath(dbName));
+    await sqliteWrapper.setVersion(request.version);
+    sqliteWrapper.closeDB();
     // Replace with logic to set the database version.
     return SetVersionResponse(success: true);
   }
