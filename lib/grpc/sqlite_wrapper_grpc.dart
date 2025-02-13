@@ -10,13 +10,13 @@ import 'package:sqlite_wrapper/grpc/grpc_service_manager.dart';
 import 'package:sqlite_wrapper/grpc/sqlite_service_client_wrapper.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
-class SqliteWrapperGrpc extends SQLiteWrapperBase {
+class SqliteWrapperGRPC extends SQLiteWrapperBase {
   // Client should be passed from the Manager just after instantiating the
   late GrpcServiceManager _serviceManager;
   String _token = "";
 
   // Init the class passing the client
-  SqliteWrapperGrpc.withHostAndPort(
+  SqliteWrapperGRPC.withHostAndPort(
       {String host = 'localhost', int port = 50051, bool secure = false}) {
     _serviceManager =
         GrpcServiceManager(host: host, port: port, secure: secure);
@@ -29,7 +29,7 @@ class SqliteWrapperGrpc extends SQLiteWrapperBase {
         GrpcServiceManager(host: host, port: port, secure: secure);
   }
 
-  SqliteWrapperGrpc() {
+  SqliteWrapperGRPC() {
     // Set the use of GRPC
     useGRPC = true;
   }
