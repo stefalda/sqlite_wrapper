@@ -86,6 +86,6 @@
 
 - created automation for publishing to github
 
-## 0.4.0-beta
+## 0.3.0-beta
 
 - added pRPG support
