@@ -17,16 +17,15 @@ import 'dart:typed_data' as $typed_data;
 const OpenDBRequest$json = {
   '1': 'OpenDBRequest',
   '2': [
-    {'1': 'path', '3': 1, '4': 1, '5': 9, '10': 'path'},
-    {'1': 'version', '3': 2, '4': 1, '5': 5, '10': 'version'},
-    {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
+    {'1': 'version', '3': 1, '4': 1, '5': 5, '10': 'version'},
+    {'1': 'dbName', '3': 2, '4': 1, '5': 9, '10': 'dbName'},
   ],
 };
 
 /// Descriptor for `OpenDBRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List openDBRequestDescriptor = $convert.base64Decode(
-    'Cg1PcGVuREJSZXF1ZXN0EhIKBHBhdGgYASABKAlSBHBhdGgSGAoHdmVyc2lvbhgCIAEoBVIHdm'
-    'Vyc2lvbhIWCgZkYk5hbWUYAyABKAlSBmRiTmFtZQ==');
+    'Cg1PcGVuREJSZXF1ZXN0EhgKB3ZlcnNpb24YASABKAVSB3ZlcnNpb24SFgoGZGJOYW1lGAIgAS'
+    'gJUgZkYk5hbWU=');
 
 @$core.Deprecated('Use openDBResponseDescriptor instead')
 const OpenDBResponse$json = {
@@ -36,7 +35,6 @@ const OpenDBResponse$json = {
     {'1': 'version', '3': 2, '4': 1, '5': 5, '10': 'version'},
     {'1': 'sqliteVersion', '3': 3, '4': 1, '5': 9, '10': 'sqliteVersion'},
     {'1': 'dbName', '3': 4, '4': 1, '5': 9, '10': 'dbName'},
-    {'1': 'path', '3': 5, '4': 1, '5': 9, '10': 'path'},
   ],
 };
 
@@ -44,7 +42,7 @@ const OpenDBResponse$json = {
 final $typed_data.Uint8List openDBResponseDescriptor = $convert.base64Decode(
     'Cg5PcGVuREJSZXNwb25zZRIYCgdjcmVhdGVkGAEgASgIUgdjcmVhdGVkEhgKB3ZlcnNpb24YAi'
     'ABKAVSB3ZlcnNpb24SJAoNc3FsaXRlVmVyc2lvbhgDIAEoCVINc3FsaXRlVmVyc2lvbhIWCgZk'
-    'Yk5hbWUYBCABKAlSBmRiTmFtZRISCgRwYXRoGAUgASgJUgRwYXRo');
+    'Yk5hbWUYBCABKAlSBmRiTmFtZQ==');
 
 @$core.Deprecated('Use closeDBRequestDescriptor instead')
 const CloseDBRequest$json = {
@@ -146,36 +144,6 @@ const SetVersionResponse$json = {
 /// Descriptor for `SetVersionResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setVersionResponseDescriptor = $convert.base64Decode(
     'ChJTZXRWZXJzaW9uUmVzcG9uc2USGAoHc3VjY2VzcxgBIAEoCFIHc3VjY2Vzcw==');
-
-@$core.Deprecated('Use watchRequestDescriptor instead')
-const WatchRequest$json = {
-  '1': 'WatchRequest',
-  '2': [
-    {'1': 'sql', '3': 1, '4': 1, '5': 9, '10': 'sql'},
-    {'1': 'params', '3': 2, '4': 3, '5': 9, '10': 'params'},
-    {'1': 'tables', '3': 3, '4': 3, '5': 9, '10': 'tables'},
-    {'1': 'singleResult', '3': 4, '4': 1, '5': 8, '10': 'singleResult'},
-    {'1': 'dbName', '3': 5, '4': 1, '5': 9, '10': 'dbName'},
-  ],
-};
-
-/// Descriptor for `WatchRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List watchRequestDescriptor = $convert.base64Decode(
-    'CgxXYXRjaFJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSFgoGcGFyYW1zGAIgAygJUgZwYXJhbX'
-    'MSFgoGdGFibGVzGAMgAygJUgZ0YWJsZXMSIgoMc2luZ2xlUmVzdWx0GAQgASgIUgxzaW5nbGVS'
-    'ZXN1bHQSFgoGZGJOYW1lGAUgASgJUgZkYk5hbWU=');
-
-@$core.Deprecated('Use watchResponseDescriptor instead')
-const WatchResponse$json = {
-  '1': 'WatchResponse',
-  '2': [
-    {'1': 'result', '3': 1, '4': 1, '5': 9, '10': 'result'},
-  ],
-};
-
-/// Descriptor for `WatchResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List watchResponseDescriptor = $convert.base64Decode(
-    'Cg1XYXRjaFJlc3BvbnNlEhYKBnJlc3VsdBgBIAEoCVIGcmVzdWx0');
 
 @$core.Deprecated('Use echoRequestDescriptor instead')
 const EchoRequest$json = {

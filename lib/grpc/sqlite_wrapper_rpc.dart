@@ -61,7 +61,6 @@ class SqliteWrapperGrpc extends SQLiteWrapperBase {
     dbName ??= defaultDBName;
     final response = await client.openDB(
       OpenDBRequest(
-        path: path,
         version: version,
         dbName: dbName,
       ),
@@ -87,7 +86,7 @@ class SqliteWrapperGrpc extends SQLiteWrapperBase {
       version: response.version,
       sqliteVersion: response.sqliteVersion,
       dbName: response.dbName,
-      path: response.path,
+      path: response.dbName,
     );
   }
 

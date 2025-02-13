@@ -17,14 +17,10 @@ import 'google/protobuf/any.pb.dart' as $2;
 
 class OpenDBRequest extends $pb.GeneratedMessage {
   factory OpenDBRequest({
-    $core.String? path,
     $core.int? version,
     $core.String? dbName,
   }) {
     final $result = create();
-    if (path != null) {
-      $result.path = path;
-    }
     if (version != null) {
       $result.version = version;
     }
@@ -38,9 +34,8 @@ class OpenDBRequest extends $pb.GeneratedMessage {
   factory OpenDBRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'OpenDBRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'), createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'path')
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
-    ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
+    ..aOS(2, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
     ..hasRequiredFields = false
   ;
 
@@ -65,35 +60,25 @@ class OpenDBRequest extends $pb.GeneratedMessage {
   static OpenDBRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OpenDBRequest>(create);
   static OpenDBRequest? _defaultInstance;
 
-  /// The file path for the SQLite database.
-  @$pb.TagNumber(1)
-  $core.String get path => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set path($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasPath() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPath() => clearField(1);
-
   /// The target version (if needed for migration).
-  @$pb.TagNumber(2)
-  $core.int get version => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set version($core.int v) { $_setSignedInt32(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasVersion() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearVersion() => clearField(2);
+  @$pb.TagNumber(1)
+  $core.int get version => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set version($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVersion() => clearField(1);
 
   /// An optional name for the database.
-  @$pb.TagNumber(3)
-  $core.String get dbName => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set dbName($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasDbName() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearDbName() => clearField(3);
+  @$pb.TagNumber(2)
+  $core.String get dbName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set dbName($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasDbName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDbName() => clearField(2);
 }
 
 class OpenDBResponse extends $pb.GeneratedMessage {
@@ -102,7 +87,6 @@ class OpenDBResponse extends $pb.GeneratedMessage {
     $core.int? version,
     $core.String? sqliteVersion,
     $core.String? dbName,
-    $core.String? path,
   }) {
     final $result = create();
     if (created != null) {
@@ -117,9 +101,6 @@ class OpenDBResponse extends $pb.GeneratedMessage {
     if (dbName != null) {
       $result.dbName = dbName;
     }
-    if (path != null) {
-      $result.path = path;
-    }
     return $result;
   }
   OpenDBResponse._() : super();
@@ -131,7 +112,6 @@ class OpenDBResponse extends $pb.GeneratedMessage {
     ..a<$core.int>(2, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
     ..aOS(3, _omitFieldNames ? '' : 'sqliteVersion', protoName: 'sqliteVersion')
     ..aOS(4, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
-    ..aOS(5, _omitFieldNames ? '' : 'path')
     ..hasRequiredFields = false
   ;
 
@@ -195,16 +175,6 @@ class OpenDBResponse extends $pb.GeneratedMessage {
   $core.bool hasDbName() => $_has(3);
   @$pb.TagNumber(4)
   void clearDbName() => clearField(4);
-
-  /// The path to the database file.
-  @$pb.TagNumber(5)
-  $core.String get path => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set path($core.String v) { $_setString(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasPath() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearPath() => clearField(5);
 }
 
 class CloseDBRequest extends $pb.GeneratedMessage {
@@ -649,156 +619,6 @@ class SetVersionResponse extends $pb.GeneratedMessage {
   $core.bool hasSuccess() => $_has(0);
   @$pb.TagNumber(1)
   void clearSuccess() => clearField(1);
-}
-
-class WatchRequest extends $pb.GeneratedMessage {
-  factory WatchRequest({
-    $core.String? sql,
-    $core.Iterable<$core.String>? params,
-    $core.Iterable<$core.String>? tables,
-    $core.bool? singleResult,
-    $core.String? dbName,
-  }) {
-    final $result = create();
-    if (sql != null) {
-      $result.sql = sql;
-    }
-    if (params != null) {
-      $result.params.addAll(params);
-    }
-    if (tables != null) {
-      $result.tables.addAll(tables);
-    }
-    if (singleResult != null) {
-      $result.singleResult = singleResult;
-    }
-    if (dbName != null) {
-      $result.dbName = dbName;
-    }
-    return $result;
-  }
-  WatchRequest._() : super();
-  factory WatchRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WatchRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WatchRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'), createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'sql')
-    ..pPS(2, _omitFieldNames ? '' : 'params')
-    ..pPS(3, _omitFieldNames ? '' : 'tables')
-    ..aOB(4, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
-    ..aOS(5, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
-    ..hasRequiredFields = false
-  ;
-
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  WatchRequest clone() => WatchRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  WatchRequest copyWith(void Function(WatchRequest) updates) => super.copyWith((message) => updates(message as WatchRequest)) as WatchRequest;
-
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static WatchRequest create() => WatchRequest._();
-  WatchRequest createEmptyInstance() => create();
-  static $pb.PbList<WatchRequest> createRepeated() => $pb.PbList<WatchRequest>();
-  @$core.pragma('dart2js:noInline')
-  static WatchRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WatchRequest>(create);
-  static WatchRequest? _defaultInstance;
-
-  /// The SQL query to watch.
-  @$pb.TagNumber(1)
-  $core.String get sql => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set sql($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasSql() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSql() => clearField(1);
-
-  /// Optional parameters for the SQL statement.
-  @$pb.TagNumber(2)
-  $core.List<$core.String> get params => $_getList(1);
-
-  /// List of tables to monitor for changes.
-  @$pb.TagNumber(3)
-  $core.List<$core.String> get tables => $_getList(2);
-
-  /// Indicates whether the query returns a single result.
-  @$pb.TagNumber(4)
-  $core.bool get singleResult => $_getBF(3);
-  @$pb.TagNumber(4)
-  set singleResult($core.bool v) { $_setBool(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasSingleResult() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearSingleResult() => clearField(4);
-
-  /// The database name.
-  @$pb.TagNumber(5)
-  $core.String get dbName => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set dbName($core.String v) { $_setString(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasDbName() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearDbName() => clearField(5);
-}
-
-class WatchResponse extends $pb.GeneratedMessage {
-  factory WatchResponse({
-    $core.String? result,
-  }) {
-    final $result = create();
-    if (result != null) {
-      $result.result = result;
-    }
-    return $result;
-  }
-  WatchResponse._() : super();
-  factory WatchResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WatchResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WatchResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'), createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'result')
-    ..hasRequiredFields = false
-  ;
-
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  WatchResponse clone() => WatchResponse()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  WatchResponse copyWith(void Function(WatchResponse) updates) => super.copyWith((message) => updates(message as WatchResponse)) as WatchResponse;
-
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static WatchResponse create() => WatchResponse._();
-  WatchResponse createEmptyInstance() => create();
-  static $pb.PbList<WatchResponse> createRepeated() => $pb.PbList<WatchResponse>();
-  @$core.pragma('dart2js:noInline')
-  static WatchResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WatchResponse>(create);
-  static WatchResponse? _defaultInstance;
-
-  /// The result for the watched query (returned as a JSON-encoded string).
-  @$pb.TagNumber(1)
-  $core.String get result => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set result($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasResult() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearResult() => clearField(1);
 }
 
 class EchoRequest extends $pb.GeneratedMessage {
