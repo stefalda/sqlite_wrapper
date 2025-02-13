@@ -74,7 +74,7 @@ class AuthClient {
       final response = await _stub.validateToken(request);
       return response.valid;
     } catch (e) {
-      print('Error validating token: $e');
+      //print('Error validating token: $e');
       return false;
     }
   }

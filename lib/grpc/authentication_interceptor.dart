@@ -31,9 +31,6 @@ class AuthInterceptor implements ClientInterceptor {
     CallOptions options,
     ClientUnaryInvoker<Q, R> invoker,
   ) {
-    print(method);
-    print(request.toString());
-
     var newOptions = options.mergedWith(CallOptions(metadata: <String, String>{
       'token': getToken() ?? "",
     }));
