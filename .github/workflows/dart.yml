@@ -3,10 +3,14 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Dart test & analysis
 
 on:
   push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
   pull_request:
     branches: [ "master" ]
 
