@@ -89,3 +89,7 @@
 ## 0.3.0-beta
 
 - added pRPG support
+
+## 0.3.1-beta
+
+- renamed grpc class and file
