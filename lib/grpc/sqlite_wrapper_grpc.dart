@@ -29,10 +29,7 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
         GrpcServiceManager(host: host, port: port, secure: secure);
   }
 
-  SqliteWrapperGRPC() {
-    // Set the use of GRPC
-    useGRPC = true;
-  }
+  SqliteWrapperGRPC();
 
   /// Set the grpc token
   set token(String token) {
@@ -53,11 +50,14 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
   }
 
   @override
-  Future<DatabaseInfo> openDB(String path,
-      {int version = 0,
-      OnCreate? onCreate,
-      OnUpgrade? onUpgrade,
-      String? dbName}) async {
+  Future<DatabaseInfo> openDB(
+    String path, {
+    int version = 0,
+    OnCreate? onCreate,
+    OnUpgrade? onUpgrade,
+    String? dbName,
+    bool useGRPC = false,
+  }) async {
     dbName ??= defaultDBName;
     final response = await client.openDB(
       OpenDBRequest(
@@ -66,8 +66,10 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
       ),
     );
     SQLiteWrapperBase.databases.add(
-        db: SqliteServiceClientWrapper(client: client, dbName: dbName),
-        name: dbName);
+        db: SqliteServiceClientWrapper(
+            client: client, dbName: dbName, wrapper: this),
+        name: dbName,
+        useGRPC: useGRPC);
     // Execute the onCreate method if is set
     if (response.created && onCreate != null) {
       await onCreate();

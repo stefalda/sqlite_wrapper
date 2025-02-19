@@ -2,11 +2,14 @@ import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
 abstract class SqliteWrapperInterface {
   /// Open the Database and returns true if the Database has been created
-  Future<DatabaseInfo> openDB(String path,
-      {int version = 0,
-      OnCreate? onCreate,
-      OnUpgrade? onUpgrade,
-      String? dbName});
+  Future<DatabaseInfo> openDB(
+    String path, {
+    int version = 0,
+    OnCreate? onCreate,
+    OnUpgrade? onUpgrade,
+    String? dbName,
+    bool useGRPC = false,
+  });
 
   /// Close the Database
   void closeDB({String? dbName});

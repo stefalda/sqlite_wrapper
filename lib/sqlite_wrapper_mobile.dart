@@ -13,13 +13,16 @@ import 'sqlite_wrapper_base.dart';
 SQLiteWrapperBase getInstance() => SQLiteWrapperCore();
 
 class SQLiteWrapperCore extends SQLiteWrapperBase {
-  /// Open the Database and returns true if the Database has been created
+  /// Open the Database and returns the databaseInfo if the Database has been created
   @override
-  Future<DatabaseInfo> openDB(String path,
-      {int version = 0,
-      OnCreate? onCreate,
-      OnUpgrade? onUpgrade,
-      String? dbName}) async {
+  Future<DatabaseInfo> openDB(
+    String path, {
+    int version = 0,
+    OnCreate? onCreate,
+    OnUpgrade? onUpgrade,
+    String? dbName,
+    bool useGRPC = false,
+  }) async {
     dbName ??= defaultDBName;
     bool missingDB = true;
     if (path == inMemoryDatabasePath) {

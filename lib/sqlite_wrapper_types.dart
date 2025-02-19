@@ -52,9 +52,13 @@ class StreamInfo {
 
 class Databases {
   final _dbs = {};
+  final Set<String> _grcpsDBs = {};
 
-  void add({required String name, required db}) {
+  void add({required String name, required db, bool useGRPC = false}) {
     _dbs[name] = db;
+    if (useGRPC) {
+      _grcpsDBs.add(name);
+    }
   }
 
   dynamic get(String name) {
@@ -63,6 +67,7 @@ class Databases {
 
   void remove(String name) {
     _dbs.remove(name);
+    _grcpsDBs.remove(name);
   }
 
   bool get isNotEmpty {
@@ -72,5 +77,9 @@ class Databases {
   /// Return all db names
   List<String> getNames() {
     return _dbs.keys.map((item) => item.toString()).toList();
+  }
+
+  useGRPC(String name) {
+    return _grcpsDBs.contains(name);
   }
 }

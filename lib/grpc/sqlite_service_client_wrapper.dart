@@ -9,12 +9,22 @@ import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 class SqliteServiceClientWrapper {
   final SqliteWrapperServiceClient client;
   final String dbName;
+  final SQLiteWrapperBase wrapper;
 
-  SqliteServiceClientWrapper({required this.client, required this.dbName});
+  SqliteServiceClientWrapper(
+      {required this.client, required this.dbName, required this.wrapper});
 
   Future<dynamic> select(String sql, List<Object?> params) async {
     final response = await client.select(SqlQueryRequest(
         sql: sql, params: convertParamsToAny(params), dbName: dbName));
     return jsonDecode(response.result);
+  }
+
+  Future<dynamic> execute(String sql,
+      {List<String>? tables,
+      List<Object?> params = const [],
+      String? dbName}) async {
+    return await wrapper.execute(sql,
+        tables: tables, params: params, dbName: dbName);
   }
 }

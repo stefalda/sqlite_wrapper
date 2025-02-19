@@ -93,3 +93,7 @@
 ## 0.3.1-beta
 
 - renamed grpc class and file
+
+## 0.3.2-beta
+
+- moved useRPC in openDB

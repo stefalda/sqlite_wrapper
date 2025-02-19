@@ -14,8 +14,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   static final Databases databases = Databases();
 
   bool debugMode = false;
-  // Set the use or remote procedure call
-  bool useGRPC = false;
 
   bool isWeb() {
     return isRunningOnWeb();
@@ -23,11 +21,14 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
 
   /// Open the Database and returns true if the Database has been created
   @override
-  Future<DatabaseInfo> openDB(String path,
-      {int version = 0,
-      OnCreate? onCreate,
-      OnUpgrade? onUpgrade,
-      String? dbName});
+  Future<DatabaseInfo> openDB(
+    String path, {
+    int version = 0,
+    OnCreate? onCreate,
+    OnUpgrade? onUpgrade,
+    String? dbName,
+    bool useGRPC = false,
+  });
 
   /// Close the Database
   @override
@@ -107,7 +108,7 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
       bool singleResult = false,
       String? dbName}) async {
     late List<dynamic> results;
-    if (isWeb() && !useGRPC) {
+    if (isWeb() && !databases.useGRPC(dbName!)) {
       results = await _getDB(dbName).rawQuery(sql, params);
     } else {
       assert(_getDB(dbName) != null);
@@ -115,7 +116,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
       final res = _getDB(dbName).select(sql, params);
       results = res is Future ? await res : res;
     }
-    //final List<dynamic> results = await _getDB(dbName).rawQuery(sql, params);
     if (singleResult) {
       if (results.isEmpty) {
         return null;
