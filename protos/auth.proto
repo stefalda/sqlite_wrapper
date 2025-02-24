@@ -31,4 +31,5 @@ message ValidateTokenRequest {
 message ValidateTokenResponse {
   bool valid = 1;
   string email = 2;
+  string userid = 3;
 }

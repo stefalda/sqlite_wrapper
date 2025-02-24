@@ -74,11 +74,12 @@ const ValidateTokenResponse$json = {
   '2': [
     {'1': 'valid', '3': 1, '4': 1, '5': 8, '10': 'valid'},
     {'1': 'email', '3': 2, '4': 1, '5': 9, '10': 'email'},
+    {'1': 'userid', '3': 3, '4': 1, '5': 9, '10': 'userid'},
   ],
 };
 
 /// Descriptor for `ValidateTokenResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List validateTokenResponseDescriptor = $convert.base64Decode(
     'ChVWYWxpZGF0ZVRva2VuUmVzcG9uc2USFAoFdmFsaWQYASABKAhSBXZhbGlkEhQKBWVtYWlsGA'
-    'IgASgJUgVlbWFpbA==');
+    'IgASgJUgVlbWFpbBIWCgZ1c2VyaWQYAyABKAlSBnVzZXJpZA==');
 

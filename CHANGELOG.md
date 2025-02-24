@@ -97,3 +97,7 @@
 ## 0.3.2-beta
 
 - moved useRPC in openDB
+
+## 0.3.3-beta
+
+- added userid in ValidateTokenResponse response

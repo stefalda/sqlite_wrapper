@@ -273,6 +273,7 @@ class ValidateTokenResponse extends $pb.GeneratedMessage {
   factory ValidateTokenResponse({
     $core.bool? valid,
     $core.String? email,
+    $core.String? userid,
   }) {
     final $result = create();
     if (valid != null) {
@@ -280,6 +281,9 @@ class ValidateTokenResponse extends $pb.GeneratedMessage {
     }
     if (email != null) {
       $result.email = email;
+    }
+    if (userid != null) {
+      $result.userid = userid;
     }
     return $result;
   }
@@ -290,6 +294,7 @@ class ValidateTokenResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ValidateTokenResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'auth'), createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'valid')
     ..aOS(2, _omitFieldNames ? '' : 'email')
+    ..aOS(3, _omitFieldNames ? '' : 'userid')
     ..hasRequiredFields = false
   ;
 
@@ -331,6 +336,15 @@ class ValidateTokenResponse extends $pb.GeneratedMessage {
   $core.bool hasEmail() => $_has(1);
   @$pb.TagNumber(2)
   void clearEmail() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get userid => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set userid($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasUserid() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUserid() => clearField(3);
 }
 
 
