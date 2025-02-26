@@ -101,3 +101,7 @@
 ## 0.3.3-beta
 
 - added userid in ValidateTokenResponse response
+
+## 0.3.4-beta
+
+- fixed problem with vacuum not executed

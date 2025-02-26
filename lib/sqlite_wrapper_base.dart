@@ -69,7 +69,9 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
       // ignore: avoid_print
       print("execute: $sql - params: $params - tables: $tables");
     }
-    final String sqlCommand = sql.substring(0, sql.indexOf(" ")).toUpperCase();
+    final String sqlCommand = sql.contains(" ")
+        ? sql.substring(0, sql.indexOf(" ")).toUpperCase()
+        : sql;
     final db = _getDB(dbName);
     fixBoolParams(params);
     try {
