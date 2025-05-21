@@ -105,3 +105,7 @@
 ## 0.3.4-beta
 
 - fixed problem with vacuum not executed
+
+## 0.3.5-beta
+
+- fixed null error when dbName is missing and check if should useRPC

@@ -110,7 +110,9 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
       bool singleResult = false,
       String? dbName}) async {
     late List<dynamic> results;
-    if (isWeb() && !databases.useGRPC(dbName!)) {
+    dbName ??= defaultDBName;
+
+    if (isWeb() && !databases.useGRPC(dbName)) {
       results = await _getDB(dbName).rawQuery(sql, params);
     } else {
       assert(_getDB(dbName) != null);
