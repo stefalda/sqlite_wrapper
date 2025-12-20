@@ -1,13 +1,15 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: sqlite_wrapper_rpc.proto
-//
-// @dart = 2.12
+// Generated from sqlite_wrapper_rpc.proto.
+
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: unused_import
 
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
@@ -53,8 +55,8 @@ const CloseDBRequest$json = {
 };
 
 /// Descriptor for `CloseDBRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List closeDBRequestDescriptor = $convert.base64Decode(
-    'Cg5DbG9zZURCUmVxdWVzdBIWCgZkYk5hbWUYASABKAlSBmRiTmFtZQ==');
+final $typed_data.Uint8List closeDBRequestDescriptor = $convert
+    .base64Decode('Cg5DbG9zZURCUmVxdWVzdBIWCgZkYk5hbWUYASABKAlSBmRiTmFtZQ==');
 
 @$core.Deprecated('Use closeDBResponseDescriptor instead')
 const CloseDBResponse$json = {
@@ -73,7 +75,14 @@ const SqlQueryRequest$json = {
   '1': 'SqlQueryRequest',
   '2': [
     {'1': 'sql', '3': 1, '4': 1, '5': 9, '10': 'sql'},
-    {'1': 'params', '3': 2, '4': 3, '5': 11, '6': '.google.protobuf.Any', '10': 'params'},
+    {
+      '1': 'params',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.protobuf.Any',
+      '10': 'params'
+    },
     {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
   ],
 };
@@ -92,8 +101,8 @@ const SqlQueryResponse$json = {
 };
 
 /// Descriptor for `SqlQueryResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List sqlQueryResponseDescriptor = $convert.base64Decode(
-    'ChBTcWxRdWVyeVJlc3BvbnNlEhYKBnJlc3VsdBgBIAEoCVIGcmVzdWx0');
+final $typed_data.Uint8List sqlQueryResponseDescriptor = $convert
+    .base64Decode('ChBTcWxRdWVyeVJlc3BvbnNlEhYKBnJlc3VsdBgBIAEoCVIGcmVzdWx0');
 
 @$core.Deprecated('Use getVersionRequestDescriptor instead')
 const GetVersionRequest$json = {
@@ -116,8 +125,9 @@ const GetVersionResponse$json = {
 };
 
 /// Descriptor for `GetVersionResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getVersionResponseDescriptor = $convert.base64Decode(
-    'ChJHZXRWZXJzaW9uUmVzcG9uc2USGAoHdmVyc2lvbhgBIAEoBVIHdmVyc2lvbg==');
+final $typed_data.Uint8List getVersionResponseDescriptor =
+    $convert.base64Decode(
+        'ChJHZXRWZXJzaW9uUmVzcG9uc2USGAoHdmVyc2lvbhgBIAEoBVIHdmVyc2lvbg==');
 
 @$core.Deprecated('Use setVersionRequestDescriptor instead')
 const SetVersionRequest$json = {
@@ -142,8 +152,9 @@ const SetVersionResponse$json = {
 };
 
 /// Descriptor for `SetVersionResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List setVersionResponseDescriptor = $convert.base64Decode(
-    'ChJTZXRWZXJzaW9uUmVzcG9uc2USGAoHc3VjY2VzcxgBIAEoCFIHc3VjY2Vzcw==');
+final $typed_data.Uint8List setVersionResponseDescriptor =
+    $convert.base64Decode(
+        'ChJTZXRWZXJzaW9uUmVzcG9uc2USGAoHc3VjY2VzcxgBIAEoCFIHc3VjY2Vzcw==');
 
 @$core.Deprecated('Use echoRequestDescriptor instead')
 const EchoRequest$json = {
@@ -154,8 +165,8 @@ const EchoRequest$json = {
 };
 
 /// Descriptor for `EchoRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List echoRequestDescriptor = $convert.base64Decode(
-    'CgtFY2hvUmVxdWVzdBIYCgdtZXNzYWdlGAEgASgJUgdtZXNzYWdl');
+final $typed_data.Uint8List echoRequestDescriptor = $convert
+    .base64Decode('CgtFY2hvUmVxdWVzdBIYCgdtZXNzYWdlGAEgASgJUgdtZXNzYWdl');
 
 @$core.Deprecated('Use echoResponseDescriptor instead')
 const EchoResponse$json = {
@@ -166,6 +177,5 @@ const EchoResponse$json = {
 };
 
 /// Descriptor for `EchoResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List echoResponseDescriptor = $convert.base64Decode(
-    'CgxFY2hvUmVzcG9uc2USGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZQ==');
-
+final $typed_data.Uint8List echoResponseDescriptor = $convert
+    .base64Decode('CgxFY2hvUmVzcG9uc2USGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZQ==');

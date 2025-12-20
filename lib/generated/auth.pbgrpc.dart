@@ -1,13 +1,14 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: auth.proto
-//
-// @dart = 2.12
+// Generated from auth.proto.
+
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
 import 'dart:async' as $async;
 import 'dart:core' as $core;
@@ -15,42 +16,59 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'auth.pb.dart' as $1;
+import 'auth.pb.dart' as $0;
 
 export 'auth.pb.dart';
 
 @$pb.GrpcServiceName('auth.AuthService')
 class AuthServiceClient extends $grpc.Client {
-  static final _$register = $grpc.ClientMethod<$1.RegisterRequest, $1.AuthResponse>(
-      '/auth.AuthService/Register',
-      ($1.RegisterRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.AuthResponse.fromBuffer(value));
-  static final _$login = $grpc.ClientMethod<$1.LoginRequest, $1.AuthResponse>(
-      '/auth.AuthService/Login',
-      ($1.LoginRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.AuthResponse.fromBuffer(value));
-  static final _$validateToken = $grpc.ClientMethod<$1.ValidateTokenRequest, $1.ValidateTokenResponse>(
-      '/auth.AuthService/ValidateToken',
-      ($1.ValidateTokenRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.ValidateTokenResponse.fromBuffer(value));
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
 
-  AuthServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions? options,
-      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
-      : super(channel, options: options,
-        interceptors: interceptors);
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
 
-  $grpc.ResponseFuture<$1.AuthResponse> register($1.RegisterRequest request, {$grpc.CallOptions? options}) {
+  AuthServiceClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.AuthResponse> register(
+    $0.RegisterRequest request, {
+    $grpc.CallOptions? options,
+  }) {
     return $createUnaryCall(_$register, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.AuthResponse> login($1.LoginRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.AuthResponse> login(
+    $0.LoginRequest request, {
+    $grpc.CallOptions? options,
+  }) {
     return $createUnaryCall(_$login, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ValidateTokenResponse> validateToken($1.ValidateTokenRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.ValidateTokenResponse> validateToken(
+    $0.ValidateTokenRequest request, {
+    $grpc.CallOptions? options,
+  }) {
     return $createUnaryCall(_$validateToken, request, options: options);
   }
+
+  // method descriptors
+
+  static final _$register =
+      $grpc.ClientMethod<$0.RegisterRequest, $0.AuthResponse>(
+          '/auth.AuthService/Register',
+          ($0.RegisterRequest value) => value.writeToBuffer(),
+          $0.AuthResponse.fromBuffer);
+  static final _$login = $grpc.ClientMethod<$0.LoginRequest, $0.AuthResponse>(
+      '/auth.AuthService/Login',
+      ($0.LoginRequest value) => value.writeToBuffer(),
+      $0.AuthResponse.fromBuffer);
+  static final _$validateToken =
+      $grpc.ClientMethod<$0.ValidateTokenRequest, $0.ValidateTokenResponse>(
+          '/auth.AuthService/ValidateToken',
+          ($0.ValidateTokenRequest value) => value.writeToBuffer(),
+          $0.ValidateTokenResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('auth.AuthService')
@@ -58,42 +76,53 @@ abstract class AuthServiceBase extends $grpc.Service {
   $core.String get $name => 'auth.AuthService';
 
   AuthServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.RegisterRequest, $1.AuthResponse>(
+    $addMethod($grpc.ServiceMethod<$0.RegisterRequest, $0.AuthResponse>(
         'Register',
         register_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.RegisterRequest.fromBuffer(value),
-        ($1.AuthResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.LoginRequest, $1.AuthResponse>(
+        ($core.List<$core.int> value) => $0.RegisterRequest.fromBuffer(value),
+        ($0.AuthResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.LoginRequest, $0.AuthResponse>(
         'Login',
         login_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.LoginRequest.fromBuffer(value),
-        ($1.AuthResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ValidateTokenRequest, $1.ValidateTokenResponse>(
-        'ValidateToken',
-        validateToken_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.ValidateTokenRequest.fromBuffer(value),
-        ($1.ValidateTokenResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.LoginRequest.fromBuffer(value),
+        ($0.AuthResponse value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ValidateTokenRequest, $0.ValidateTokenResponse>(
+            'ValidateToken',
+            validateToken_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ValidateTokenRequest.fromBuffer(value),
+            ($0.ValidateTokenResponse value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.AuthResponse> register_Pre($grpc.ServiceCall call, $async.Future<$1.RegisterRequest> request) async {
-    return register(call, await request);
+  $async.Future<$0.AuthResponse> register_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RegisterRequest> $request) async {
+    return register($call, await $request);
   }
 
-  $async.Future<$1.AuthResponse> login_Pre($grpc.ServiceCall call, $async.Future<$1.LoginRequest> request) async {
-    return login(call, await request);
+  $async.Future<$0.AuthResponse> register(
+      $grpc.ServiceCall call, $0.RegisterRequest request);
+
+  $async.Future<$0.AuthResponse> login_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.LoginRequest> $request) async {
+    return login($call, await $request);
   }
 
-  $async.Future<$1.ValidateTokenResponse> validateToken_Pre($grpc.ServiceCall call, $async.Future<$1.ValidateTokenRequest> request) async {
-    return validateToken(call, await request);
+  $async.Future<$0.AuthResponse> login(
+      $grpc.ServiceCall call, $0.LoginRequest request);
+
+  $async.Future<$0.ValidateTokenResponse> validateToken_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ValidateTokenRequest> $request) async {
+    return validateToken($call, await $request);
   }
 
-  $async.Future<$1.AuthResponse> register($grpc.ServiceCall call, $1.RegisterRequest request);
-  $async.Future<$1.AuthResponse> login($grpc.ServiceCall call, $1.LoginRequest request);
-  $async.Future<$1.ValidateTokenResponse> validateToken($grpc.ServiceCall call, $1.ValidateTokenRequest request);
+  $async.Future<$0.ValidateTokenResponse> validateToken(
+      $grpc.ServiceCall call, $0.ValidateTokenRequest request);
 }

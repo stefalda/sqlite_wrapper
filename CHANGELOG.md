@@ -113,3 +113,7 @@
 ## 0.3.6-beta
 
 - Updated libraries version
+
+## 0.3.7-beta
+
+- Refreshed GRPC generated code

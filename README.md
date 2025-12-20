@@ -362,6 +362,12 @@ await sqlWrapper.update(user.toMap(), "users", keys: ["id"]);
 res = await sqlWrapper.delete(user.toMap(), "users", keys: ["id"]);
 ```
 
+## Refresh ther RPC Implementation
+Run the command:
+````bash
+./protos/refresh.sh 
+```
+
 ## Additional information
 
 I've written this library firstly for my projects, but I think that it can be

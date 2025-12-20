@@ -1,9 +1,9 @@
 import 'package:fixnum/fixnum.dart';
-import 'package:sqlite_wrapper/generated/google/protobuf/any.pb.dart';
 import 'package:sqlite_wrapper/generated/google/protobuf/wrappers.pb.dart';
+import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart';
 
 /// Convert params to Any type
-List<Any> convertParamsToAny(List params) {
+Iterable<Any>? convertParamsToAny(List<Object?> params) {
   return params.map((value) {
     if (value is int) {
       return Any.pack(Int64Value()..value = Int64(value));
@@ -17,5 +17,5 @@ List<Any> convertParamsToAny(List params) {
       return Any();
     }
     throw ArgumentError('Unsupported type: ${value.runtimeType}');
-  }).toList();
+  }).toList() as Iterable<Any>;
 }
