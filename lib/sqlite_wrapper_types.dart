@@ -79,7 +79,7 @@ class Databases {
     return _dbs.keys.map((item) => item.toString()).toList();
   }
 
-  useGRPC(String name) {
+  bool useGRPC(String name) {
     return _grcpsDBs.contains(name);
   }
 }

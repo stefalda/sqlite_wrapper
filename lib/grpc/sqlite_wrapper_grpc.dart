@@ -23,7 +23,7 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
   }
 
   /// Init the manager
-  initServiceManager(
+  void initServiceManager(
       {String host = 'localhost', int port = 50051, bool secure = false}) {
     _serviceManager =
         GrpcServiceManager(host: host, port: port, secure: secure);

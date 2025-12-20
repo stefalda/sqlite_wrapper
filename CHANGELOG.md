@@ -109,3 +109,7 @@
 ## 0.3.5-beta
 
 - fixed null error when dbName is missing and check if should useRPC
+
+## 0.3.6-beta
+
+- Updated libraries version

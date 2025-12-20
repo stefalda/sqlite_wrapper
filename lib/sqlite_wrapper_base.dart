@@ -49,7 +49,7 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   }
 
   /// Convert boolean in integer (true = 1 - false = 0)
-  fixBoolParams(List<Object?> params) {
+  void fixBoolParams(List<Object?> params) {
     for (int i = 0; i < params.length; i++) {
       if (params[i].runtimeType == bool) {
         params[i] = params[i] == true ? 1 : 0;

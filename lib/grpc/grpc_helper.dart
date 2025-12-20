@@ -3,7 +3,7 @@ import 'package:sqlite_wrapper/generated/google/protobuf/any.pb.dart';
 import 'package:sqlite_wrapper/generated/google/protobuf/wrappers.pb.dart';
 
 /// Convert params to Any type
-convertParamsToAny(List params) {
+List<Any> convertParamsToAny(List params) {
   return params.map((value) {
     if (value is int) {
       return Any.pack(Int64Value()..value = Int64(value));

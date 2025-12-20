@@ -10,7 +10,7 @@ import 'user.dart';
 
 const String inMemoryDatabasePath = ':memory:';
 
-_createTableAndInsertSampleValues({createOnly = false}) async {
+Future<void> _createTableAndInsertSampleValues({createOnly = false}) async {
   await SQLiteWrapper().execute("""
       CREATE TABLE IF NOT EXISTS "users" (
           "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
