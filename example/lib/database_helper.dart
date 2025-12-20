@@ -12,7 +12,7 @@ class DatabaseHelper {
 
   DatabaseHelper._internal();
 
-  Future<void> initDB({inMemory = false}) async {
+  Future<void> initDB({bool inMemory = false}) async {
     String dbPath = inMemoryDatabasePath;
     if (kIsWeb) {
       dbPath = 'todoDatabase';

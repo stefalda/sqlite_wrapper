@@ -26,7 +26,7 @@ class AuthClient {
   late AuthServiceClient _stub;
   //String? _token;
 
-  AuthClient(channel) {
+  AuthClient(dynamic channel) {
     _stub = AuthServiceClient(channel);
   }
 
