@@ -364,7 +364,8 @@ res = await sqlWrapper.delete(user.toMap(), "users", keys: ["id"]);
 
 ## Refresh ther RPC Implementation
 Run the command:
-````bash
+
+```bash
 ./protos/refresh.sh 
 ```
 
