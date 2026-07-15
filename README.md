@@ -56,7 +56,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  sqlite_wrapper: ^0.3.7
+  sqlite_wrapper: ^0.4.0
   inject_x: ^0.0.6
 ```
 
