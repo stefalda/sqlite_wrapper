@@ -142,19 +142,115 @@ final db = SQLiteWrapperCore();
 await db.openDB(inMemoryDatabasePath);
 ```
 
-## WEB and gRPC
+## gRPC
 
-The Web version default to the WASM implementation of SQL but it could be slow
-when using big database or synching data with the
+The Web version defaults to the WASM implementation of SQLite, which can be slow
+with large databases or when syncing data with the
 [sync_client](https://github.com/stefalda/sync_client) package.
 
-That's why I've added an [gRPC](https://grpc.io/) implementation that treats a
-remote sqlite db as a local one.
+That's why the library includes a [gRPC](https://grpc.io/) implementation that
+lets you use a remote SQLite database as if it were local. All calls are
+forwarded to a
+[sqlite_wrapper_server](https://github.com/stefalda/sqlite_wrapper_server)
+instance via gRPC.
 
-You can find a sample server implementation in this repository
-([sqlite_wrapper_server](https://github.com/stefalda/sqlite_wrapper_server))
-completed with a client example. To enable the use of the gRPC implementation
-you have to set the variable **useGRPC** to true.
+### Setup
+
+Create a `SqliteWrapperGRPC` instance instead of `SQLiteWrapperCore`:
+
+```dart
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+final db = SqliteWrapperGRPC.withHostAndPort(
+  host: '192.168.1.100',
+  port: 50051,
+  secure: false, // use TLS in production
+);
+```
+
+Register it with `inject_x`:
+
+```dart
+import 'package:inject_x/inject_x.dart';
+
+void main() {
+  InjectX.add<SQLiteWrapperBase>(
+    SqliteWrapperGRPC.withHostAndPort(
+      host: '192.168.1.100',
+      port: 50051,
+    ),
+  );
+}
+```
+
+### Authentication (optional)
+
+If the server requires authentication, register or log in and set the token:
+
+```dart
+// Register a new user
+final authResponse = await db.authClient.register('user@example.com', 'password');
+
+// Or log in
+final authResponse = await db.authClient.login('user@example.com', 'password');
+
+// Set the token — all subsequent gRPC calls include it
+db.token = authResponse.token;
+```
+
+### Complete example
+
+```dart
+import 'package:inject_x/inject_x.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+void main() async {
+  // 1. Create the gRPC client
+  final db = SqliteWrapperGRPC.withHostAndPort(
+    host: '192.168.1.100',
+    port: 50051,
+  );
+
+  // 2. Authenticate (if required)
+  final response = await db.authClient.login('admin', 'secret');
+  db.token = response.token;
+
+  // 3. Open a remote database
+  await db.openDB('my_remote_db');
+
+  // 4. Use it like a local database
+  await db.execute('''
+    CREATE TABLE IF NOT EXISTS items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL
+    )
+  ''');
+
+  final id = await db.insert({'name': 'hello'}, 'items');
+  final items = await db.query('SELECT * FROM items');
+}
+```
+
+### watch() with gRPC
+
+`watch()` works via gRPC but **only in polling mode** — it re-queries the remote
+database after every `execute()` call on the same instance. Changes made by
+other clients are not detected. Server-side streaming (`rpc Watch`) is not yet
+implemented.
+
+### Regenerate protobuf stubs
+
+After changing the `.proto` files, run:
+
+```bash
+./protos/refresh.sh
+```
+
+### Server
+
+The server implementation is available at
+[sqlite_wrapper_server](https://github.com/stefalda/sqlite_wrapper_server) with
+a client example.
 
 ## Usage
 
@@ -476,13 +572,6 @@ await db.transaction(() async {
   await db.execute("UPDATE accounts SET balance = balance - 100 WHERE name = 'Alice'");
   await db.execute("UPDATE accounts SET balance = balance + 100 WHERE name = 'Bob'");
 });
-```
-
-## Refresh ther RPC Implementation
-Run the command:
-
-```bash
-./protos/refresh.sh 
 ```
 
 ## Additional information

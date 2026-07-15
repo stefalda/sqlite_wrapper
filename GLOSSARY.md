@@ -31,3 +31,16 @@ The typedef `dynamic Function(Map<String, dynamic>)` used by `query()` and `watc
 
 **OnCreate** / **OnUpgrade**:
 Callbacks passed to `openDB()`. `OnCreate` fires when a database is opened for the first time. `OnUpgrade(fromVersion, toVersion)` fires when `version` changes, used for schema migrations.
+
+**SqliteWrapperGRPC**:
+The gRPC subclass of `SQLiteWrapperBase`. Created via `SqliteWrapperGRPC.withHostAndPort(host, port, secure)`. Delegates all database operations to a remote `sqlite_wrapper_server` via gRPC. Exposes `authClient` for authentication.
+_Avoid_: using it for local databases
+
+**GrpcServiceManager**:
+Manages the gRPC `ClientChannel` and lazily initializes `AuthClient` and `SqliteWrapperServiceClient`. Created internally by `SqliteWrapperGRPC`.
+
+**AuthClient**:
+Wraps the generated `AuthServiceClient` gRPC stub. Provides `register(email, password)`, `login(email, password)`, and `validateToken(token)` methods. Accessible via `SqliteWrapperGRPC.authClient`.
+
+**SqliteServiceClientWrapper**:
+Implements `DatabaseCore` by forwarding `execute()` and `select()` calls to the gRPC `SqliteWrapperServiceClient`. Created internally when `SqliteWrapperGRPC.openDB()` is called.
