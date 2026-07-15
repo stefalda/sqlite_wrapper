@@ -1,5 +1,3 @@
-library sqlite_wrapper;
-
 import 'sqlite_wrapper_stub.dart'
     if (dart.library.io) 'sqlite_wrapper_mobile.dart'
     if (dart.library.js_interop) 'sqlite_wrapper_web.dart';

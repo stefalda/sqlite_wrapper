@@ -82,6 +82,7 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
   @override
   Future<void> closeDB({String? dbName}) async {
     await client.closeDB(CloseDBRequest(dbName: dbName ?? defaultDBName));
+    await super.closeDB(dbName: dbName);
   }
 
   @override
