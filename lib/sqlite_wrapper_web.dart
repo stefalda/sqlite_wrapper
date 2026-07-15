@@ -1,5 +1,3 @@
-library sqlite_wrapper;
-
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
@@ -11,8 +9,31 @@ import 'sqlite_wrapper_base.dart';
 
 SQLiteWrapperBase getInstance() => SQLiteWrapperCore();
 
+/// Sqflite web database adapter implementing [DatabaseCore].
+/// Delegates to sqflite_common_ffi_web's async Database API.
+class SqfliteWebDatabase implements DatabaseCore {
+  final dynamic _db;
+
+  SqfliteWebDatabase(this._db);
+
+  @override
+  Future<void> execute(String sql, List<Object?> params) async {
+    await _db.execute(sql, params);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> select(
+      String sql, List<Object?> params) async {
+    final result = await _db.rawQuery(sql, params);
+    return result.cast<Map<String, dynamic>>();
+  }
+
+  @override
+  void dispose() => _db.close();
+}
+
 class SQLiteWrapperCore extends SQLiteWrapperBase {
-  /// Open the Database and returns true if the Database has been created
+  /// Open the Database and returns [DatabaseInfo] with creation status and version.
   @override
   Future<DatabaseInfo> openDB(
     String path, {
@@ -24,24 +45,16 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
   }) async {
     dbName ??= defaultDBName;
     bool missingDB = true;
-    if (path == inMemoryDatabasePath) {
-      //SQLiteWrapperBase.databases.add(db: sqlite3.openInMemory(), name: dbName);
-      throw UnimplementedError();
-    } else {
-      final factory = databaseFactoryFfiWeb;
-      final db = await factory.openDatabase(path);
-      SQLiteWrapperBase.databases.add(db: db, name: dbName);
-    }
-    // Execute the onCreate method if is set
+    final factory = databaseFactoryFfiWeb;
+    final db = await factory.openDatabase(path);
+    databases.add(db: SqfliteWebDatabase(db), name: dbName);
     if (missingDB && onCreate != null) {
       await onCreate();
     }
-    // Execute the onUpdate method if the version is set
     int currentVersion = await getVersion(dbName: dbName);
     if (onUpgrade != null && version != currentVersion) {
       await onUpgrade(currentVersion, version);
     }
-    // Set the version
     if (version != currentVersion) {
       await setVersion(version, dbName: dbName);
     }

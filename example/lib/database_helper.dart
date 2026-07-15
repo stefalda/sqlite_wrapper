@@ -1,16 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:inject_x/inject_x.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:sqlite_wrapper_sample/models.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _singleton = DatabaseHelper._internal();
-  factory DatabaseHelper() {
-    return _singleton;
-  }
-
-  DatabaseHelper._internal();
+  SQLiteWrapperBase get _db => inject<SQLiteWrapperBase>();
 
   Future<void> initDB({bool inMemory = false}) async {
     String dbPath = inMemoryDatabasePath;
@@ -26,26 +22,23 @@ class DatabaseHelper {
       }
     }
     final DatabaseInfo dbInfo =
-        await SQLiteWrapper().openDB(dbPath, onCreate: () async {
+        await _db.openDB(dbPath, onCreate: () async {
       const String sql = """CREATE TABLE IF NOT EXISTS "todos" (
             "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
             "title" varchar(255) NOT NULL,
             "done" int default 0
           );""";
-      await SQLiteWrapper().execute(sql);
+      await _db.execute(sql);
     });
-    // Print where the database is stored
     debugPrint("Database path: ${dbInfo.path}");
   }
 
-  /// Return a list of all todos
   Stream getTodos() {
-    return SQLiteWrapper()
-        .watch("SELECT * FROM todos", tables: ["todos"], fromMap: Todo.fromMap);
+    return _db.watch("SELECT * FROM todos", tables: ["todos"], fromMap: Todo.fromMap);
   }
 
   Stream<Map<String, dynamic>> getTodoCount() {
-    return Stream.castFrom(SQLiteWrapper().watch("""
+    return Stream.castFrom(_db.watch("""
         SELECT SUM(done) as done, sum(todo) as todo FROM (
         SELECT COUNT(*) as done,  0 as todo FROM todos where done = 1
         UNION
@@ -54,17 +47,16 @@ class DatabaseHelper {
       """, tables: ["todos"], singleResult: true));
   }
 
-  /// Add the new to-do Item
-  void addNewTodo(String title) async {
-    await SQLiteWrapper().insert(Todo(title: title).toMap(), "todos");
+  Future<void> addNewTodo(String title) async {
+    await _db.insert(Todo(title: title).toMap(), "todos");
   }
 
-  void toggleDone(Todo todo) async {
+  Future<void> toggleDone(Todo todo) async {
     todo.done = !todo.done;
-    await SQLiteWrapper().update(todo.toMap(), "todos", keys: ["id"]);
+    await _db.update(todo.toMap(), "todos", keys: ["id"]);
   }
 
-  void deleteTodo(Todo todo) async {
-    await SQLiteWrapper().delete(todo.toMap(), "todos", keys: ["id"]);
+  Future<void> deleteTodo(Todo todo) async {
+    await _db.delete(todo.toMap(), "todos", keys: ["id"]);
   }
 }

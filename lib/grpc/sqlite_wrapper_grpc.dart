@@ -1,5 +1,3 @@
-library sqlite_wrapper;
-
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
@@ -11,18 +9,15 @@ import 'package:sqlite_wrapper/grpc/sqlite_service_client_wrapper.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
 class SqliteWrapperGRPC extends SQLiteWrapperBase {
-  // Client should be passed from the Manager just after instantiating the
   late GrpcServiceManager _serviceManager;
   String _token = "";
 
-  // Init the class passing the client
   SqliteWrapperGRPC.withHostAndPort(
       {String host = 'localhost', int port = 50051, bool secure = false}) {
     _serviceManager =
         GrpcServiceManager(host: host, port: port, secure: secure);
   }
 
-  /// Init the manager
   void initServiceManager(
       {String host = 'localhost', int port = 50051, bool secure = false}) {
     _serviceManager =
@@ -31,11 +26,8 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
 
   SqliteWrapperGRPC();
 
-  /// Set the grpc token
   set token(String token) {
     _token = token;
-    //_token =
-    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0ZWZhbm8uZmFsZGFAZ21haWwuY29tIiwiaWF0IjoxNzM5MzE2MzMyfQ.6WpGX1JcMjc0cXVOAk87X2cPUwbddVbdD9h0BM-ON7A";
     _serviceManager.token = _token;
   }
 
@@ -43,7 +35,6 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
 
   AuthClient get authClient => _serviceManager.authClient;
 
-  /// Test echo method
   Future<String> echo(String message) async {
     final response = await client.echo(EchoRequest(message: message));
     return response.message;
@@ -65,21 +56,17 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
         dbName: dbName,
       ),
     );
-    SQLiteWrapperBase.databases.add(
-        db: SqliteServiceClientWrapper(
-            client: client, dbName: dbName, wrapper: this),
+    databases.add(
+        db: SqliteServiceClientWrapper(client: client, dbName: dbName),
         name: dbName,
         useGRPC: useGRPC);
-    // Execute the onCreate method if is set
     if (response.created && onCreate != null) {
       await onCreate();
     }
-    // Execute the onUpdate method if the version is set
     int currentVersion = await getVersion(dbName: dbName);
     if (onUpgrade != null && version != currentVersion) {
       await onUpgrade(currentVersion, version);
     }
-    // Set the version
     if (version != currentVersion) {
       await setVersion(version, dbName: dbName);
     }
@@ -93,13 +80,13 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
   }
 
   @override
-  void closeDB({String? dbName}) async {
+  Future<void> closeDB({String? dbName}) async {
     await client.closeDB(CloseDBRequest(dbName: dbName ?? defaultDBName));
   }
 
   @override
-  dynamic getDatabase({String? dbName}) {
-    throw UnimplementedError('This operation is not supported via gRPC');
+  DatabaseCore? getDatabase({String? dbName}) {
+    return databases.get(dbName ?? defaultDBName);
   }
 
   @override

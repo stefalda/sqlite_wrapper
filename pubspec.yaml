@@ -10,6 +10,7 @@ environment:
 dependencies:
   sqlite3: ^3.1.1
   sqflite_common_ffi_web: ^1.1.0
+  inject_x: ^0.0.6
   # Remote procedure call support
   grpc: ^5.1.0
   fixnum: ^1.1.1

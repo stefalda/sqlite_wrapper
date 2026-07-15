@@ -1,8 +1,6 @@
-//import 'package:flutter_test/flutter_test.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:test/test.dart';
 
@@ -34,7 +32,7 @@ void main() {
   });
 
   tearDown(() async {
-    SQLiteWrapper().closeDB();
+    await SQLiteWrapper().closeDB();
   });
 
   final sqlWrapper = SQLiteWrapper();
@@ -74,9 +72,7 @@ void main() {
 
   test('create a DB instance and check for version', () async {
     expect(await sqlWrapper.getVersion(), 0);
-    // Set version
     await sqlWrapper.setVersion(1);
-    // Check version
     expect(await sqlWrapper.getVersion(), 1);
   });
 
@@ -109,7 +105,6 @@ void main() {
 
     test('SELECT converting data to Model objects', () async {
       await _createTableAndInsertSampleValues();
-      // Now try to convert to a User object
       final User user = await sqlWrapper.query(
           "SELECT * FROM users WHERE name = ?",
           params: ["Paperino"],
@@ -117,7 +112,6 @@ void main() {
           singleResult: true);
       expect(user.id, 1);
 
-      // Find something not exisitng
       final User? missingUser = await sqlWrapper.query(
           "SELECT * FROM users WHERE name = ?",
           params: ["Topolino"],
@@ -125,7 +119,6 @@ void main() {
           singleResult: true);
       expect(missingUser, null);
 
-      // Return a list of users
       List<User> allUsers = List<User>.from(await sqlWrapper.query(
           "SELECT * from users order by name DESC",
           fromMap: User.fromMap));
@@ -135,19 +128,16 @@ void main() {
 
     test("Extract a single field from Table", () async {
       await _createTableAndInsertSampleValues();
-      // Return a list of ids
       List<int> ids =
           List<int>.from(await sqlWrapper.query("SELECT id from users"));
       expect(ids.length, 2);
       expect(ids[0], 1);
-      // Select just the id of a Record
       final int? id = await sqlWrapper.query(
         "SELECT id FROM users WHERE name = ?",
         params: ["Paperino"],
         singleResult: true,
       );
       expect(id, 1);
-      // Create a count
       final int count = await sqlWrapper.query("SELECT COUNT(*) FROM users",
           singleResult: true);
       expect(count, 2);
@@ -163,7 +153,6 @@ void main() {
       user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",
           params: ["2"], singleResult: true, fromMap: User.fromMap);
       expect(user.name, "Topolino");
-      // Now go back by using simplified methods
       user.name = "Pippo";
       await sqlWrapper.update(user.toMap(), "users", keys: ["id"]);
       user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",
@@ -186,16 +175,13 @@ void main() {
       User user = User();
       user.name = "Paperone";
       user.id = await sqlWrapper.insert(user.toMap(), "users");
-      // Now save again to get an error
       user.name = "Archimede";
       expect(() async => await sqlWrapper.insert(user.toMap(), "users"),
           throwsException);
-      //Now save with an upsert
       await sqlWrapper.save(user.toMap(), "users", keys: ["id"]);
       user = await sqlWrapper.query("SELECT * FROM users WHERE id=?",
           params: [user.id], singleResult: true, fromMap: User.fromMap);
       expect(user.name, "Archimede");
-      // And perform a new INSERT
       User user2 = User();
       user2.name = "Paperone";
       user2.id = await sqlWrapper.save(user2.toMap(), "users", keys: ["id"]);
@@ -214,43 +200,25 @@ void main() {
     });
   });
 
-  // STREAM
   group("DB STREAM", () {
     test("WATCH A SIMPLE VALUE", () async {
       await _createTableAndInsertSampleValues();
       Stream stream = SQLiteWrapper().watch("SELECT COUNT(*) FROM users",
           singleResult: true, tables: ["users"]);
-      // Add a user
       User user = User();
       user.name = "Paperone";
       await sqlWrapper.insert(user.toMap(), "users");
-      // Delete a user
       await sqlWrapper
           .execute('DELETE FROM users WHERE id=1', tables: ['users']);
       expect(stream, emitsInOrder([2, 3, 2]));
-      //
-      /*
-      stream.listen((event) {
-        expect(event, 2);
-        // Add a user
-        User user = User();
-        user.name = "Paperone";
-        sqlWrapper.insert(user.toMap(), "users");
-
-        // First async event
-        expectAsync1((event) {
-          expect(event, 0);
-        });
-      });
-              */
     });
 
     test("Watch a list of resultsets", () async {
       await _createTableAndInsertSampleValues();
-      Stream<ResultSet> userStream = Stream.castFrom(SQLiteWrapper().watch(
+      Stream userStream = SQLiteWrapper().watch(
           "SELECT * FROM users",
           singleResult: false,
-          tables: ["users"]));
+          tables: ["users"]);
       expect(
           userStream,
           emitsInOrder([
@@ -284,14 +252,13 @@ void main() {
     await _createTableAndInsertSampleValues();
     Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
         singleResult: false, fromMap: User.fromMap, tables: ["users"]);
-    // Check if the stream has been added to the array
-    expect(SQLiteWrapperBase.streams.length, 1);
+    expect(sqlWrapper.streams.length, 1);
 
     final StreamSubscription sub = userStream.listen((event) {});
 
     await sub.cancel();
 
-    expect(SQLiteWrapperBase.streams.length, 0);
+    expect(sqlWrapper.streams.length, 0);
   });
 
   test("Create one or more subfolders in the base folder to store the DB",
@@ -302,7 +269,7 @@ void main() {
     await SQLiteWrapper().openDB(path, dbName: dbName);
     File f = File.fromUri(Uri(path: path));
     expect(f.existsSync(), true);
-    SQLiteWrapper().closeDB(dbName: dbName);
+    await SQLiteWrapper().closeDB(dbName: dbName);
     f = File.fromUri(Uri(path: "./59976040-a675-11ec-8ee4-1f922f66b681"));
     f.deleteSync(recursive: true);
   });
@@ -323,7 +290,6 @@ void main() {
       """, dbName: dbName);
     });
 
-    // PERFORM UPDATE
     await SQLiteWrapper().update(
         {"description": "Paperino modificato", "id": 1, "name": "Donald Duck"},
         "characters",
@@ -335,7 +301,6 @@ void main() {
         dbName: dbName);
     expect(description, "Paperino modificato");
 
-    // PERFORM DELETE
     await SQLiteWrapper().delete(
         {"description": "Paperino modificato", "id": 1, "name": "Donald Duck"},
         "characters",
@@ -347,5 +312,103 @@ void main() {
         dbName: dbName);
     expect(count, 0);
     expect(await SQLiteWrapper().getVersion(dbName: dbName), 1);
+  });
+
+  group('New API tests', () {
+    test('transaction commits and reflects data', () async {
+      await SQLiteWrapper().execute("""
+        CREATE TABLE IF NOT EXISTS tx_test (
+          "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+          "value" varchar(128) NOT NULL
+        )""");
+      await SQLiteWrapper().transaction(() async {
+        await SQLiteWrapper().execute(
+            "INSERT INTO tx_test (value) VALUES ('committed')");
+      });
+      final count = await SQLiteWrapper().query(
+          "SELECT COUNT(*) FROM tx_test WHERE value='committed'",
+          singleResult: true);
+      expect(count, 1);
+    });
+
+    test('transaction rollback on error does not persist data', () async {
+      await SQLiteWrapper().execute("""
+        CREATE TABLE IF NOT EXISTS tx_rollback (
+          "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+          "value" varchar(128) NOT NULL
+        )""");
+      await SQLiteWrapper().execute(
+          "INSERT INTO tx_rollback (value) VALUES ('initial')");
+      try {
+        await SQLiteWrapper().transaction(() async {
+          await SQLiteWrapper().execute(
+              "INSERT INTO tx_rollback (value) VALUES ('should_rollback')");
+          throw StateError('force rollback');
+        });
+      } catch (_) {}
+      final count = await SQLiteWrapper().query(
+          "SELECT COUNT(*) FROM tx_rollback WHERE value='should_rollback'",
+          singleResult: true);
+      expect(count, 0);
+      final total = await SQLiteWrapper().query(
+          "SELECT COUNT(*) FROM tx_rollback", singleResult: true);
+      expect(total, 1);
+    });
+
+    test('fixBoolParams does not mutate the input list', () async {
+      final original = <Object?>[true, false, 42, 'hello'];
+      final copy = List<Object?>.from(original);
+      sqlWrapper.fixBoolParams(copy);
+      expect(copy[0], true);
+      expect(copy[1], false);
+      expect(copy[2], 42);
+    });
+
+    test('fixBoolParams returns ints instead of bools', () async {
+      final result = sqlWrapper.fixBoolParams([true, false, 42, 'hello']);
+      expect(result[0], 1);
+      expect(result[1], 0);
+      expect(result[2], 42);
+      expect(result[3], 'hello');
+    });
+
+    test('column sanitization rejects invalid column names', () async {
+      expect(() => sanitizeColumnName("'),*"),
+          throwsA(isA<ArgumentError>()));
+      expect(() => sanitizeColumnName("1abc"),
+          throwsA(isA<ArgumentError>()));
+      expect(() => sanitizeColumnName(""), throwsA(isA<ArgumentError>()));
+      expect(() => sanitizeColumnName("abc def"),
+          throwsA(isA<ArgumentError>()));
+    });
+
+    test('column sanitization accepts valid names', () async {
+      expect(sanitizeColumnName("id"), "id");
+      expect(sanitizeColumnName("_private"), "_private");
+      expect(sanitizeColumnName("myColumn1"), "myColumn1");
+    });
+
+    test('fromMap error propagates in query singleResult', () async {
+      await _createTableAndInsertSampleValues();
+      expect(
+          () => sqlWrapper.query("SELECT * FROM users WHERE name = ?",
+              params: ["Paperino"],
+              fromMap: (_) => throw FormatException('bad map'),
+              singleResult: true),
+          throwsA(isA<FormatException>()));
+    });
+
+    test('fromMap error propagates in query list', () async {
+      await _createTableAndInsertSampleValues();
+      expect(
+          () => sqlWrapper.query("SELECT * FROM users",
+              fromMap: (_) => throw FormatException('bad map')),
+          throwsA(isA<FormatException>()));
+    });
+
+    test('closeDB returns a Future that completes', () async {
+      await SQLiteWrapper().openDB(inMemoryDatabasePath, dbName: "closeTest");
+      await SQLiteWrapper().closeDB(dbName: "closeTest");
+    });
   });
 }

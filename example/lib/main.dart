@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:sqlite_wrapper_sample/database_helper.dart';
 import 'package:sqlite_wrapper_sample/todo_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Init the DB
+  getInstance();
   await DatabaseHelper().initDB();
   runApp(const MyApp());
 }
@@ -12,7 +13,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,8 +38,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(title),
       ),
       body: const TodoList(),
@@ -47,7 +45,7 @@ class HomePage extends StatelessWidget {
         onPressed: _addNewTodo,
         tooltip: 'Add new todo',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
