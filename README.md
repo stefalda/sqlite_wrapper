@@ -21,7 +21,7 @@ This are the main principles that guide the development of this library:
 
 ## Features
 
-This package provide just a few methods that allow to:
+This package provides just a few methods that allow to:
 
 - connect to a SQLite db
 - execute sql statements on it
@@ -31,6 +31,7 @@ This package provide just a few methods that allow to:
 - connect to multiple databases by providing a dbName
 - execute a callback when the database is created or when should be migrated to
   a new schema version
+- execute operations inside a transaction with automatic commit/rollback
 
 ## Getting started
 
@@ -48,6 +49,98 @@ This package provide just a few methods that allow to:
 <pre>
   $ dart run sqflite_common_ffi_web:setup --force
 </pre>
+
+## Imports
+
+Add the dependency to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  sqlite_wrapper: ^0.3.7
+  inject_x: ^0.0.6
+```
+
+Required imports in your Dart code:
+
+```dart
+// Main package — provides SQLiteWrapperBase, SQLiteWrapperCore, getInstance(), types
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+// Dependency injection (required for inject<T>() / InjectX)
+import 'package:inject_x/inject_x.dart';
+```
+
+**Flutter web only** — add and configure `sqflite_common_ffi_web`:
+
+```yaml
+dependencies:
+  sqflite_common_ffi_web: ^1.0.0
+```
+
+Then run:
+
+```
+dart run sqflite_common_ffi_web:setup --force
+```
+
+**Windows/Linux only** (deprecated `sqlite3_flutter_libs` alternative) — add manually if the platform does not bundle SQLite:
+
+```yaml
+dependencies:
+  sqlite3_flutter_libs: ^0.5.0
+```
+
+The `sqlite_wrapper` package already includes `sqlite3` — you do not need to add it yourself.
+
+## Dependency Injection
+
+sqlite_wrapper uses [inject_x](https://pub.dev/packages/inject_x) for dependency injection.
+The old `SQLiteWrapper` singleton is deprecated.
+
+### Register the platform instance
+
+In your app's `main()`, call `getInstance()` to register the platform-specific
+implementation:
+
+```dart
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+void main() {
+  getInstance(); // registers SQLiteWrapperCore in the DI container
+  ...
+}
+```
+
+Alternatively, register manually with `inject_x`:
+
+```dart
+import 'package:inject_x/inject_x.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+void main() {
+  InjectX.add<SQLiteWrapperBase>(SQLiteWrapperCore());
+  ...
+}
+```
+
+### Use it anywhere
+
+```dart
+import 'package:inject_x/inject_x.dart';
+
+final db = inject<SQLiteWrapperBase>();
+```
+
+### Testing
+
+In tests you can instantiate `SQLiteWrapperCore` directly (no inject_x needed):
+
+```dart
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
+
+final db = SQLiteWrapperCore();
+await db.openDB(inMemoryDatabasePath);
+```
 
 ## WEB and gRPC
 
@@ -68,13 +161,6 @@ you have to set the variable **useGRPC** to true.
 A full working Flutter **Todos** example (what else!) is provided in the
 `/example` folder but here's some information about the available methods (check
 even the `/test` folder for additional examples).
-
-_**sqlite_wrapper**_ can be invoked as a singleton (the class returns always the
-same instance) so there's no need to create or store it in a variable,
-`SQLiteWrapper()` always returns the same instance. Otherwise, it is possible to
-instantiate locally an `SQLiteWrapperCore` instance, the parent class of
-SQLiteWrapper, that can be subclassed and used instead of the singleton
-implementation.
 
 Most of the methods accept a sql string, an optional list of parameters and an
 optional list of tables.
@@ -105,8 +191,8 @@ It returns different results depending of the performed action:
 - other - returns nothing
 
 ```dart
-Future<dynamic>? execute(
- 	String sql,
+Future<dynamic> execute(
+    String sql,
     {List<String>? tables, 
     List<Object?> params = const [],
     String dbName=defaultDBName})
@@ -130,7 +216,7 @@ Parameters:
 
 ```dart
 Future<dynamic> query(
-	String sql,
+    String sql,
    {List<Object?> params = const [],
    FromMap? fromMap,
    bool singleResult = false,
@@ -150,7 +236,7 @@ Parameters:
 
 ```dart
 Stream watch(
-	String sql,
+    String sql,
   {List<Object?> params = const [],
   FromMap? fromMap,
   bool singleResult = false,
@@ -165,8 +251,8 @@ table name and it will perform a single insert to the DB:
 
 ```dart
 Future<int> insert(
-	Map<String, dynamic> map, 
-	String table, {String dbName=defaultDBName})
+    Map<String, dynamic> map, 
+    String table, {String dbName=defaultDBName})
 ```
 
 ### update
@@ -176,8 +262,8 @@ id - `keys: const['id']`) to perform the update to a single row.
 
 ```dart
 Future<int> update(
-	Map<String, dynamic> map, 
-	String table,
+    Map<String, dynamic> map, 
+    String table,
     {required List<String> keys, String dbName=defaultDBName})
 ```
 
@@ -190,8 +276,8 @@ a single row.
 
 ```dart
 Future<int> save(
-	Map<String, dynamic> map, 
-	String table,
+    Map<String, dynamic> map, 
+    String table,
     {required List<String> keys, String dbName=defaultDBName})
 ```
 
@@ -204,8 +290,8 @@ This is the method called to get some results from the DB.
 
 ```dart
 Future<int> delete(
-	Map<String, dynamic> map, 
-	String table,
+    Map<String, dynamic> map, 
+    String table,
     {required List<String> keys, String dbName=defaultDBName})
 ```
 
@@ -233,19 +319,37 @@ created and the SQLite library version used.
 
 ```dart
 Future<DatabaseInfo> openDB(String path,       
-	{
-		int version = 0,
+    {
+        int version = 0,
     OnCreate? onCreate,
- 	  OnUpgrade? onUpgrade,
+      OnUpgrade? onUpgrade,
     dbName = defaultDBName}) {
 ```
 
 ### closeDB
 
-Well, you know, it just closes the database
+Closes the database and cleans up its associated reactive streams.
 
 ```dart
-void closeDB()
+Future<void> closeDB({String dbName=defaultDBName})
+```
+
+### transaction
+
+Executes operations atomically. On success the transaction is committed and
+all reactive streams are refreshed. On error the transaction is rolled back
+and streams are not updated.
+
+```dart
+Future<T> transaction<T>(Future<T> Function() action, {String? dbName})
+```
+
+Example:
+```dart
+await db.transaction(() async {
+  await db.execute("INSERT INTO accounts (name, balance) VALUES (?, ?)", params: ["Alice", 100]);
+  await db.execute("INSERT INTO accounts (name, balance) VALUES (?, ?)", params: ["Bob", 200]);
+});
 ```
 
 ### db
@@ -254,7 +358,7 @@ void closeDB()
 case you need to do something else with it...
 
 ```dart
-getDatabase({String dbName=defaultDBName}}
+DatabaseCore? getDatabase({String dbName=defaultDBName})
 ```
 
 ## Examples
@@ -270,15 +374,18 @@ You should include path and path_provider to get the Document folder and the
 system path separator.
 
 ```dart
+import 'package:inject_x/inject_x.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+
+final db = inject<SQLiteWrapperBase>();
 
 initDB() async {
     final docDir = await getApplicationDocumentsDirectory();
     if (!await docDir.exists()) {
       await docDir.create(recursive: true);
     }
-    await SQLiteWrapper().openDB(p.join(docDir.path, "todoDatabase.sqlite"));
+    await db.openDB(p.join(docDir.path, "todoDatabase.sqlite"));
   }
 ```
 
@@ -286,19 +393,19 @@ initDB() async {
 
 ```dart
 const String sql = """
-		CREATE TABLE IF NOT EXISTS "todos" (
+    CREATE TABLE IF NOT EXISTS "todos" (
           "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           "title" varchar(255) NOT NULL,
           "done" int default 0
         );""";
         
-await SQLiteWrapper().execute(sql);
+await db.execute(sql);
 ```
 
 ### A simple query - single result
 
 ```dart
-final Map? userMap = await sqlWrapper.query(
+final Map? userMap = await db.query(
           "SELECT * FROM users WHERE name = 'Paperino'",
           singleResult: true);
 ```
@@ -306,7 +413,7 @@ final Map? userMap = await sqlWrapper.query(
 Mapped to a specific object:
 
 ```dart
-final User user = await sqlWrapper.query("SELECT * FROM users WHERE name = ?",
+final User user = await db.query("SELECT * FROM users WHERE name = ?",
     params: ["Paperino"],
     fromMap: User.fromMap,
     singleResult: true);
@@ -315,14 +422,14 @@ final User user = await sqlWrapper.query("SELECT * FROM users WHERE name = ?",
 ### A simple query - multiple results
 
 ```dart
-List<Map> users = await sqlWrapper.query("SELECT * FROM users");
+List<Map> users = await db.query("SELECT * FROM users");
 ```
 
 Mapped to a list of specific objects:
 
 ```dart
 List<User> allUsers = List<User>.from(
-		await sqlWrapper.query(
+    await db.query(
           "SELECT * from users order by name DESC",
           fromMap: User.fromMap)
           );
@@ -333,7 +440,7 @@ List<User> allUsers = List<User>.from(
 Watch a single value
 
 ```dart
-Stream stream = SQLiteWrapper().watch("SELECT COUNT(*) FROM users",
+Stream stream = db.watch("SELECT COUNT(*) FROM users",
           singleResult: true, 
           tables: ["users"]);
 ```
@@ -341,7 +448,7 @@ Stream stream = SQLiteWrapper().watch("SELECT COUNT(*) FROM users",
 Watch a list of mapped objects:
 
 ```dart
-Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
+Stream userStream = db.watch("SELECT * FROM users",
           fromMap: User.fromMap, 
           tables: ["users"]);
 ```
@@ -352,14 +459,23 @@ Stream userStream = SQLiteWrapper().watch("SELECT * FROM users",
 // insert
 User user = User();
 user.name = "Paperone";
-user.id = await sqlWrapper.insert(user.toMap(), "users");
+user.id = await db.insert(user.toMap(), "users");
 
 // update
 user.name = "Pippo";
-await sqlWrapper.update(user.toMap(), "users", keys: ["id"]);
+await db.update(user.toMap(), "users", keys: ["id"]);
 
 // delete
-res = await sqlWrapper.delete(user.toMap(), "users", keys: ["id"]);
+res = await db.delete(user.toMap(), "users", keys: ["id"]);
+```
+
+### Transaction
+
+```dart
+await db.transaction(() async {
+  await db.execute("UPDATE accounts SET balance = balance - 100 WHERE name = 'Alice'");
+  await db.execute("UPDATE accounts SET balance = balance + 100 WHERE name = 'Bob'");
+});
 ```
 
 ## Refresh ther RPC Implementation

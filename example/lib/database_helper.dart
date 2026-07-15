@@ -23,12 +23,11 @@ class DatabaseHelper {
     }
     final DatabaseInfo dbInfo =
         await _db.openDB(dbPath, onCreate: () async {
-      const String sql = """CREATE TABLE IF NOT EXISTS "todos" (
+      await _db.execute("""CREATE TABLE IF NOT EXISTS "todos" (
             "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
             "title" varchar(255) NOT NULL,
             "done" int default 0
-          );""";
-      await _db.execute(sql);
+          );""");
     });
     debugPrint("Database path: ${dbInfo.path}");
   }
@@ -58,5 +57,12 @@ class DatabaseHelper {
 
   Future<void> deleteTodo(Todo todo) async {
     await _db.delete(todo.toMap(), "todos", keys: ["id"]);
+  }
+
+  /// Example of using a transaction for atomic batch operations.
+  Future<void> markAllAsDone() async {
+    await _db.transaction(() async {
+      await _db.execute("UPDATE todos SET done = 1 WHERE done = 0");
+    });
   }
 }
