@@ -1,0 +1,5 @@
+workflow:
+  backend: local
+
+local:
+  path: ai_specs

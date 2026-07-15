@@ -1,5 +1,3 @@
-library sqlite_wrapper;
-
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
@@ -12,44 +10,65 @@ import 'sqlite_wrapper_base.dart';
 
 SQLiteWrapperBase getInstance() => SQLiteWrapperCore();
 
-class SQLiteWrapperCore extends SQLiteWrapperBase {
-  /// Open the Database and returns true if the Database has been created
+/// Sqlite3 database adapter implementing [DatabaseCore].
+/// Wraps synchronous sqlite3 calls in async for uniform access.
+class Sqlite3Database implements DatabaseCore {
+  final Database _db;
+
+  Sqlite3Database(this._db);
+
   @override
-  Future<DatabaseInfo> openDB(String path,
-      {int version = 0,
-      OnCreate? onCreate,
-      OnUpgrade? onUpgrade,
-      String? dbName}) async {
+  Future<void> execute(String sql, List<Object?> params) async {
+    _db.execute(sql, params);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> select(
+      String sql, List<Object?> params) async {
+    return _db.select(sql, params).map((r) => r as Map<String, dynamic>).toList();
+  }
+
+  @override
+  void close() => _db.close();
+}
+
+class SQLiteWrapperCore extends SQLiteWrapperBase {
+  /// Open the Database and returns [DatabaseInfo] with creation status, version and sqlite version.
+  @override
+  Future<DatabaseInfo> openDB(
+    String path, {
+    int version = 0,
+    OnCreate? onCreate,
+    OnUpgrade? onUpgrade,
+    String? dbName,
+    bool useGRPC = false,
+  }) async {
     dbName ??= defaultDBName;
     bool missingDB = true;
     if (path == inMemoryDatabasePath) {
-      SQLiteWrapperBase.databases.add(db: sqlite3.openInMemory(), name: dbName);
+      databases.add(db: Sqlite3Database(sqlite3.openInMemory()), name: dbName);
     } else {
       final File f = File(path);
       missingDB = !f.existsSync();
       if (missingDB) {
-        // Create the path to the DB file if it's missing
         var dir = Directory.fromUri(Uri.directory(path));
         if (!dir.parent.existsSync()) {
           dir.parent.createSync(recursive: true);
         }
       }
-      SQLiteWrapperBase.databases.add(db: sqlite3.open(path), name: dbName);
+      databases.add(db: Sqlite3Database(sqlite3.open(path)), name: dbName);
       if (debugMode) {
         // ignore: avoid_print
-        print("DB location: ${SQLiteWrapperBase.databases.get(dbName)}");
+        print("DB location: ${databases.get(dbName)}");
       }
     }
-    // Execute the onCreate method if is set
     if (missingDB && onCreate != null) {
       await onCreate();
     }
-    // Execute the onUpdate method if the version is set
     int currentVersion = await getVersion(dbName: dbName);
     if (onUpgrade != null && version != currentVersion) {
       await onUpgrade(currentVersion, version);
     }
-    // Set the version
     if (version != currentVersion) {
       await setVersion(version, dbName: dbName);
     }
@@ -61,14 +80,4 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
         sqliteVersion: sqlite3.version.toString());
   }
 
-  @override
-  Future<int> getVersion({String? dbName}) async {
-    return await query("PRAGMA user_version;",
-        singleResult: true, dbName: dbName);
-  }
-
-  @override
-  Future<void> setVersion(int version, {String? dbName}) async {
-    await execute("PRAGMA user_version=$version;", dbName: dbName);
-  }
 }

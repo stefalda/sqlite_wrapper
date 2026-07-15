@@ -1,17 +1,24 @@
-library sqlite_wrapper;
-
 import 'sqlite_wrapper_stub.dart'
     if (dart.library.io) 'sqlite_wrapper_mobile.dart'
     if (dart.library.js_interop) 'sqlite_wrapper_web.dart';
 
 export './helpers/platform/platform.dart';
+export 'generated/sqlite_wrapper_rpc.pb.dart';
+export 'generated/sqlite_wrapper_rpc.pbenum.dart';
+export 'generated/sqlite_wrapper_rpc.pbgrpc.dart';
+export 'generated/sqlite_wrapper_rpc.pbjson.dart';
+export 'grpc/sqlite_wrapper_grpc.dart';
 export 'sqlite_wrapper_base.dart';
 export 'sqlite_wrapper_factory.dart';
 export 'sqlite_wrapper_stub.dart'
     if (dart.library.io) 'sqlite_wrapper_mobile.dart'
     if (dart.library.js_interop) 'sqlite_wrapper_web.dart' hide getInstance;
 export 'sqlite_wrapper_types.dart';
+export 'grpc/auth_client.dart';
 
+@Deprecated(
+    'Use inject_x instead: `InjectX.add<SQLiteWrapperBase>(SQLiteWrapperCore())` then `inject<SQLiteWrapperBase>()`. '
+    'See https://pub.dev/packages/inject_x for details.')
 class SQLiteWrapper extends SQLiteWrapperCore {
   static final SQLiteWrapper _singleton = SQLiteWrapper._internal();
 

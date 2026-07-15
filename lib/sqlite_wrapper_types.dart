@@ -10,11 +10,17 @@ typedef OnCreate = Future<void> Function();
 
 const defaultDBName = "mainDB";
 
+/// Unified async interface for all database backends.
+///
+/// Each platform (native sqlite3, sqflite_ffi_web, gRPC) implements this
+/// interface to normalize access behind a single type.
 abstract class DatabaseCore {
-  void execute(String sql, List<Object?> params);
+  Future<void> execute(String sql, List<Object?> params);
 
-  List<Map> select(String sql, List<Object?> params);
-  void dispose();
+  Future<List<Map<String, dynamic>>> select(
+      String sql, List<Object?> params);
+
+  void close();
 }
 
 class DatabaseInfo {
@@ -50,22 +56,39 @@ class StreamInfo {
       this.singleResult = false});
 }
 
+/// Manages multiple named database connections.
+/// Maps [dbName] strings to [DatabaseCore] instances.
 class Databases {
-  final _dbs = {};
+  final Map<String, DatabaseCore> _dbs = {};
+  final Set<String> _grcpsDBs = {};
 
-  void add({required String name, required db}) {
+  void add(
+      {required String name, required DatabaseCore db, bool useGRPC = false}) {
     _dbs[name] = db;
+    if (useGRPC) {
+      _grcpsDBs.add(name);
+    }
   }
 
-  dynamic get(String name) {
+  DatabaseCore? get(String name) {
     return _dbs[name];
   }
 
   void remove(String name) {
     _dbs.remove(name);
+    _grcpsDBs.remove(name);
   }
 
   bool get isNotEmpty {
     return _dbs.isNotEmpty;
+  }
+
+  /// Return all db names
+  List<String> getNames() {
+    return _dbs.keys.map((item) => item.toString()).toList();
+  }
+
+  bool useGRPC(String name) {
+    return _grcpsDBs.contains(name);
   }
 }

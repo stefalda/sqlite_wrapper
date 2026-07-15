@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+//import "google/protobuf/wrappers.proto"; // Compiler says it's not needed...
+
+
+package sqlite_wrapper;
+
+// Optionally, set the Dart package for generated code.
+// option dart_package = "sqlite";
+
+//
+// The SQLiteWrapper gRPC Service exposes methods to open/close databases,
+// execute SQL commands, query data, update/insert/delete records, 
+// get/set database versions, and even watch for changes via server streaming.
+//
+
+service SqliteWrapperService {
+  // Opens (or creates) a database.
+  rpc OpenDB(OpenDBRequest) returns (OpenDBResponse);
+
+  // Closes an open database.
+  rpc CloseDB(CloseDBRequest) returns (CloseDBResponse);
+
+  // Executes a SQL command (such as INSERT, UPDATE, DELETE).
+  rpc Execute(SqlQueryRequest) returns (SqlQueryResponse);
+
+  // Executes a SQL command (such as INSERT, UPDATE, DELETE).
+  rpc Select(SqlQueryRequest) returns (SqlQueryResponse);
+
+  // Retrieves the database user_version.
+  rpc GetVersion(GetVersionRequest) returns (GetVersionResponse);
+
+  // Sets the database user_version.
+  rpc SetVersion(SetVersionRequest) returns (SetVersionResponse);
+
+  rpc Echo (EchoRequest) returns (EchoResponse);
+
+
+
+  // Watches a query for real-time updates.
+  // This is a server-streaming RPC where the server will push new results.
+  //rpc Watch(WatchRequest) returns (stream WatchResponse);
+}
+
+//
+// Message definitions
+//
+
+// ----- Database Connection Operations -----
+
+message OpenDBRequest {
+  // The target version (if needed for migration).
+  int32 version = 1;
+  // An optional name for the database.
+  string dbName = 2;
+}
+
+message OpenDBResponse {
+  // Indicates if the database was created (true) or already existed (false).
+  bool created = 1;
+  // The version of the database.
+  int32 version = 2;
+  // The SQLite engine version.
+  string sqliteVersion = 3;
+  // The database name.
+  string dbName = 4;
+}
+
+message CloseDBRequest {
+  // The name of the database to close.
+  string dbName = 1;
+}
+
+message CloseDBResponse {
+  // Indicates if the operation succeeded.
+  bool success = 1;
+}
+
+// ----- Query & Command Operations -----
+
+// Used for both executing commands (INSERT/UPDATE/DELETE) and queries.
+message SqlQueryRequest {
+  // The SQL statement to execute.
+  string sql = 1;
+  // Parameters for the SQL statement (passed as strings for simplicity).
+  repeated google.protobuf.Any params = 2;
+  // The database name to use.
+  string dbName = 3;
+}
+
+message SqlQueryResponse {
+  // For simplicity, the result is returned as a JSON-encoded string.
+  // In a real-world scenario you might define a more structured response.
+  string result = 1;
+}
+
+
+// ----- Database Versioning Operations -----
+
+message GetVersionRequest {
+  string dbName = 1;
+}
+
+message GetVersionResponse {
+  int32 version = 1;
+}
+
+message SetVersionRequest {
+  string dbName = 1;
+  int32 version = 2;
+}
+
+message SetVersionResponse {
+  bool success = 1;
+}
+
+
+message EchoRequest {
+  string message = 1;
+}
+
+message EchoResponse {
+  string message = 1;
+}

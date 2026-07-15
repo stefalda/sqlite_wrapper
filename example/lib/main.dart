@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:inject_x/inject_x.dart';
+import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:sqlite_wrapper_sample/database_helper.dart';
 import 'package:sqlite_wrapper_sample/todo_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Init the DB
-  await DatabaseHelper().initDB();
+
+  // Register the sqlite_wrapper platform instance in the DI container.
+  getInstance();
+
+  // Register the DatabaseHelper so it can be injected where needed.
+  InjectX.add<DatabaseHelper>(DatabaseHelper());
+
+  // Initialize the database.
+  await inject<DatabaseHelper>().initDB();
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,17 +38,15 @@ class HomePage extends StatelessWidget {
   final String title;
 
   const HomePage({super.key, required this.title});
+
   void _addNewTodo() {
-    DatabaseHelper().addNewTodo("NEW TODO");
-    return;
+    inject<DatabaseHelper>().addNewTodo("NEW TODO");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(title),
       ),
       body: const TodoList(),
@@ -47,7 +54,7 @@ class HomePage extends StatelessWidget {
         onPressed: _addNewTodo,
         tooltip: 'Add new todo',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
