@@ -20,7 +20,7 @@ abstract class DatabaseCore {
   Future<List<Map<String, dynamic>>> select(
       String sql, List<Object?> params);
 
-  void dispose();
+  void close();
 }
 
 class DatabaseInfo {

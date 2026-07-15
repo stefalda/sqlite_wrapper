@@ -17,7 +17,7 @@ The deprecated singleton class that wraps SQLiteWrapperCore. Replaced by `inject
 _Avoid_: using it in new code
 
 **DatabaseCore**:
-The unified abstract interface for a single database connection. Defines `execute`, `select`, and `dispose`. Implemented per-platform (native sqlite3, sqflite_ffi_web, gRPC client wrapper). Used as the type parameter in `Databases` instead of `dynamic`.
+The unified abstract interface for a single database connection. Defines `execute`, `select`, and `close`. Implemented per-platform (native sqlite3, sqflite_ffi_web, gRPC client wrapper). Used as the type parameter in `Databases` instead of `dynamic`.
 _Avoid_: dynamic database references
 
 **Databases**:

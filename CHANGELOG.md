@@ -1,3 +1,25 @@
+## 0.4.0
+
+- **Breaking**: `closeDB()` changed to `Future<void>`. Callers must now `await closeDB()`.
+- **Breaking**: `execute()` now returns `Future<dynamic>` (non-nullable) instead of `Future<dynamic>?`.
+- **Breaking**: `getDatabase()` now returns `DatabaseCore?` instead of `dynamic`.
+- **Breaking**: `DatabaseCore` promoted to real async interface with unified `execute`/`select`/`close`.
+- **Breaking**: Removed `SqliteWrapperInterface` (was incomplete and unused).
+- Added `transaction()` method wrapping `BEGIN`/`COMMIT`/`ROLLBACK`.
+- Replaced singleton pattern with `inject_x` DI. `SQLiteWrapper` is deprecated.
+- Instance state (`streams`, `databases`) is now per-instance instead of static.
+- Column names in `update`/`delete`/`save` keys are now sanitized against SQL injection.
+- `fixBoolParams` no longer mutates the input list.
+- `fromMap` errors in `query()` now propagate instead of being silently swallowed.
+- `updateStreams(null)` now refreshes all streams (used by `transaction`).
+- `closeDB()` now removes stale streams for the closed database.
+- gRPC: `closeDB()` now cleans up local state and shuts down the channel.
+- gRPC: `SqliteWrapperGRPC()` default constructor removed — use `withHostAndPort`.
+- Web: `:memory:` path no longer throws `UnimplementedError`.
+- Source cleanup: removed `library sqlite_wrapper;` declarations.
+- Removed redundant `getVersion`/`setVersion` overrides from platform implementations.
+- Documentation updated for new DI patterns and API changes.
+
 ## 0.1.2
 
 - Fixed some dependencies,lint problems and compiled with latest Flutter version

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:sqlite_wrapper/interfaces/sqlite_wrapper_interface.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper_types.dart';
 
 import './helpers/platform/platform.dart';
@@ -14,7 +13,7 @@ String sanitizeColumnName(String name) {
   return name;
 }
 
-abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
+abstract class SQLiteWrapperBase {
   final List<StreamInfo> streams = [];
   final Databases databases = Databases();
 
@@ -25,7 +24,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   }
 
   /// Open the Database and returns [DatabaseInfo] with creation status and version.
-  @override
   Future<DatabaseInfo> openDB(
     String path, {
     int version = 0,
@@ -36,18 +34,16 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   });
 
   /// Close the Database and clean up its streams.
-  @override
   Future<void> closeDB({String? dbName}) async {
     final resolvedName = dbName ?? defaultDBName;
     final db = databases.get(resolvedName);
-    db?.dispose();
+    db?.close();
     databases.remove(resolvedName);
     streams.removeWhere((s) => s.dbName == resolvedName);
   }
 
   /// Returns the internal [DatabaseCore] instance for the given db name.
   /// Handle with care: exposes the underlying database adapter.
-  @override
   DatabaseCore? getDatabase({String? dbName}) {
     return databases.get(dbName ?? defaultDBName);
   }
@@ -83,7 +79,6 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
   ///
   /// [tables] is used by the reactive stream system to know which watched
   /// queries to refresh after this operation.
-  @override
   Future<dynamic> execute(String sql,
       {List<String>? tables,
       List<Object?> params = const [],
@@ -323,13 +318,11 @@ abstract class SQLiteWrapperBase implements SqliteWrapperInterface {
     }
   }
 
-  @override
   Future<int> getVersion({String? dbName}) async {
     return await query("PRAGMA user_version;",
         singleResult: true, dbName: dbName);
   }
 
-  @override
   Future<void> setVersion(int version, {String? dbName}) async {
     await execute("PRAGMA user_version=$version;", dbName: dbName);
   }

@@ -8,8 +8,12 @@ import 'package:sqlite_wrapper/grpc/grpc_service_manager.dart';
 import 'package:sqlite_wrapper/grpc/sqlite_service_client_wrapper.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
+/// gRPC implementation of [SQLiteWrapperBase].
+///
+/// Connects to a remote sqlite_wrapper_server via gRPC.
+/// Must be created with [SqliteWrapperGRPC.withHostAndPort].
 class SqliteWrapperGRPC extends SQLiteWrapperBase {
-  late GrpcServiceManager _serviceManager;
+  late final GrpcServiceManager _serviceManager;
   String _token = "";
 
   SqliteWrapperGRPC.withHostAndPort(
@@ -23,8 +27,6 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
     _serviceManager =
         GrpcServiceManager(host: host, port: port, secure: secure);
   }
-
-  SqliteWrapperGRPC();
 
   set token(String token) {
     _token = token;
@@ -83,6 +85,7 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
   Future<void> closeDB({String? dbName}) async {
     await client.closeDB(CloseDBRequest(dbName: dbName ?? defaultDBName));
     await super.closeDB(dbName: dbName);
+    await _serviceManager.dispose();
   }
 
   @override

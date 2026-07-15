@@ -8,7 +8,6 @@ export 'generated/sqlite_wrapper_rpc.pbenum.dart';
 export 'generated/sqlite_wrapper_rpc.pbgrpc.dart';
 export 'generated/sqlite_wrapper_rpc.pbjson.dart';
 export 'grpc/sqlite_wrapper_grpc.dart';
-export 'interfaces/sqlite_wrapper_interface.dart';
 export 'sqlite_wrapper_base.dart';
 export 'sqlite_wrapper_factory.dart';
 export 'sqlite_wrapper_stub.dart'

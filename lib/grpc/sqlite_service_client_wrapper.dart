@@ -42,5 +42,5 @@ class SqliteServiceClientWrapper implements DatabaseCore {
   }
 
   @override
-  void dispose() {}
+  void close() {}
 }

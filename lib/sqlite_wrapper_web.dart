@@ -29,7 +29,7 @@ class SqfliteWebDatabase implements DatabaseCore {
   }
 
   @override
-  void dispose() => _db.close();
+  void close() => _db.close();
 }
 
 class SQLiteWrapperCore extends SQLiteWrapperBase {
@@ -66,14 +66,4 @@ class SQLiteWrapperCore extends SQLiteWrapperBase {
         sqliteVersion: "unknown");
   }
 
-  @override
-  Future<int> getVersion({String? dbName}) async {
-    return await query("PRAGMA user_version;",
-        singleResult: true, dbName: dbName);
-  }
-
-  @override
-  Future<void> setVersion(int version, {String? dbName}) async {
-    await execute("PRAGMA user_version=$version;", dbName: dbName);
-  }
 }

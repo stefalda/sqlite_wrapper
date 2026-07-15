@@ -58,14 +58,6 @@ abstract class DatabaseCore {
 10. `getDatabase({String? dbName})` return type changes from `dynamic` to `DatabaseCore?`, consistent with `Databases.get()`. This preserves the escape hatch without the untyped `dynamic`.
 11. The `isWeb()` branch in `query()` is removed. All platforms go through `await db.select(sql, params)`.
 
-### SqliteWrapperInterface
-
-12. `SqliteWrapperInterface` is updated to match the new signatures: [L6] [L7]
-    - `closeDB()` → `Future<void> closeDB({String? dbName})`
-    - `execute()` → `Future<dynamic> execute(...)` (non-nullable)
-    - `getDatabase()` → `DatabaseCore? getDatabase({String? dbName})`
-13. The commented-out method block (lines 26–65) is removed — those methods are already declared by the concrete class `SQLiteWrapperBase`.
-
 ### closeDB
 
 14. `closeDB({String? dbName})` changes return type from `void` to `Future<void>`. The base implementation awaits `databases.get(name).dispose()`. The gRPC override already returns a Future. [L6]
