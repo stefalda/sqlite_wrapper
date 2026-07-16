@@ -1,3 +1,8 @@
+## 0.5.1
+
+- `SqliteWrapperGRPC.watch()` now automatically reconnects the server-streaming `Watch` RPC on connection close or error, with retry delays (1s on done, 2s on error), enabling resilient long-lived subscriptions.
+- Fixed changelog ordering for historical entries.
+
 ## 0.5.0
 
 - Added `Watch` server-streaming RPC in proto, with `WatchRequest`/`WatchResponse` messages — remote clients can now subscribe to real-time push updates triggered by any client's mutations.

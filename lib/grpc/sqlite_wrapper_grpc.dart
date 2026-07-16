@@ -125,42 +125,67 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
     required List<String> tables,
     String? dbName,
   }) {
-    final responseStream = client.watch(WatchRequest(
-      sql: sql,
-      params: convertParamsToAny(params),
-      dbName: dbName ?? defaultDBName,
-      tables: tables,
-      singleResult: singleResult,
-    ));
     StreamSubscription? sub;
     final sc = StreamController(
       onCancel: () => sub?.cancel(),
     );
-    sub = responseStream.listen(
-      (response) {
-        final decoded = jsonDecode(response.json);
-        if (fromMap != null) {
-          if (response.singleResult) {
-            if (decoded is Map<String, dynamic>) {
-              sc.add(fromMap(decoded));
+
+    void startWatch() {
+      if (sc.isClosed) return;
+      sub?.cancel();
+
+      try {
+        final responseStream = client.watch(WatchRequest(
+          sql: sql,
+          params: convertParamsToAny(params),
+          dbName: dbName ?? defaultDBName,
+          tables: tables,
+          singleResult: singleResult,
+        ));
+
+        sub = responseStream.listen(
+          (response) {
+            final decoded = jsonDecode(response.json);
+            if (fromMap != null) {
+              if (response.singleResult) {
+                if (decoded is Map<String, dynamic>) {
+                  sc.add(fromMap(decoded));
+                } else {
+                  sc.add(decoded);
+                }
+              } else if (decoded is List) {
+                sc.add(decoded
+                    .map((e) => fromMap(e as Map<String, dynamic>))
+                    .toList());
+              } else if (decoded is Map<String, dynamic>) {
+                sc.add(fromMap(decoded));
+              } else {
+                sc.add(decoded);
+              }
             } else {
               sc.add(decoded);
             }
-          } else if (decoded is List) {
-            sc.add(decoded.map((e) => fromMap(e as Map<String, dynamic>)).toList());
-          } else if (decoded is Map<String, dynamic>) {
-            sc.add(fromMap(decoded));
-          } else {
-            sc.add(decoded);
-          }
-        } else {
-          sc.add(decoded);
+          },
+          onDone: () {
+            if (!sc.isClosed) {
+              Future.delayed(const Duration(seconds: 1), startWatch);
+            }
+          },
+          onError: (e) {
+            if (!sc.isClosed) {
+              Future.delayed(const Duration(seconds: 2), startWatch);
+            }
+          },
+          cancelOnError: false,
+        );
+      } catch (e) {
+        if (!sc.isClosed) {
+          Future.delayed(const Duration(seconds: 2), startWatch);
         }
-      },
-      onDone: () => sc.close(),
-      onError: (e) => sc.addError(e),
-      cancelOnError: true,
-    );
+      }
+    }
+
+    startWatch();
     return sc.stream;
   }
 
