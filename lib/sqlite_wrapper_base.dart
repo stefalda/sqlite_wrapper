@@ -281,14 +281,19 @@ abstract class SQLiteWrapperBase {
   /// Refresh streams that watch any of the [tables].
   /// If [tables] is null, all streams are refreshed.
   Future<void> updateStreams(List<String>? tables) async {
+    // Snapshot per evitare ConcurrentModificationError:
+    // streams può essere modificato durante gli await (es. nuova watch o
+    // sc.done che rimuove un elemento), e Dart lancia l'eccezione se
+    // si modifica una lista mentre la si itera con for...in.
+    final snapshot = List<StreamInfo>.from(streams);
     if (tables == null) {
-      for (StreamInfo s in streams) {
+      for (StreamInfo s in snapshot) {
         await _updateStream(s);
       }
       return;
     }
     if (tables.isEmpty) return;
-    for (StreamInfo s in streams) {
+    for (StreamInfo s in snapshot) {
       for (String table in tables) {
         if (s.tables.contains(table)) {
           await _updateStream(s);

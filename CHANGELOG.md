@@ -1,3 +1,7 @@
+## 0.5.2
+
+- Fix per concurrent modification of `streams` in `SqliteWrapperGRPC.watch()` when multiple watches are active, preventing `ConcurrentModificationError` on stream updates.
+
 ## 0.5.1
 
 - `SqliteWrapperGRPC.watch()` now automatically reconnects the server-streaming `Watch` RPC on connection close or error, with retry delays (1s on done, 2s on error), enabling resilient long-lived subscriptions.
