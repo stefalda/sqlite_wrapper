@@ -1,3 +1,5 @@
+[![CI](https://github.com/stefalda/sqlite_wrapper/actions/workflows/dart.yml/badge.svg)](https://github.com/stefalda/sqlite_wrapper/actions/workflows/dart.yml)
+
 **sqlite_wrapper** is a simple wrapper around the SQLite3 bindings provided by
 the [sqlite3](https://pub.dev/packages/sqlite3) package by
 [Simon Binder](https://pub.dev/publishers/simonbinder.eu/packages).
@@ -233,10 +235,9 @@ void main() async {
 
 ### watch() with gRPC
 
-`watch()` works via gRPC but **only in polling mode** — it re-queries the remote
-database after every `execute()` call on the same instance. Changes made by
-other clients are not detected. Server-side streaming (`rpc Watch`) is not yet
-implemented.
+`watch()` works via gRPC using the **server-side streaming** RPC (`rpc Watch`).
+The server pushes new results to the client whenever the watched tables change.
+Changes made by other clients are detected and propagated in real time.
 
 ### Regenerate protobuf stubs
 
