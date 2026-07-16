@@ -1,3 +1,13 @@
+## 0.5.0
+
+- Added `Watch` server-streaming RPC in proto, with `WatchRequest`/`WatchResponse` messages — remote clients can now subscribe to real-time push updates triggered by any client's mutations.
+- Added `tables` field to `SqlQueryRequest` for server-side table tracking.
+- `SqliteWrapperGRPC.watch()` now uses the server-streaming `Watch` RPC instead of a local stream, enabling cross-client reactive updates.
+- Added `clientOverride` setter in `SqliteWrapperGRPC` to support dependency injection in tests.
+- `SqliteWrapperGRPC.execute()` now guards `updateStreams()` with `streams.isNotEmpty` to avoid unnecessary remote calls when no watches are active.
+- Regenerated gRPC Dart stubs from updated proto.
+- Updated documentation for the gRPC watch feature.
+
 ## 0.4.0
 
 - **Breaking**: `closeDB()` changed to `Future<void>`. Callers must now `await closeDB()`.
@@ -20,70 +30,53 @@
 - Removed redundant `getVersion`/`setVersion` overrides from platform implementations.
 - Documentation updated for new DI patterns and API changes.
 
-## 0.1.2
+## 0.3.7-beta
 
-- Fixed some dependencies,lint problems and compiled with latest Flutter version
-- Updated sqlite version dependency and sdk constraint
+- Refreshed GRPC generated code
 
-## 0.0.1
+## 0.3.6-beta
 
-- First release of the library in a complete (?) state.
-- Tested under MacOs, iOS, Android
+- Updated libraries version
 
-## 0.0.2
+## 0.3.5-beta
 
-- Removed dependency from Flutter for tests
-- Tested under Windows (both tests and examples)
+- fixed null error when dbName is missing and check if should useRPC
 
-## 0.0.3
+## 0.3.4-beta
 
-- Autoremove the stream from the streams array when the subscription is
-  cancelled
+- fixed problem with vacuum not executed
 
-## 0.0.4
+## 0.3.3-beta
 
-- Fixed the version call to use the "user_version" instead of the
-  "schema_version"
-- Added onCreate and onUpgrade callback to simplify migrations
-- Added support for opening multiple databases
-- Now the openDB method returns some information about the database
+- added userid in ValidateTokenResponse response
 
-## 0.0.5
+## 0.3.2-beta
 
-- Added assert to throw an error when the database has not been opened yet and
-  you're trying to use it
+- moved useRPC in openDB
 
-## 0.0.6
+## 0.3.1-beta
 
-- Added method save to perform an upsert
+- renamed grpc class and file
 
-## 0.0.7
+## 0.3.0-beta
 
-- dbName param can now be null instead of having a default value set in every
-  method call
+- added pRPG support
 
-## 0.0.8
+## 0.2.3
 
-- fixed a warning
+- created automation for publishing to github
 
-## 0.0.9
+## 0.2.2
 
-- create the parent folders of the DB file if they are missing
+- code reorganization and introduction of factory method getInstance
 
-## 0.1.0
+## 0.2.1
 
-- created a parent class SQLiteWrapperCore that can be instantiated/subclassed
-  and used instead of the Singleton implementation
+- exported isRunningOnWeb from platform
 
-## 0.1.1
+## 0.2.0
 
-- the method updateStreams is now public to be able to force externally a
-  refresh of one or more data streams
-
-## 0.1.3
-
-- bug fix for update and delete not working with tables having multiple primary
-  keys
+- bumped sqflite_common_ffi_web to latest version
 
 ## 0.2.0-dev-1
 
@@ -92,50 +85,60 @@
 - added CI pipeline
 - review of class structures
 
-## 0.2.0
+## 0.1.3
 
-- bumped sqflite_common_ffi_web to latest version
+- bug fix for update and delete not working with tables having multiple primary keys
 
-## 0.2.1
+## 0.1.2
 
-- exported isRunningOnWeb from platform
+- Fixed some dependencies,lint problems and compiled with latest Flutter version
+- Updated sqlite version dependency and sdk constraint
 
-## 0.2.2
+## 0.1.1
 
-- code reorganization and introduction of factory method getInstance
+- the method updateStreams is now public to be able to force externally a refresh of one or more data streams
 
-## 0.2.3
+## 0.1.0
 
-- created automation for publishing to github
+- created a parent class SQLiteWrapperCore that can be instantiated/subclassed and used instead of the Singleton implementation
 
-## 0.3.0-beta
+## 0.0.9
 
-- added pRPG support
+- create the parent folders of the DB file if they are missing
 
-## 0.3.1-beta
+## 0.0.8
 
-- renamed grpc class and file
+- fixed a warning
 
-## 0.3.2-beta
+## 0.0.7
 
-- moved useRPC in openDB
+- dbName param can now be null instead of having a default value set in every method call
 
-## 0.3.3-beta
+## 0.0.6
 
-- added userid in ValidateTokenResponse response
+- Added method save to perform an upsert
 
-## 0.3.4-beta
+## 0.0.5
 
-- fixed problem with vacuum not executed
+- Added assert to throw an error when the database has not been opened yet and you're trying to use it
 
-## 0.3.5-beta
+## 0.0.4
 
-- fixed null error when dbName is missing and check if should useRPC
+- Fixed the version call to use the "user_version" instead of the "schema_version"
+- Added onCreate and onUpgrade callback to simplify migrations
+- Added support for opening multiple databases
+- Now the openDB method returns some information about the database
 
-## 0.3.6-beta
+## 0.0.3
 
-- Updated libraries version
+- Autoremove the stream from the streams array when the subscription is cancelled
 
-## 0.3.7-beta
+## 0.0.2
 
-- Refreshed GRPC generated code
+- Removed dependency from Flutter for tests
+- Tested under Windows (both tests and examples)
+
+## 0.0.1
+
+- First release of the library in a complete (?) state.
+- Tested under MacOs, iOS, Android
