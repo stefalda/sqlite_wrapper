@@ -213,7 +213,7 @@ void main() {
       await controller.close();
     });
 
-    test('stream error propagates', () async {
+    test('stream silently handles errors by reconnecting', () async {
       final controller = StreamController<WatchResponse>();
       final client = _createClientWithChannel(controller);
 
@@ -222,20 +222,30 @@ void main() {
         tables: ['test'],
       );
 
+      final events = <dynamic>[];
       final errors = <dynamic>[];
       final sub = stream.listen(
-        (_) {},
+        (e) => events.add(e),
         onError: (e) => errors.add(e),
       );
 
+      // Error should not propagate — stream reconnects silently
       controller.addError(Exception('test error'));
+
+      // Stream should still accept new data after the error
+      controller.add(WatchResponse(
+        json: jsonEncode([
+          {'id': 1, 'name': 'Alice'}
+        ]),
+        singleResult: false,
+      ));
 
       await Future<void>.delayed(Duration.zero);
       await sub.cancel();
       await controller.close();
 
-      expect(errors.length, 1);
-      expect(errors[0].toString(), contains('test error'));
+      expect(errors, isEmpty);
+      expect(events.length, 1);
     });
   });
 }
