@@ -88,6 +88,16 @@ class SqliteWrapperServiceClient extends $grpc.Client {
     return $createUnaryCall(_$echo, request, options: options);
   }
 
+  /// Watches a query for real-time updates.
+  /// This is a server-streaming RPC where the server will push new results.
+  $grpc.ResponseStream<$0.WatchResponse> watch(
+    $0.WatchRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(_$watch, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   // method descriptors
 
   static final _$openDB =
@@ -124,6 +134,10 @@ class SqliteWrapperServiceClient extends $grpc.Client {
       '/sqlite_wrapper.SqliteWrapperService/Echo',
       ($0.EchoRequest value) => value.writeToBuffer(),
       $0.EchoResponse.fromBuffer);
+  static final _$watch = $grpc.ClientMethod<$0.WatchRequest, $0.WatchResponse>(
+      '/sqlite_wrapper.SqliteWrapperService/Watch',
+      ($0.WatchRequest value) => value.writeToBuffer(),
+      $0.WatchResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('sqlite_wrapper.SqliteWrapperService')
@@ -180,6 +194,13 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EchoRequest.fromBuffer(value),
         ($0.EchoResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.WatchRequest, $0.WatchResponse>(
+        'Watch',
+        watch_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.WatchRequest.fromBuffer(value),
+        ($0.WatchResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.OpenDBResponse> openDB_Pre(
@@ -237,4 +258,12 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
 
   $async.Future<$0.EchoResponse> echo(
       $grpc.ServiceCall call, $0.EchoRequest request);
+
+  $async.Stream<$0.WatchResponse> watch_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.WatchRequest> $request) async* {
+    yield* watch($call, await $request);
+  }
+
+  $async.Stream<$0.WatchResponse> watch(
+      $grpc.ServiceCall call, $0.WatchRequest request);
 }

@@ -13,7 +13,7 @@ import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 /// Connects to a remote sqlite_wrapper_server via gRPC.
 /// Must be created with [SqliteWrapperGRPC.withHostAndPort].
 class SqliteWrapperGRPC extends SQLiteWrapperBase {
-  late final GrpcServiceManager _serviceManager;
+  late GrpcServiceManager _serviceManager;
   String _token = "";
 
   SqliteWrapperGRPC.withHostAndPort(
@@ -33,7 +33,10 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
     _serviceManager.token = _token;
   }
 
-  SqliteWrapperServiceClient get client => _serviceManager.sqliteService;
+  SqliteWrapperServiceClient? clientOverride;
+
+  SqliteWrapperServiceClient get client =>
+      clientOverride ?? _serviceManager.sqliteService;
 
   AuthClient get authClient => _serviceManager.authClient;
 
@@ -103,11 +106,62 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
         sql: sql,
         params: convertParamsToAny(params),
         dbName: dbName ?? defaultDBName,
+        tables: tables ?? [],
       ));
       return jsonDecode(response.result);
     } finally {
-      await updateStreams(tables);
+      if (streams.isNotEmpty) {
+        await updateStreams(tables);
+      }
     }
+  }
+
+  @override
+  Stream watch(
+    String sql, {
+    List<Object?> params = const [],
+    FromMap? fromMap,
+    bool singleResult = false,
+    required List<String> tables,
+    String? dbName,
+  }) {
+    final responseStream = client.watch(WatchRequest(
+      sql: sql,
+      params: convertParamsToAny(params),
+      dbName: dbName ?? defaultDBName,
+      tables: tables,
+      singleResult: singleResult,
+    ));
+    StreamSubscription? sub;
+    final sc = StreamController(
+      onCancel: () => sub?.cancel(),
+    );
+    sub = responseStream.listen(
+      (response) {
+        final decoded = jsonDecode(response.json);
+        if (fromMap != null) {
+          if (response.singleResult) {
+            if (decoded is Map<String, dynamic>) {
+              sc.add(fromMap(decoded));
+            } else {
+              sc.add(decoded);
+            }
+          } else if (decoded is List) {
+            sc.add(decoded.map((e) => fromMap(e as Map<String, dynamic>)).toList());
+          } else if (decoded is Map<String, dynamic>) {
+            sc.add(fromMap(decoded));
+          } else {
+            sc.add(decoded);
+          }
+        } else {
+          sc.add(decoded);
+        }
+      },
+      onDone: () => sc.close(),
+      onError: (e) => sc.addError(e),
+      cancelOnError: true,
+    );
+    return sc.stream;
   }
 
   @override

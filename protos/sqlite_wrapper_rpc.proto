@@ -40,7 +40,7 @@ service SqliteWrapperService {
 
   // Watches a query for real-time updates.
   // This is a server-streaming RPC where the server will push new results.
-  //rpc Watch(WatchRequest) returns (stream WatchResponse);
+  rpc Watch(WatchRequest) returns (stream WatchResponse);
 }
 
 //
@@ -87,6 +87,21 @@ message SqlQueryRequest {
   repeated google.protobuf.Any params = 2;
   // The database name to use.
   string dbName = 3;
+  // Tables that are watched/modified by this request.
+  repeated string tables = 4;
+}
+
+message WatchRequest {
+  string sql = 1;
+  repeated google.protobuf.Any params = 2;
+  string dbName = 3;
+  repeated string tables = 4;
+  bool singleResult = 5;
+}
+
+message WatchResponse {
+  string json = 1;
+  bool singleResult = 2;
 }
 
 message SqlQueryResponse {

@@ -295,11 +295,13 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
     $core.String? sql,
     $core.Iterable<$1.Any>? params,
     $core.String? dbName,
+    $core.Iterable<$core.String>? tables,
   }) {
     final result = create();
     if (sql != null) result.sql = sql;
     if (params != null) result.params.addAll(params);
     if (dbName != null) result.dbName = dbName;
+    if (tables != null) result.tables.addAll(tables);
     return result;
   }
 
@@ -319,6 +321,7 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'sql')
     ..pPM<$1.Any>(2, _omitFieldNames ? '' : 'params', subBuilder: $1.Any.create)
     ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..pPS(4, _omitFieldNames ? '' : 'tables')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -363,6 +366,166 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
   $core.bool hasDbName() => $_has(2);
   @$pb.TagNumber(3)
   void clearDbName() => $_clearField(3);
+
+  /// Tables that are watched/modified by this request.
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get tables => $_getList(3);
+}
+
+class WatchRequest extends $pb.GeneratedMessage {
+  factory WatchRequest({
+    $core.String? sql,
+    $core.Iterable<$1.Any>? params,
+    $core.String? dbName,
+    $core.Iterable<$core.String>? tables,
+    $core.bool? singleResult,
+  }) {
+    final result = create();
+    if (sql != null) result.sql = sql;
+    if (params != null) result.params.addAll(params);
+    if (dbName != null) result.dbName = dbName;
+    if (tables != null) result.tables.addAll(tables);
+    if (singleResult != null) result.singleResult = singleResult;
+    return result;
+  }
+
+  WatchRequest._();
+
+  factory WatchRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WatchRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WatchRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'sql')
+    ..pPM<$1.Any>(2, _omitFieldNames ? '' : 'params', subBuilder: $1.Any.create)
+    ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..pPS(4, _omitFieldNames ? '' : 'tables')
+    ..aOB(5, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WatchRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WatchRequest copyWith(void Function(WatchRequest) updates) =>
+      super.copyWith((message) => updates(message as WatchRequest))
+          as WatchRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WatchRequest create() => WatchRequest._();
+  @$core.override
+  WatchRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WatchRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WatchRequest>(create);
+  static WatchRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get sql => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set sql($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSql() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSql() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$1.Any> get params => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $core.String get dbName => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set dbName($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDbName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDbName() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get tables => $_getList(3);
+
+  @$pb.TagNumber(5)
+  $core.bool get singleResult => $_getBF(4);
+  @$pb.TagNumber(5)
+  set singleResult($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSingleResult() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSingleResult() => $_clearField(5);
+}
+
+class WatchResponse extends $pb.GeneratedMessage {
+  factory WatchResponse({
+    $core.String? json,
+    $core.bool? singleResult,
+  }) {
+    final result = create();
+    if (json != null) result.json = json;
+    if (singleResult != null) result.singleResult = singleResult;
+    return result;
+  }
+
+  WatchResponse._();
+
+  factory WatchResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WatchResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WatchResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'json')
+    ..aOB(2, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WatchResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WatchResponse copyWith(void Function(WatchResponse) updates) =>
+      super.copyWith((message) => updates(message as WatchResponse))
+          as WatchResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WatchResponse create() => WatchResponse._();
+  @$core.override
+  WatchResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WatchResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WatchResponse>(create);
+  static WatchResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get json => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set json($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasJson() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearJson() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get singleResult => $_getBF(1);
+  @$pb.TagNumber(2)
+  set singleResult($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSingleResult() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSingleResult() => $_clearField(2);
 }
 
 class SqlQueryResponse extends $pb.GeneratedMessage {

@@ -84,13 +84,54 @@ const SqlQueryRequest$json = {
       '10': 'params'
     },
     {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
+    {'1': 'tables', '3': 4, '4': 3, '5': 9, '10': 'tables'},
   ],
 };
 
 /// Descriptor for `SqlQueryRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List sqlQueryRequestDescriptor = $convert.base64Decode(
     'Cg9TcWxRdWVyeVJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLAoGcGFyYW1zGAIgAygLMhQuZ2'
-    '9vZ2xlLnByb3RvYnVmLkFueVIGcGFyYW1zEhYKBmRiTmFtZRgDIAEoCVIGZGJOYW1l');
+    '9vZ2xlLnByb3RvYnVmLkFueVIGcGFyYW1zEhYKBmRiTmFtZRgDIAEoCVIGZGJOYW1lEhYKBnRh'
+    'YmxlcxgEIAMoCVIGdGFibGVz');
+
+@$core.Deprecated('Use watchRequestDescriptor instead')
+const WatchRequest$json = {
+  '1': 'WatchRequest',
+  '2': [
+    {'1': 'sql', '3': 1, '4': 1, '5': 9, '10': 'sql'},
+    {
+      '1': 'params',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.protobuf.Any',
+      '10': 'params'
+    },
+    {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
+    {'1': 'tables', '3': 4, '4': 3, '5': 9, '10': 'tables'},
+    {'1': 'singleResult', '3': 5, '4': 1, '5': 8, '10': 'singleResult'},
+  ],
+};
+
+/// Descriptor for `WatchRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List watchRequestDescriptor = $convert.base64Decode(
+    'CgxXYXRjaFJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLAoGcGFyYW1zGAIgAygLMhQuZ29vZ2'
+    'xlLnByb3RvYnVmLkFueVIGcGFyYW1zEhYKBmRiTmFtZRgDIAEoCVIGZGJOYW1lEhYKBnRhYmxl'
+    'cxgEIAMoCVIGdGFibGVzEiIKDHNpbmdsZVJlc3VsdBgFIAEoCFIMc2luZ2xlUmVzdWx0');
+
+@$core.Deprecated('Use watchResponseDescriptor instead')
+const WatchResponse$json = {
+  '1': 'WatchResponse',
+  '2': [
+    {'1': 'json', '3': 1, '4': 1, '5': 9, '10': 'json'},
+    {'1': 'singleResult', '3': 2, '4': 1, '5': 8, '10': 'singleResult'},
+  ],
+};
+
+/// Descriptor for `WatchResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List watchResponseDescriptor = $convert.base64Decode(
+    'Cg1XYXRjaFJlc3BvbnNlEhIKBGpzb24YASABKAlSBGpzb24SIgoMc2luZ2xlUmVzdWx0GAIgAS'
+    'gIUgxzaW5nbGVSZXN1bHQ=');
 
 @$core.Deprecated('Use sqlQueryResponseDescriptor instead')
 const SqlQueryResponse$json = {
