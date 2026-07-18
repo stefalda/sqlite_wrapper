@@ -1,8 +1,13 @@
+## 0.5.5
+Bugfix: `SqliteServiceClientWrapper.select()` now correctly converts JSON-encoded BLOB data (arrays of integers) back to `Uint8List` for all platforms, fixing cover image reads on web and other platforms.
+
 ## 0.5.4
 
 - Added `BytesValue` support in `convertParamsToAny()` for `Uint8List` (binary)
   parameters sent via gRPC, enabling cover image inserts on web.
-- Added corresponding `import 'dart:typed_data'`. 
+- `SqliteServiceClientWrapper.select()` now converts JSON-encoded BLOB data
+  (arrays of integers) back to `Uint8List`, fixing cover image reads on web.
+- Added corresponding `import 'dart:typed_data'`.
 
 ## 0.5.3
 
