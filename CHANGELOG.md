@@ -1,4 +1,11 @@
+## 0.5.4
+
+- Added `BytesValue` support in `convertParamsToAny()` for `Uint8List` (binary)
+  parameters sent via gRPC, enabling cover image inserts on web.
+- Added corresponding `import 'dart:typed_data'`. 
+
 ## 0.5.3
+
 - Added refreshToken() method to SqliteWrapperGRPC for refreshing the auth token on the server, enabling long-lived sessions without re-authentication. 
 
 ## 0.5.2

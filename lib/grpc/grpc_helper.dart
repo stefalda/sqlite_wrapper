@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fixnum/fixnum.dart';
 import 'package:sqlite_wrapper/generated/google/protobuf/wrappers.pb.dart';
 import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart';
@@ -13,6 +15,8 @@ Iterable<Any> convertParamsToAny(List<Object?> params) {
       return Any.pack(BoolValue()..value = value);
     } else if (value is double) {
       return Any.pack(DoubleValue()..value = value);
+    } else if (value is Uint8List) {
+      return Any.pack(BytesValue()..value = value);
     } else if (value == null) {
       return Any();
     }
