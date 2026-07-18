@@ -153,11 +153,13 @@ class AuthResponse extends $pb.GeneratedMessage {
     $core.bool? success,
     $core.String? message,
     $core.String? token,
+    $core.String? refreshToken,
   }) {
     final result = create();
     if (success != null) result.success = success;
     if (message != null) result.message = message;
     if (token != null) result.token = token;
+    if (refreshToken != null) result.refreshToken = refreshToken;
     return result;
   }
 
@@ -177,6 +179,7 @@ class AuthResponse extends $pb.GeneratedMessage {
     ..aOB(1, _omitFieldNames ? '' : 'success')
     ..aOS(2, _omitFieldNames ? '' : 'message')
     ..aOS(3, _omitFieldNames ? '' : 'token')
+    ..aOS(4, _omitFieldNames ? '' : 'refreshToken', protoName: 'refreshToken')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -224,6 +227,69 @@ class AuthResponse extends $pb.GeneratedMessage {
   $core.bool hasToken() => $_has(2);
   @$pb.TagNumber(3)
   void clearToken() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get refreshToken => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set refreshToken($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRefreshToken() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRefreshToken() => $_clearField(4);
+}
+
+class RefreshTokenRequest extends $pb.GeneratedMessage {
+  factory RefreshTokenRequest({
+    $core.String? refreshToken,
+  }) {
+    final result = create();
+    if (refreshToken != null) result.refreshToken = refreshToken;
+    return result;
+  }
+
+  RefreshTokenRequest._();
+
+  factory RefreshTokenRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RefreshTokenRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RefreshTokenRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'auth'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'refreshToken', protoName: 'refreshToken')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RefreshTokenRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RefreshTokenRequest copyWith(void Function(RefreshTokenRequest) updates) =>
+      super.copyWith((message) => updates(message as RefreshTokenRequest))
+          as RefreshTokenRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RefreshTokenRequest create() => RefreshTokenRequest._();
+  @$core.override
+  RefreshTokenRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RefreshTokenRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RefreshTokenRequest>(create);
+  static RefreshTokenRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get refreshToken => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set refreshToken($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRefreshToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRefreshToken() => $_clearField(1);
 }
 
 class ValidateTokenRequest extends $pb.GeneratedMessage {

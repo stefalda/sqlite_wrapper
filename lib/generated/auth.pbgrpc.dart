@@ -53,6 +53,13 @@ class AuthServiceClient extends $grpc.Client {
     return $createUnaryCall(_$validateToken, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.AuthResponse> refreshToken(
+    $0.RefreshTokenRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$refreshToken, request, options: options);
+  }
+
   // method descriptors
 
   static final _$register =
@@ -69,6 +76,11 @@ class AuthServiceClient extends $grpc.Client {
           '/auth.AuthService/ValidateToken',
           ($0.ValidateTokenRequest value) => value.writeToBuffer(),
           $0.ValidateTokenResponse.fromBuffer);
+  static final _$refreshToken =
+      $grpc.ClientMethod<$0.RefreshTokenRequest, $0.AuthResponse>(
+          '/auth.AuthService/RefreshToken',
+          ($0.RefreshTokenRequest value) => value.writeToBuffer(),
+          $0.AuthResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('auth.AuthService')
@@ -99,6 +111,14 @@ abstract class AuthServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ValidateTokenRequest.fromBuffer(value),
             ($0.ValidateTokenResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RefreshTokenRequest, $0.AuthResponse>(
+        'RefreshToken',
+        refreshToken_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.RefreshTokenRequest.fromBuffer(value),
+        ($0.AuthResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.AuthResponse> register_Pre($grpc.ServiceCall $call,
@@ -125,4 +145,12 @@ abstract class AuthServiceBase extends $grpc.Service {
 
   $async.Future<$0.ValidateTokenResponse> validateToken(
       $grpc.ServiceCall call, $0.ValidateTokenRequest request);
+
+  $async.Future<$0.AuthResponse> refreshToken_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RefreshTokenRequest> $request) async {
+    return refreshToken($call, await $request);
+  }
+
+  $async.Future<$0.AuthResponse> refreshToken(
+      $grpc.ServiceCall call, $0.RefreshTokenRequest request);
 }

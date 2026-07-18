@@ -30,8 +30,8 @@ class AuthClient {
     _stub = AuthServiceClient(channel);
   }
 
-  /// Returns the token or throws an error
-  Future<String> register(String email, String password) async {
+  /// Returns the AuthResponse (token + refreshToken) or throws on error.
+  Future<AuthResponse> register(String email, String password) async {
     try {
       final request = RegisterRequest()
         ..email = email
@@ -39,7 +39,7 @@ class AuthClient {
 
       final response = await _stub.register(request);
       if (response.success) {
-        return response.token;
+        return response;
       }
       final err = ('Registration failed: ${response.message}');
       throw err;
@@ -49,8 +49,8 @@ class AuthClient {
     }
   }
 
-  /// Returns the token or throws an error
-  Future<String> login(String email, String password) async {
+  /// Returns the AuthResponse (token + refreshToken) or throws on error.
+  Future<AuthResponse> login(String email, String password) async {
     try {
       final request = LoginRequest()
         ..email = email
@@ -58,12 +58,29 @@ class AuthClient {
 
       final response = await _stub.login(request);
       if (response.success) {
-        return response.token;
+        return response;
       }
       final err = ('Login failed: ${response.message}');
       throw err;
     } catch (e) {
       final err = ('Error during login: $e');
+      throw err;
+    }
+  }
+
+  /// Returns the AuthResponse (new token + new refreshToken) or throws on failure.
+  Future<AuthResponse> refreshToken(String refreshToken) async {
+    try {
+      final request = RefreshTokenRequest()
+        ..refreshToken = refreshToken;
+      final response = await _stub.refreshToken(request);
+      if (response.success) {
+        return response;
+      }
+      final err = ('Token refresh failed: ${response.message}');
+      throw err;
+    } catch (e) {
+      final err = ('Error during token refresh: $e');
       throw err;
     }
   }

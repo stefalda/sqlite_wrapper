@@ -50,13 +50,28 @@ const AuthResponse$json = {
     {'1': 'success', '3': 1, '4': 1, '5': 8, '10': 'success'},
     {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
     {'1': 'token', '3': 3, '4': 1, '5': 9, '10': 'token'},
+    {'1': 'refreshToken', '3': 4, '4': 1, '5': 9, '10': 'refreshToken'},
   ],
 };
 
 /// Descriptor for `AuthResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List authResponseDescriptor = $convert.base64Decode(
     'CgxBdXRoUmVzcG9uc2USGAoHc3VjY2VzcxgBIAEoCFIHc3VjY2VzcxIYCgdtZXNzYWdlGAIgAS'
-    'gJUgdtZXNzYWdlEhQKBXRva2VuGAMgASgJUgV0b2tlbg==');
+    'gJUgdtZXNzYWdlEhQKBXRva2VuGAMgASgJUgV0b2tlbhIiCgxyZWZyZXNoVG9rZW4YBCABKAlS'
+    'DHJlZnJlc2hUb2tlbg==');
+
+@$core.Deprecated('Use refreshTokenRequestDescriptor instead')
+const RefreshTokenRequest$json = {
+  '1': 'RefreshTokenRequest',
+  '2': [
+    {'1': 'refreshToken', '3': 1, '4': 1, '5': 9, '10': 'refreshToken'},
+  ],
+};
+
+/// Descriptor for `RefreshTokenRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List refreshTokenRequestDescriptor = $convert.base64Decode(
+    'ChNSZWZyZXNoVG9rZW5SZXF1ZXN0EiIKDHJlZnJlc2hUb2tlbhgBIAEoCVIMcmVmcmVzaFRva2'
+    'Vu');
 
 @$core.Deprecated('Use validateTokenRequestDescriptor instead')
 const ValidateTokenRequest$json = {
