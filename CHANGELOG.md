@@ -1,3 +1,6 @@
+## 0.5.3
+- Added refreshToken() method to SqliteWrapperGRPC for refreshing the auth token on the server, enabling long-lived sessions without re-authentication. 
+
 ## 0.5.2
 
 - Fix per concurrent modification of `streams` in `SqliteWrapperGRPC.watch()` when multiple watches are active, preventing `ConcurrentModificationError` on stream updates.
