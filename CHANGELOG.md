@@ -1,3 +1,9 @@
+## 0.5.6
+
+- Added `error_code` field to `AuthResponse` proto (`int32 error_code = 5`) — gRPC auth errors now carry a numeric code (0=success, 1=user_not_found, 2=wrong_credentials, 3=already_registered) while keeping the human message generic for anti-enumeration.
+- **Breaking**: `AuthClient.login()` and `AuthClient.register()` now return the `AuthResponse` directly on both success and failure (instead of throwing on `success == false`). Callers should check `response.success` and `response.errorCode` instead of catching exceptions.
+- Updated generated Dart stubs from proto.
+
 ## 0.5.5
 Bugfix: `SqliteServiceClientWrapper.select()` now correctly converts JSON-encoded BLOB data (arrays of integers) back to `Uint8List` for all platforms, fixing cover image reads on web and other platforms.
 

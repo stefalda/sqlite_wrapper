@@ -154,12 +154,14 @@ class AuthResponse extends $pb.GeneratedMessage {
     $core.String? message,
     $core.String? token,
     $core.String? refreshToken,
+    $core.int? errorCode,
   }) {
     final result = create();
     if (success != null) result.success = success;
     if (message != null) result.message = message;
     if (token != null) result.token = token;
     if (refreshToken != null) result.refreshToken = refreshToken;
+    if (errorCode != null) result.errorCode = errorCode;
     return result;
   }
 
@@ -180,6 +182,7 @@ class AuthResponse extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'message')
     ..aOS(3, _omitFieldNames ? '' : 'token')
     ..aOS(4, _omitFieldNames ? '' : 'refreshToken', protoName: 'refreshToken')
+    ..aI(5, _omitFieldNames ? '' : 'errorCode')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -236,6 +239,15 @@ class AuthResponse extends $pb.GeneratedMessage {
   $core.bool hasRefreshToken() => $_has(3);
   @$pb.TagNumber(4)
   void clearRefreshToken() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get errorCode => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set errorCode($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasErrorCode() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearErrorCode() => $_clearField(5);
 }
 
 class RefreshTokenRequest extends $pb.GeneratedMessage {

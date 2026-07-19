@@ -30,42 +30,40 @@ class AuthClient {
     _stub = AuthServiceClient(channel);
   }
 
-  /// Returns the AuthResponse (token + refreshToken) or throws on error.
+  /// Register a new user.
+  ///
+  /// Returns the AuthResponse. Check [AuthResponse.success] and
+  /// [AuthResponse.errorCode] to determine the outcome:
+  ///
+  /// | errorCode | Meaning |
+  /// |---|---|
+  /// | 0 | Success |
+  /// | 3 | Email already registered |
+  /// | -1 | Other error |
   Future<AuthResponse> register(String email, String password) async {
-    try {
-      final request = RegisterRequest()
-        ..email = email
-        ..password = password;
+    final request = RegisterRequest()
+      ..email = email
+      ..password = password;
 
-      final response = await _stub.register(request);
-      if (response.success) {
-        return response;
-      }
-      final err = ('Registration failed: ${response.message}');
-      throw err;
-    } catch (e) {
-      final err = ('Error during registration: $e');
-      throw err;
-    }
+    return await _stub.register(request);
   }
 
-  /// Returns the AuthResponse (token + refreshToken) or throws on error.
+  /// Login with existing credentials.
+  ///
+  /// Returns the AuthResponse. Check [AuthResponse.success] and
+  /// [AuthResponse.errorCode] to determine the outcome:
+  ///
+  /// | errorCode | Meaning |
+  /// |---|---|
+  /// | 0 | Success |
+  /// | 1 | User not found |
+  /// | 2 | Wrong credentials |
   Future<AuthResponse> login(String email, String password) async {
-    try {
-      final request = LoginRequest()
-        ..email = email
-        ..password = password;
+    final request = LoginRequest()
+      ..email = email
+      ..password = password;
 
-      final response = await _stub.login(request);
-      if (response.success) {
-        return response;
-      }
-      final err = ('Login failed: ${response.message}');
-      throw err;
-    } catch (e) {
-      final err = ('Error during login: $e');
-      throw err;
-    }
+    return await _stub.login(request);
   }
 
   /// Returns the AuthResponse (new token + new refreshToken) or throws on failure.

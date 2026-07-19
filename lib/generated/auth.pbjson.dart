@@ -51,6 +51,7 @@ const AuthResponse$json = {
     {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
     {'1': 'token', '3': 3, '4': 1, '5': 9, '10': 'token'},
     {'1': 'refreshToken', '3': 4, '4': 1, '5': 9, '10': 'refreshToken'},
+    {'1': 'error_code', '3': 5, '4': 1, '5': 5, '10': 'errorCode'},
   ],
 };
 
@@ -58,7 +59,7 @@ const AuthResponse$json = {
 final $typed_data.Uint8List authResponseDescriptor = $convert.base64Decode(
     'CgxBdXRoUmVzcG9uc2USGAoHc3VjY2VzcxgBIAEoCFIHc3VjY2VzcxIYCgdtZXNzYWdlGAIgAS'
     'gJUgdtZXNzYWdlEhQKBXRva2VuGAMgASgJUgV0b2tlbhIiCgxyZWZyZXNoVG9rZW4YBCABKAlS'
-    'DHJlZnJlc2hUb2tlbg==');
+    'DHJlZnJlc2hUb2tlbhIdCgplcnJvcl9jb2RlGAUgASgFUgllcnJvckNvZGU=');
 
 @$core.Deprecated('Use refreshTokenRequestDescriptor instead')
 const RefreshTokenRequest$json = {

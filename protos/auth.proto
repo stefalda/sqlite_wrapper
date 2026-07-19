@@ -24,6 +24,7 @@ message AuthResponse {
   string message = 2;
   string token = 3;
   string refreshToken = 4;
+  int32 error_code = 5;
 }
 
 message RefreshTokenRequest {
