@@ -1,7 +1,6 @@
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:sqlite_wrapper/grpc/grpc_helper.dart';
 import 'package:sqlite_wrapper/grpc/grpc_service_manager.dart';
@@ -104,11 +103,11 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
     try {
       final response = await client.execute(SqlQueryRequest(
         sql: sql,
-        params: convertParamsToAny(params),
+        params: convertParamsToParam(params),
         dbName: dbName ?? defaultDBName,
         tables: tables ?? [],
       ));
-      return jsonDecode(response.result);
+      return dartFromValue(response.result);
     } finally {
       if (streams.isNotEmpty) {
         await updateStreams(tables);
@@ -137,7 +136,7 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
       try {
         final responseStream = client.watch(WatchRequest(
           sql: sql,
-          params: convertParamsToAny(params),
+          params: convertParamsToParam(params),
           dbName: dbName ?? defaultDBName,
           tables: tables,
           singleResult: singleResult,
@@ -145,25 +144,31 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
 
         sub = responseStream.listen(
           (response) {
-            final decoded = jsonDecode(response.json);
-            if (fromMap != null) {
-              if (response.singleResult) {
-                if (decoded is Map<String, dynamic>) {
-                  sc.add(fromMap(decoded));
+            if (singleResult) {
+              if (response.rows.isNotEmpty) {
+                // Single row with multiple columns → Map result
+                final map = mapsFromRows(response.rows.toList()).first;
+                if (fromMap != null) {
+                  sc.add(fromMap(map));
                 } else {
-                  sc.add(decoded);
+                  sc.add(map);
                 }
-              } else if (decoded is List) {
-                sc.add(decoded
-                    .map((e) => fromMap(e as Map<String, dynamic>))
-                    .toList());
-              } else if (decoded is Map<String, dynamic>) {
-                sc.add(fromMap(decoded));
               } else {
-                sc.add(decoded);
+                // Scalar result
+                final val = dartFromValue(response.result);
+                if (fromMap != null && val is Map<String, dynamic>) {
+                  sc.add(fromMap(val));
+                } else {
+                  sc.add(val);
+                }
               }
             } else {
-              sc.add(decoded);
+              final rows = mapsFromRows(response.rows.toList());
+              if (fromMap != null) {
+                sc.add(rows.map((e) => fromMap(e)).toList());
+              } else {
+                sc.add(rows);
+              }
             }
           },
           onDone: () {
@@ -187,6 +192,29 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
 
     startWatch();
     return sc.stream;
+  }
+
+  @override
+  Future<List<dynamic>> executeBatch(
+    List<String> sqls, {
+    List<List<Object?>>? paramsList,
+    List<String>? dbName,
+    List<List<String>>? tablesList,
+  }) async {
+    final requests = <SqlQueryRequest>[];
+    final count = sqls.length;
+    for (int i = 0; i < count; i++) {
+      requests.add(SqlQueryRequest(
+        sql: sqls[i],
+        params: convertParamsToParam(paramsList?[i] ?? []),
+        dbName: dbName?[i] ?? defaultDBName,
+        tables: tablesList?[i] ?? [],
+      ));
+    }
+    final response = await client.executeBatch(BatchRequest(requests: requests));
+    return response.responses
+        .map((r) => dartFromValue(r.result))
+        .toList();
   }
 
   @override

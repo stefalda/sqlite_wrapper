@@ -57,12 +57,20 @@ class SqliteWrapperServiceClient extends $grpc.Client {
     return $createUnaryCall(_$execute, request, options: options);
   }
 
-  /// Executes a SQL command (such as INSERT, UPDATE, DELETE).
+  /// Executes a SELECT query.
   $grpc.ResponseFuture<$0.SqlQueryResponse> select(
     $0.SqlQueryRequest request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$select, request, options: options);
+  }
+
+  /// Executes a batch of SQL commands in a single round-trip.
+  $grpc.ResponseFuture<$0.BatchResponse> executeBatch(
+    $0.BatchRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$executeBatch, request, options: options);
   }
 
   /// Retrieves the database user_version.
@@ -120,6 +128,11 @@ class SqliteWrapperServiceClient extends $grpc.Client {
           '/sqlite_wrapper.SqliteWrapperService/Select',
           ($0.SqlQueryRequest value) => value.writeToBuffer(),
           $0.SqlQueryResponse.fromBuffer);
+  static final _$executeBatch =
+      $grpc.ClientMethod<$0.BatchRequest, $0.BatchResponse>(
+          '/sqlite_wrapper.SqliteWrapperService/ExecuteBatch',
+          ($0.BatchRequest value) => value.writeToBuffer(),
+          $0.BatchResponse.fromBuffer);
   static final _$getVersion =
       $grpc.ClientMethod<$0.GetVersionRequest, $0.GetVersionResponse>(
           '/sqlite_wrapper.SqliteWrapperService/GetVersion',
@@ -173,6 +186,13 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.SqlQueryRequest.fromBuffer(value),
         ($0.SqlQueryResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.BatchRequest, $0.BatchResponse>(
+        'ExecuteBatch',
+        executeBatch_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.BatchRequest.fromBuffer(value),
+        ($0.BatchResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetVersionRequest, $0.GetVersionResponse>(
         'GetVersion',
         getVersion_Pre,
@@ -234,6 +254,14 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
 
   $async.Future<$0.SqlQueryResponse> select(
       $grpc.ServiceCall call, $0.SqlQueryRequest request);
+
+  $async.Future<$0.BatchResponse> executeBatch_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.BatchRequest> $request) async {
+    return executeBatch($call, await $request);
+  }
+
+  $async.Future<$0.BatchResponse> executeBatch(
+      $grpc.ServiceCall call, $0.BatchRequest request);
 
   $async.Future<$0.GetVersionResponse> getVersion_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GetVersionRequest> $request) async {

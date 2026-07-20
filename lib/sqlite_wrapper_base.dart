@@ -114,6 +114,38 @@ abstract class SQLiteWrapperBase {
     }
   }
 
+  /// Execute a batch of SQL statements in a single round-trip (gRPC) or
+  /// sequentially (native). Each statement is processed through [execute]
+  /// so INSERT/UPDATE/DELETE return their scalar result.
+  ///
+  /// Returns a list of results in the same order as [sqls].
+  /// Each result is the scalar value (last_insert_rowid, changes, etc.)
+  /// or null for statements that don't produce one.
+  Future<List<dynamic>> executeBatch(
+    List<String> sqls, {
+    List<List<Object?>>? paramsList,
+    List<String>? dbName,
+    List<List<String>>? tablesList,
+  }) async {
+    final results = <dynamic>[];
+    for (int i = 0; i < sqls.length; i++) {
+      final result = await execute(
+        sqls[i],
+        params: paramsList != null && i < paramsList.length
+            ? paramsList[i]
+            : const [],
+        tables: tablesList != null && i < tablesList.length
+            ? tablesList[i]
+            : null,
+        dbName: dbName != null && i < dbName.length
+            ? dbName[i]
+            : null,
+      );
+      results.add(result);
+    }
+    return results;
+  }
+
   /// Executes a query and returns the results.
   ///
   /// Returns a [List] of results, or a single result if [singleResult] is true.

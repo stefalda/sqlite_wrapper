@@ -1,5 +1,5 @@
+import 'package:grpc/grpc.dart';
 import 'package:grpc/grpc_or_grpcweb.dart';
-import 'package:grpc/service_api.dart';
 import 'package:sqlite_wrapper/grpc/authentication_interceptor.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
@@ -16,11 +16,29 @@ class GrpcServiceManager {
     int port = 50051,
     bool secure = false,
   }) {
-    _channel = GrpcOrGrpcWebClientChannel.toSingleEndpoint(
-      host: host,
-      port: port,
-      transportSecure: secure,
-    );
+    final credentials = secure
+        ? ChannelCredentials.secure()
+        : ChannelCredentials.insecure();
+
+    if (isRunningOnWeb()) {
+      // gRPC-web: browser gestisce già la compressione HTTP,
+      // .grpc() non è supportato su web.
+      _channel = GrpcOrGrpcWebClientChannel.toSingleEndpoint(
+        host: host,
+        port: port,
+        transportSecure: secure,
+      );
+    } else {
+      // Native: abilita codecRegistry per decomprimere le risposte.
+      _channel = GrpcOrGrpcWebClientChannel.grpc(
+        host,
+        port: port,
+        options: ChannelOptions(
+          credentials: credentials,
+          codecRegistry: CodecRegistry(codecs: [GzipCodec()]),
+        ),
+      );
+    }
   }
 
   // Getter methods that lazy-initialize clients
@@ -28,7 +46,8 @@ class GrpcServiceManager {
 
   SqliteWrapperServiceClient get sqliteService =>
       _sqliteClient ??= SqliteWrapperServiceClient(_channel,
-          interceptors: [AuthInterceptor(getToken)]);
+          interceptors: [AuthInterceptor(getToken)],
+          options: CallOptions(compression: GzipCodec()));
 
   String? getToken() {
     return token;

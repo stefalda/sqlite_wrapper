@@ -431,6 +431,38 @@ Closes the database and cleans up its associated reactive streams.
 Future<void> closeDB({String dbName=defaultDBName})
 ```
 
+### executeBatch (gRPC only, v0.6.0+)
+
+Executes multiple SQL statements in a single round-trip (gRPC transport) or
+sequentially (native). On gRPC this batches all requests into one `ExecuteBatch`
+RPC, significantly reducing latency for composite operations.
+
+Returns a list of results in the same order as the SQL statements.
+Each result is the scalar value (last_insert_rowid for INSERT, changes for
+UPDATE/DELETE) or null for statements that don't produce one.
+
+```dart
+Future<List<dynamic>> executeBatch(
+  List<String> sqls, {
+  List<List<Object?>>? paramsList,
+  List<String>? dbName,
+  List<List<String>>? tablesList,
+})
+```
+
+Example — batch two independent SELECT queries:
+```dart
+final results = await db.executeBatch([
+  "SELECT publisherid FROM publishers WHERE publishername=?",
+  "SELECT authorid FROM authors WHERE authorname=?",
+], paramsList: [
+  ["John Wiley"],
+  ["J. R. R. Tolkien"],
+]);
+final publisherId = results[0] as String?;
+final authorId = results[1] as String?;
+```
+
 ### transaction
 
 Executes operations atomically. On success the transaction is committed and

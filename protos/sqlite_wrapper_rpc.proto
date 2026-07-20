@@ -1,17 +1,10 @@
 syntax = "proto3";
 
-import "google/protobuf/any.proto";
-//import "google/protobuf/wrappers.proto"; // Compiler says it's not needed...
-
-
 package sqlite_wrapper;
-
-// Optionally, set the Dart package for generated code.
-// option dart_package = "sqlite";
 
 //
 // The SQLiteWrapper gRPC Service exposes methods to open/close databases,
-// execute SQL commands, query data, update/insert/delete records, 
+// execute SQL commands, query data, update/insert/delete records,
 // get/set database versions, and even watch for changes via server streaming.
 //
 
@@ -25,8 +18,11 @@ service SqliteWrapperService {
   // Executes a SQL command (such as INSERT, UPDATE, DELETE).
   rpc Execute(SqlQueryRequest) returns (SqlQueryResponse);
 
-  // Executes a SQL command (such as INSERT, UPDATE, DELETE).
+  // Executes a SELECT query.
   rpc Select(SqlQueryRequest) returns (SqlQueryResponse);
+
+  // Executes a batch of SQL commands in a single round-trip.
+  rpc ExecuteBatch(BatchRequest) returns (BatchResponse);
 
   // Retrieves the database user_version.
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse);
@@ -34,20 +30,50 @@ service SqliteWrapperService {
   // Sets the database user_version.
   rpc SetVersion(SetVersionRequest) returns (SetVersionResponse);
 
-  rpc Echo (EchoRequest) returns (EchoResponse);
-
-
+  rpc Echo(EchoRequest) returns (EchoResponse);
 
   // Watches a query for real-time updates.
   // This is a server-streaming RPC where the server will push new results.
   rpc Watch(WatchRequest) returns (stream WatchResponse);
 }
 
-//
-// Message definitions
-//
+// ==================== Core types ====================
 
-// ----- Database Connection Operations -----
+// Compact parameter representation (replaces google.protobuf.Any).
+message Param {
+  oneof value {
+    string string_value = 1;
+    int64 int_value = 2;
+    double double_value = 3;
+    bool bool_value = 4;
+    bytes bytes_value = 5;
+    // null is represented by no field set in the oneof.
+  }
+}
+
+// A single value returned in query results.
+message Value {
+  oneof value {
+    string string_value = 1;
+    int64 int_value = 2;
+    double double_value = 3;
+    bool bool_value = 4;
+    bytes bytes_value = 5;
+  }
+}
+
+// A single column in a result row.
+message Column {
+  string name = 1;
+  Value value = 2;
+}
+
+// A single row of query results.
+message Row {
+  repeated Column columns = 1;
+}
+
+// ==================== Database Connection Operations ====================
 
 message OpenDBRequest {
   // The target version (if needed for migration).
@@ -77,41 +103,55 @@ message CloseDBResponse {
   bool success = 1;
 }
 
-// ----- Query & Command Operations -----
+// ==================== Query & Command Operations ====================
 
 // Used for both executing commands (INSERT/UPDATE/DELETE) and queries.
 message SqlQueryRequest {
   // The SQL statement to execute.
   string sql = 1;
-  // Parameters for the SQL statement (passed as strings for simplicity).
-  repeated google.protobuf.Any params = 2;
+  // Parameters for the SQL statement (compact oneof instead of Any).
+  repeated Param params = 2;
   // The database name to use.
   string dbName = 3;
   // Tables that are watched/modified by this request.
   repeated string tables = 4;
 }
 
+message SqlQueryResponse {
+  // For SELECT: the resulting rows.
+  repeated Row rows = 1;
+  // For INSERT/UPDATE/DELETE: a single scalar result
+  // (last_insert_rowid, changes, etc.).
+  Value result = 2;
+}
+
+// ==================== Batching ====================
+
+message BatchRequest {
+  repeated SqlQueryRequest requests = 1;
+}
+
+message BatchResponse {
+  repeated SqlQueryResponse responses = 1;
+}
+
+// ==================== Watch ====================
+
 message WatchRequest {
   string sql = 1;
-  repeated google.protobuf.Any params = 2;
+  repeated Param params = 2;
   string dbName = 3;
   repeated string tables = 4;
   bool singleResult = 5;
 }
 
 message WatchResponse {
-  string json = 1;
-  bool singleResult = 2;
+  repeated Row rows = 1;
+  Value result = 2;
+  bool singleResult = 3;
 }
 
-message SqlQueryResponse {
-  // For simplicity, the result is returned as a JSON-encoded string.
-  // In a real-world scenario you might define a more structured response.
-  string result = 1;
-}
-
-
-// ----- Database Versioning Operations -----
+// ==================== Database Versioning Operations ====================
 
 message GetVersionRequest {
   string dbName = 1;
@@ -130,6 +170,7 @@ message SetVersionResponse {
   bool success = 1;
 }
 
+// ==================== Echo ====================
 
 message EchoRequest {
   string message = 1;

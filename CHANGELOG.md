@@ -1,3 +1,22 @@
+## 0.6.0
+
+- **Breaking**: `SqlQueryRequest.params` changed from `repeated google.protobuf.Any`
+  to `repeated Param` (compact oneof). Replaced `convertParamsToAny()` with
+  `convertParamsToParam()`. Reduces parameter overhead from ~50-80 byte/param
+  to ~2-10 byte/param.
+- **Breaking**: `SqlQueryResponse.result` changed from `string result` (JSON)
+  to `repeated Row rows` + `Value result` (structured protobuf). Removes double
+  serialization (JSON inside Protobuf).
+- **New**: `ExecuteBatch` RPC for batching multiple SQL statements in a single
+  round-trip. Added `SqliteWrapperGRPC.executeBatch()` and default fallback in
+  `SQLiteWrapperBase.executeBatch()`.
+- **New**: Added helper functions `unpackParams()`, `valueFromDart()`/`dartFromValue()`,
+  `rowsFromMaps()`/`mapsFromRows()` in `grpc_helper.dart`.
+- **gRPC compression**: `GrpcServiceManager` now enables gzip compression on
+  native platforms (`GzipCodec` + `CodecRegistry`). On web, the browser handles
+  HTTP-level compression transparently.
+- Updated generated Dart stubs from proto.
+
 ## 0.5.6
 
 - Added `error_code` field to `AuthResponse` proto (`int32 error_code = 5`) — gRPC auth errors now carry a numeric code (0=success, 1=user_not_found, 2=wrong_credentials, 3=already_registered) while keeping the human message generic for anti-enumeration.

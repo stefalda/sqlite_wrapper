@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
+import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart' as grpc;
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 import 'package:test/test.dart';
@@ -49,6 +49,21 @@ SqliteWrapperGRPC _createClientWithChannel(
   return client;
 }
 
+Row _rowFromMap(Map<String, dynamic> map) {
+  final columns = map.entries.map((entry) {
+    return Column(name: entry.key, value: _valueFromDart(entry.value));
+  }).toList();
+  return Row(columns: columns);
+}
+
+Value _valueFromDart(Object? value) {
+  if (value is int) return Value(intValue: Int64(value));
+  if (value is String) return Value(stringValue: value);
+  if (value is bool) return Value(boolValue: value);
+  if (value is double) return Value(doubleValue: value);
+  return Value();
+}
+
 void main() {
   group('SqliteWrapperGRPC.watch', () {
     test('emits initial result and listens for updates', () async {
@@ -64,16 +79,16 @@ void main() {
       final sub = stream.listen((e) => events.add(e));
 
       controller.add(WatchResponse(
-        json: jsonEncode([
-          {'id': 1, 'name': 'Alice'}
-        ]),
+        rows: [
+          _rowFromMap({'id': 1, 'name': 'Alice'}),
+        ],
         singleResult: false,
       ));
       controller.add(WatchResponse(
-        json: jsonEncode([
-          {'id': 1, 'name': 'Alice'},
-          {'id': 2, 'name': 'Bob'}
-        ]),
+        rows: [
+          _rowFromMap({'id': 1, 'name': 'Alice'}),
+          _rowFromMap({'id': 2, 'name': 'Bob'}),
+        ],
         singleResult: false,
       ));
 
@@ -108,9 +123,9 @@ void main() {
       final sub = stream.listen((e) => events.add(e));
 
       controller.add(WatchResponse(
-        json: jsonEncode([
-          {'id': 1, 'name': 'Alice'}
-        ]),
+        rows: [
+          _rowFromMap({'id': 1, 'name': 'Alice'}),
+        ],
         singleResult: false,
       ));
 
@@ -124,7 +139,8 @@ void main() {
       expect((events[0] as List).first.id, 1);
     });
 
-    test('applies fromMap when singleResult is true', () async {
+    test('applies fromMap when singleResult is true with a Map result',
+        () async {
       final controller = StreamController<WatchResponse>();
       final client = _createClientWithChannel(controller);
 
@@ -140,8 +156,11 @@ void main() {
       final events = <dynamic>[];
       final sub = stream.listen((e) => events.add(e));
 
+      // singleResult with a Map result is sent as rows with one row.
       controller.add(WatchResponse(
-        json: jsonEncode({'id': 1, 'name': 'Alice'}),
+        rows: [
+          _rowFromMap({'id': 1, 'name': 'Alice'}),
+        ],
         singleResult: true,
       ));
 
@@ -151,7 +170,8 @@ void main() {
 
       expect(events.length, 1);
       expect(events[0], isA<_TestModel>());
-      expect(events[0].id, 1);
+      expect((events[0] as _TestModel).id, 1);
+      expect((events[0] as _TestModel).name, 'Alice');
     });
 
     test('singleResult emits single value without fromMap', () async {
@@ -168,7 +188,7 @@ void main() {
       final sub = stream.listen((e) => events.add(e));
 
       controller.add(WatchResponse(
-        json: jsonEncode(42),
+        result: _valueFromDart(42),
         singleResult: true,
       ));
 
@@ -234,9 +254,9 @@ void main() {
 
       // Stream should still accept new data after the error
       controller.add(WatchResponse(
-        json: jsonEncode([
-          {'id': 1, 'name': 'Alice'}
-        ]),
+        rows: [
+          _rowFromMap({'id': 1, 'name': 'Alice'}),
+        ],
         singleResult: false,
       ));
 
@@ -254,6 +274,13 @@ class _TestModel {
   final int id;
   final String name;
   _TestModel(this.id, this.name);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _TestModel && other.id == id && other.name == name;
+
+  @override
+  int get hashCode => Object.hash(id, name);
 }
 
 class _FakeWatchClient extends SqliteWrapperServiceClient {

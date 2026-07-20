@@ -15,6 +15,91 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use paramDescriptor instead')
+const Param$json = {
+  '1': 'Param',
+  '2': [
+    {'1': 'string_value', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'stringValue'},
+    {'1': 'int_value', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'intValue'},
+    {'1': 'double_value', '3': 3, '4': 1, '5': 1, '9': 0, '10': 'doubleValue'},
+    {'1': 'bool_value', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'boolValue'},
+    {'1': 'bytes_value', '3': 5, '4': 1, '5': 12, '9': 0, '10': 'bytesValue'},
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `Param`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List paramDescriptor = $convert.base64Decode(
+    'CgVQYXJhbRIjCgxzdHJpbmdfdmFsdWUYASABKAlIAFILc3RyaW5nVmFsdWUSHQoJaW50X3ZhbH'
+    'VlGAIgASgDSABSCGludFZhbHVlEiMKDGRvdWJsZV92YWx1ZRgDIAEoAUgAUgtkb3VibGVWYWx1'
+    'ZRIfCgpib29sX3ZhbHVlGAQgASgISABSCWJvb2xWYWx1ZRIhCgtieXRlc192YWx1ZRgFIAEoDE'
+    'gAUgpieXRlc1ZhbHVlQgcKBXZhbHVl');
+
+@$core.Deprecated('Use valueDescriptor instead')
+const Value$json = {
+  '1': 'Value',
+  '2': [
+    {'1': 'string_value', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'stringValue'},
+    {'1': 'int_value', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'intValue'},
+    {'1': 'double_value', '3': 3, '4': 1, '5': 1, '9': 0, '10': 'doubleValue'},
+    {'1': 'bool_value', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'boolValue'},
+    {'1': 'bytes_value', '3': 5, '4': 1, '5': 12, '9': 0, '10': 'bytesValue'},
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `Value`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List valueDescriptor = $convert.base64Decode(
+    'CgVWYWx1ZRIjCgxzdHJpbmdfdmFsdWUYASABKAlIAFILc3RyaW5nVmFsdWUSHQoJaW50X3ZhbH'
+    'VlGAIgASgDSABSCGludFZhbHVlEiMKDGRvdWJsZV92YWx1ZRgDIAEoAUgAUgtkb3VibGVWYWx1'
+    'ZRIfCgpib29sX3ZhbHVlGAQgASgISABSCWJvb2xWYWx1ZRIhCgtieXRlc192YWx1ZRgFIAEoDE'
+    'gAUgpieXRlc1ZhbHVlQgcKBXZhbHVl');
+
+@$core.Deprecated('Use columnDescriptor instead')
+const Column$json = {
+  '1': 'Column',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.sqlite_wrapper.Value',
+      '10': 'value'
+    },
+  ],
+};
+
+/// Descriptor for `Column`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List columnDescriptor = $convert.base64Decode(
+    'CgZDb2x1bW4SEgoEbmFtZRgBIAEoCVIEbmFtZRIrCgV2YWx1ZRgCIAEoCzIVLnNxbGl0ZV93cm'
+    'FwcGVyLlZhbHVlUgV2YWx1ZQ==');
+
+@$core.Deprecated('Use rowDescriptor instead')
+const Row$json = {
+  '1': 'Row',
+  '2': [
+    {
+      '1': 'columns',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.sqlite_wrapper.Column',
+      '10': 'columns'
+    },
+  ],
+};
+
+/// Descriptor for `Row`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List rowDescriptor = $convert.base64Decode(
+    'CgNSb3cSMAoHY29sdW1ucxgBIAMoCzIWLnNxbGl0ZV93cmFwcGVyLkNvbHVtblIHY29sdW1ucw'
+    '==');
+
 @$core.Deprecated('Use openDBRequestDescriptor instead')
 const OpenDBRequest$json = {
   '1': 'OpenDBRequest',
@@ -80,7 +165,7 @@ const SqlQueryRequest$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.protobuf.Any',
+      '6': '.sqlite_wrapper.Param',
       '10': 'params'
     },
     {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
@@ -90,9 +175,77 @@ const SqlQueryRequest$json = {
 
 /// Descriptor for `SqlQueryRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List sqlQueryRequestDescriptor = $convert.base64Decode(
-    'Cg9TcWxRdWVyeVJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLAoGcGFyYW1zGAIgAygLMhQuZ2'
-    '9vZ2xlLnByb3RvYnVmLkFueVIGcGFyYW1zEhYKBmRiTmFtZRgDIAEoCVIGZGJOYW1lEhYKBnRh'
-    'YmxlcxgEIAMoCVIGdGFibGVz');
+    'Cg9TcWxRdWVyeVJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLQoGcGFyYW1zGAIgAygLMhUuc3'
+    'FsaXRlX3dyYXBwZXIuUGFyYW1SBnBhcmFtcxIWCgZkYk5hbWUYAyABKAlSBmRiTmFtZRIWCgZ0'
+    'YWJsZXMYBCADKAlSBnRhYmxlcw==');
+
+@$core.Deprecated('Use sqlQueryResponseDescriptor instead')
+const SqlQueryResponse$json = {
+  '1': 'SqlQueryResponse',
+  '2': [
+    {
+      '1': 'rows',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.sqlite_wrapper.Row',
+      '10': 'rows'
+    },
+    {
+      '1': 'result',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.sqlite_wrapper.Value',
+      '10': 'result'
+    },
+  ],
+};
+
+/// Descriptor for `SqlQueryResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sqlQueryResponseDescriptor = $convert.base64Decode(
+    'ChBTcWxRdWVyeVJlc3BvbnNlEicKBHJvd3MYASADKAsyEy5zcWxpdGVfd3JhcHBlci5Sb3dSBH'
+    'Jvd3MSLQoGcmVzdWx0GAIgASgLMhUuc3FsaXRlX3dyYXBwZXIuVmFsdWVSBnJlc3VsdA==');
+
+@$core.Deprecated('Use batchRequestDescriptor instead')
+const BatchRequest$json = {
+  '1': 'BatchRequest',
+  '2': [
+    {
+      '1': 'requests',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.sqlite_wrapper.SqlQueryRequest',
+      '10': 'requests'
+    },
+  ],
+};
+
+/// Descriptor for `BatchRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List batchRequestDescriptor = $convert.base64Decode(
+    'CgxCYXRjaFJlcXVlc3QSOwoIcmVxdWVzdHMYASADKAsyHy5zcWxpdGVfd3JhcHBlci5TcWxRdW'
+    'VyeVJlcXVlc3RSCHJlcXVlc3Rz');
+
+@$core.Deprecated('Use batchResponseDescriptor instead')
+const BatchResponse$json = {
+  '1': 'BatchResponse',
+  '2': [
+    {
+      '1': 'responses',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.sqlite_wrapper.SqlQueryResponse',
+      '10': 'responses'
+    },
+  ],
+};
+
+/// Descriptor for `BatchResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List batchResponseDescriptor = $convert.base64Decode(
+    'Cg1CYXRjaFJlc3BvbnNlEj4KCXJlc3BvbnNlcxgBIAMoCzIgLnNxbGl0ZV93cmFwcGVyLlNxbF'
+    'F1ZXJ5UmVzcG9uc2VSCXJlc3BvbnNlcw==');
 
 @$core.Deprecated('Use watchRequestDescriptor instead')
 const WatchRequest$json = {
@@ -104,7 +257,7 @@ const WatchRequest$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.protobuf.Any',
+      '6': '.sqlite_wrapper.Param',
       '10': 'params'
     },
     {'1': 'dbName', '3': 3, '4': 1, '5': 9, '10': 'dbName'},
@@ -115,35 +268,39 @@ const WatchRequest$json = {
 
 /// Descriptor for `WatchRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List watchRequestDescriptor = $convert.base64Decode(
-    'CgxXYXRjaFJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLAoGcGFyYW1zGAIgAygLMhQuZ29vZ2'
-    'xlLnByb3RvYnVmLkFueVIGcGFyYW1zEhYKBmRiTmFtZRgDIAEoCVIGZGJOYW1lEhYKBnRhYmxl'
-    'cxgEIAMoCVIGdGFibGVzEiIKDHNpbmdsZVJlc3VsdBgFIAEoCFIMc2luZ2xlUmVzdWx0');
+    'CgxXYXRjaFJlcXVlc3QSEAoDc3FsGAEgASgJUgNzcWwSLQoGcGFyYW1zGAIgAygLMhUuc3FsaX'
+    'RlX3dyYXBwZXIuUGFyYW1SBnBhcmFtcxIWCgZkYk5hbWUYAyABKAlSBmRiTmFtZRIWCgZ0YWJs'
+    'ZXMYBCADKAlSBnRhYmxlcxIiCgxzaW5nbGVSZXN1bHQYBSABKAhSDHNpbmdsZVJlc3VsdA==');
 
 @$core.Deprecated('Use watchResponseDescriptor instead')
 const WatchResponse$json = {
   '1': 'WatchResponse',
   '2': [
-    {'1': 'json', '3': 1, '4': 1, '5': 9, '10': 'json'},
-    {'1': 'singleResult', '3': 2, '4': 1, '5': 8, '10': 'singleResult'},
+    {
+      '1': 'rows',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.sqlite_wrapper.Row',
+      '10': 'rows'
+    },
+    {
+      '1': 'result',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.sqlite_wrapper.Value',
+      '10': 'result'
+    },
+    {'1': 'singleResult', '3': 3, '4': 1, '5': 8, '10': 'singleResult'},
   ],
 };
 
 /// Descriptor for `WatchResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List watchResponseDescriptor = $convert.base64Decode(
-    'Cg1XYXRjaFJlc3BvbnNlEhIKBGpzb24YASABKAlSBGpzb24SIgoMc2luZ2xlUmVzdWx0GAIgAS'
-    'gIUgxzaW5nbGVSZXN1bHQ=');
-
-@$core.Deprecated('Use sqlQueryResponseDescriptor instead')
-const SqlQueryResponse$json = {
-  '1': 'SqlQueryResponse',
-  '2': [
-    {'1': 'result', '3': 1, '4': 1, '5': 9, '10': 'result'},
-  ],
-};
-
-/// Descriptor for `SqlQueryResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List sqlQueryResponseDescriptor = $convert
-    .base64Decode('ChBTcWxRdWVyeVJlc3BvbnNlEhYKBnJlc3VsdBgBIAEoCVIGcmVzdWx0');
+    'Cg1XYXRjaFJlc3BvbnNlEicKBHJvd3MYASADKAsyEy5zcWxpdGVfd3JhcHBlci5Sb3dSBHJvd3'
+    'MSLQoGcmVzdWx0GAIgASgLMhUuc3FsaXRlX3dyYXBwZXIuVmFsdWVSBnJlc3VsdBIiCgxzaW5n'
+    'bGVSZXN1bHQYAyABKAhSDHNpbmdsZVJlc3VsdA==');
 
 @$core.Deprecated('Use getVersionRequestDescriptor instead')
 const GetVersionRequest$json = {

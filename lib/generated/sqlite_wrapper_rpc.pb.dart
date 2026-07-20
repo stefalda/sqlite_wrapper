@@ -12,10 +12,395 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+enum Param_Value {
+  stringValue,
+  intValue,
+  doubleValue,
+  boolValue,
+  bytesValue,
+  notSet
+}
+
+/// Compact parameter representation (replaces google.protobuf.Any).
+class Param extends $pb.GeneratedMessage {
+  factory Param({
+    $core.String? stringValue,
+    $fixnum.Int64? intValue,
+    $core.double? doubleValue,
+    $core.bool? boolValue,
+    $core.List<$core.int>? bytesValue,
+  }) {
+    final result = create();
+    if (stringValue != null) result.stringValue = stringValue;
+    if (intValue != null) result.intValue = intValue;
+    if (doubleValue != null) result.doubleValue = doubleValue;
+    if (boolValue != null) result.boolValue = boolValue;
+    if (bytesValue != null) result.bytesValue = bytesValue;
+    return result;
+  }
+
+  Param._();
+
+  factory Param.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Param.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, Param_Value> _Param_ValueByTag = {
+    1: Param_Value.stringValue,
+    2: Param_Value.intValue,
+    3: Param_Value.doubleValue,
+    4: Param_Value.boolValue,
+    5: Param_Value.bytesValue,
+    0: Param_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Param',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4, 5])
+    ..aOS(1, _omitFieldNames ? '' : 'stringValue')
+    ..aInt64(2, _omitFieldNames ? '' : 'intValue')
+    ..aD(3, _omitFieldNames ? '' : 'doubleValue')
+    ..aOB(4, _omitFieldNames ? '' : 'boolValue')
+    ..a<$core.List<$core.int>>(
+        5, _omitFieldNames ? '' : 'bytesValue', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Param clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Param copyWith(void Function(Param) updates) =>
+      super.copyWith((message) => updates(message as Param)) as Param;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Param create() => Param._();
+  @$core.override
+  Param createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Param getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Param>(create);
+  static Param? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  Param_Value whichValue() => _Param_ValueByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  void clearValue() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get stringValue => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set stringValue($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStringValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStringValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get intValue => $_getI64(1);
+  @$pb.TagNumber(2)
+  set intValue($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasIntValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearIntValue() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get doubleValue => $_getN(2);
+  @$pb.TagNumber(3)
+  set doubleValue($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDoubleValue() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDoubleValue() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get boolValue => $_getBF(3);
+  @$pb.TagNumber(4)
+  set boolValue($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBoolValue() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBoolValue() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.List<$core.int> get bytesValue => $_getN(4);
+  @$pb.TagNumber(5)
+  set bytesValue($core.List<$core.int> value) => $_setBytes(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasBytesValue() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBytesValue() => $_clearField(5);
+}
+
+enum Value_Value {
+  stringValue,
+  intValue,
+  doubleValue,
+  boolValue,
+  bytesValue,
+  notSet
+}
+
+/// A single value returned in query results.
+class Value extends $pb.GeneratedMessage {
+  factory Value({
+    $core.String? stringValue,
+    $fixnum.Int64? intValue,
+    $core.double? doubleValue,
+    $core.bool? boolValue,
+    $core.List<$core.int>? bytesValue,
+  }) {
+    final result = create();
+    if (stringValue != null) result.stringValue = stringValue;
+    if (intValue != null) result.intValue = intValue;
+    if (doubleValue != null) result.doubleValue = doubleValue;
+    if (boolValue != null) result.boolValue = boolValue;
+    if (bytesValue != null) result.bytesValue = bytesValue;
+    return result;
+  }
+
+  Value._();
+
+  factory Value.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Value.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, Value_Value> _Value_ValueByTag = {
+    1: Value_Value.stringValue,
+    2: Value_Value.intValue,
+    3: Value_Value.doubleValue,
+    4: Value_Value.boolValue,
+    5: Value_Value.bytesValue,
+    0: Value_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Value',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4, 5])
+    ..aOS(1, _omitFieldNames ? '' : 'stringValue')
+    ..aInt64(2, _omitFieldNames ? '' : 'intValue')
+    ..aD(3, _omitFieldNames ? '' : 'doubleValue')
+    ..aOB(4, _omitFieldNames ? '' : 'boolValue')
+    ..a<$core.List<$core.int>>(
+        5, _omitFieldNames ? '' : 'bytesValue', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Value clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Value copyWith(void Function(Value) updates) =>
+      super.copyWith((message) => updates(message as Value)) as Value;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Value create() => Value._();
+  @$core.override
+  Value createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Value getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Value>(create);
+  static Value? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  Value_Value whichValue() => _Value_ValueByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  void clearValue() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get stringValue => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set stringValue($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStringValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStringValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get intValue => $_getI64(1);
+  @$pb.TagNumber(2)
+  set intValue($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasIntValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearIntValue() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get doubleValue => $_getN(2);
+  @$pb.TagNumber(3)
+  set doubleValue($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDoubleValue() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDoubleValue() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get boolValue => $_getBF(3);
+  @$pb.TagNumber(4)
+  set boolValue($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBoolValue() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBoolValue() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.List<$core.int> get bytesValue => $_getN(4);
+  @$pb.TagNumber(5)
+  set bytesValue($core.List<$core.int> value) => $_setBytes(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasBytesValue() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBytesValue() => $_clearField(5);
+}
+
+/// A single column in a result row.
+class Column extends $pb.GeneratedMessage {
+  factory Column({
+    $core.String? name,
+    Value? value,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Column._();
+
+  factory Column.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Column.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Column',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOM<Value>(2, _omitFieldNames ? '' : 'value', subBuilder: Value.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Column clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Column copyWith(void Function(Column) updates) =>
+      super.copyWith((message) => updates(message as Column)) as Column;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Column create() => Column._();
+  @$core.override
+  Column createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Column getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Column>(create);
+  static Column? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  Value get value => $_getN(1);
+  @$pb.TagNumber(2)
+  set value(Value value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearValue() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Value ensureValue() => $_ensure(1);
+}
+
+/// A single row of query results.
+class Row extends $pb.GeneratedMessage {
+  factory Row({
+    $core.Iterable<Column>? columns,
+  }) {
+    final result = create();
+    if (columns != null) result.columns.addAll(columns);
+    return result;
+  }
+
+  Row._();
+
+  factory Row.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Row.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Row',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..pPM<Column>(1, _omitFieldNames ? '' : 'columns',
+        subBuilder: Column.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Row clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Row copyWith(void Function(Row) updates) =>
+      super.copyWith((message) => updates(message as Row)) as Row;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Row create() => Row._();
+  @$core.override
+  Row createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Row getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Row>(create);
+  static Row? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Column> get columns => $_getList(0);
+}
 
 class OpenDBRequest extends $pb.GeneratedMessage {
   factory OpenDBRequest({
@@ -293,7 +678,7 @@ class CloseDBResponse extends $pb.GeneratedMessage {
 class SqlQueryRequest extends $pb.GeneratedMessage {
   factory SqlQueryRequest({
     $core.String? sql,
-    $core.Iterable<$1.Any>? params,
+    $core.Iterable<Param>? params,
     $core.String? dbName,
     $core.Iterable<$core.String>? tables,
   }) {
@@ -319,7 +704,7 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'sql')
-    ..pPM<$1.Any>(2, _omitFieldNames ? '' : 'params', subBuilder: $1.Any.create)
+    ..pPM<Param>(2, _omitFieldNames ? '' : 'params', subBuilder: Param.create)
     ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
     ..pPS(4, _omitFieldNames ? '' : 'tables')
     ..hasRequiredFields = false;
@@ -353,9 +738,9 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearSql() => $_clearField(1);
 
-  /// Parameters for the SQL statement (passed as strings for simplicity).
+  /// Parameters for the SQL statement (compact oneof instead of Any).
   @$pb.TagNumber(2)
-  $pb.PbList<$1.Any> get params => $_getList(1);
+  $pb.PbList<Param> get params => $_getList(1);
 
   /// The database name to use.
   @$pb.TagNumber(3)
@@ -372,10 +757,173 @@ class SqlQueryRequest extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get tables => $_getList(3);
 }
 
+class SqlQueryResponse extends $pb.GeneratedMessage {
+  factory SqlQueryResponse({
+    $core.Iterable<Row>? rows,
+    Value? result,
+  }) {
+    final result$ = create();
+    if (rows != null) result$.rows.addAll(rows);
+    if (result != null) result$.result = result;
+    return result$;
+  }
+
+  SqlQueryResponse._();
+
+  factory SqlQueryResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SqlQueryResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SqlQueryResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..pPM<Row>(1, _omitFieldNames ? '' : 'rows', subBuilder: Row.create)
+    ..aOM<Value>(2, _omitFieldNames ? '' : 'result', subBuilder: Value.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SqlQueryResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SqlQueryResponse copyWith(void Function(SqlQueryResponse) updates) =>
+      super.copyWith((message) => updates(message as SqlQueryResponse))
+          as SqlQueryResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SqlQueryResponse create() => SqlQueryResponse._();
+  @$core.override
+  SqlQueryResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SqlQueryResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SqlQueryResponse>(create);
+  static SqlQueryResponse? _defaultInstance;
+
+  /// For SELECT: the resulting rows.
+  @$pb.TagNumber(1)
+  $pb.PbList<Row> get rows => $_getList(0);
+
+  /// For INSERT/UPDATE/DELETE: a single scalar result
+  /// (last_insert_rowid, changes, etc.).
+  @$pb.TagNumber(2)
+  Value get result => $_getN(1);
+  @$pb.TagNumber(2)
+  set result(Value value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasResult() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearResult() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Value ensureResult() => $_ensure(1);
+}
+
+class BatchRequest extends $pb.GeneratedMessage {
+  factory BatchRequest({
+    $core.Iterable<SqlQueryRequest>? requests,
+  }) {
+    final result = create();
+    if (requests != null) result.requests.addAll(requests);
+    return result;
+  }
+
+  BatchRequest._();
+
+  factory BatchRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BatchRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BatchRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..pPM<SqlQueryRequest>(1, _omitFieldNames ? '' : 'requests',
+        subBuilder: SqlQueryRequest.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchRequest copyWith(void Function(BatchRequest) updates) =>
+      super.copyWith((message) => updates(message as BatchRequest))
+          as BatchRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BatchRequest create() => BatchRequest._();
+  @$core.override
+  BatchRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BatchRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BatchRequest>(create);
+  static BatchRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<SqlQueryRequest> get requests => $_getList(0);
+}
+
+class BatchResponse extends $pb.GeneratedMessage {
+  factory BatchResponse({
+    $core.Iterable<SqlQueryResponse>? responses,
+  }) {
+    final result = create();
+    if (responses != null) result.responses.addAll(responses);
+    return result;
+  }
+
+  BatchResponse._();
+
+  factory BatchResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BatchResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BatchResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..pPM<SqlQueryResponse>(1, _omitFieldNames ? '' : 'responses',
+        subBuilder: SqlQueryResponse.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchResponse copyWith(void Function(BatchResponse) updates) =>
+      super.copyWith((message) => updates(message as BatchResponse))
+          as BatchResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BatchResponse create() => BatchResponse._();
+  @$core.override
+  BatchResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BatchResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BatchResponse>(create);
+  static BatchResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<SqlQueryResponse> get responses => $_getList(0);
+}
+
 class WatchRequest extends $pb.GeneratedMessage {
   factory WatchRequest({
     $core.String? sql,
-    $core.Iterable<$1.Any>? params,
+    $core.Iterable<Param>? params,
     $core.String? dbName,
     $core.Iterable<$core.String>? tables,
     $core.bool? singleResult,
@@ -403,7 +951,7 @@ class WatchRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'sql')
-    ..pPM<$1.Any>(2, _omitFieldNames ? '' : 'params', subBuilder: $1.Any.create)
+    ..pPM<Param>(2, _omitFieldNames ? '' : 'params', subBuilder: Param.create)
     ..aOS(3, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
     ..pPS(4, _omitFieldNames ? '' : 'tables')
     ..aOB(5, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
@@ -438,7 +986,7 @@ class WatchRequest extends $pb.GeneratedMessage {
   void clearSql() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.Any> get params => $_getList(1);
+  $pb.PbList<Param> get params => $_getList(1);
 
   @$pb.TagNumber(3)
   $core.String get dbName => $_getSZ(2);
@@ -464,13 +1012,15 @@ class WatchRequest extends $pb.GeneratedMessage {
 
 class WatchResponse extends $pb.GeneratedMessage {
   factory WatchResponse({
-    $core.String? json,
+    $core.Iterable<Row>? rows,
+    Value? result,
     $core.bool? singleResult,
   }) {
-    final result = create();
-    if (json != null) result.json = json;
-    if (singleResult != null) result.singleResult = singleResult;
-    return result;
+    final result$ = create();
+    if (rows != null) result$.rows.addAll(rows);
+    if (result != null) result$.result = result;
+    if (singleResult != null) result$.singleResult = singleResult;
+    return result$;
   }
 
   WatchResponse._();
@@ -486,8 +1036,9 @@ class WatchResponse extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'WatchResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'json')
-    ..aOB(2, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
+    ..pPM<Row>(1, _omitFieldNames ? '' : 'rows', subBuilder: Row.create)
+    ..aOM<Value>(2, _omitFieldNames ? '' : 'result', subBuilder: Value.create)
+    ..aOB(3, _omitFieldNames ? '' : 'singleResult', protoName: 'singleResult')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -510,78 +1061,27 @@ class WatchResponse extends $pb.GeneratedMessage {
   static WatchResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get json => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set json($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasJson() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearJson() => $_clearField(1);
+  $pb.PbList<Row> get rows => $_getList(0);
 
   @$pb.TagNumber(2)
-  $core.bool get singleResult => $_getBF(1);
+  Value get result => $_getN(1);
   @$pb.TagNumber(2)
-  set singleResult($core.bool value) => $_setBool(1, value);
+  set result(Value value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasSingleResult() => $_has(1);
+  $core.bool hasResult() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSingleResult() => $_clearField(2);
-}
+  void clearResult() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Value ensureResult() => $_ensure(1);
 
-class SqlQueryResponse extends $pb.GeneratedMessage {
-  factory SqlQueryResponse({
-    $core.String? result,
-  }) {
-    final result$ = create();
-    if (result != null) result$.result = result;
-    return result$;
-  }
-
-  SqlQueryResponse._();
-
-  factory SqlQueryResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SqlQueryResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SqlQueryResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'result')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SqlQueryResponse clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SqlQueryResponse copyWith(void Function(SqlQueryResponse) updates) =>
-      super.copyWith((message) => updates(message as SqlQueryResponse))
-          as SqlQueryResponse;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SqlQueryResponse create() => SqlQueryResponse._();
-  @$core.override
-  SqlQueryResponse createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SqlQueryResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SqlQueryResponse>(create);
-  static SqlQueryResponse? _defaultInstance;
-
-  /// For simplicity, the result is returned as a JSON-encoded string.
-  /// In a real-world scenario you might define a more structured response.
-  @$pb.TagNumber(1)
-  $core.String get result => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set result($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasResult() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearResult() => $_clearField(1);
+  @$pb.TagNumber(3)
+  $core.bool get singleResult => $_getBF(2);
+  @$pb.TagNumber(3)
+  set singleResult($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSingleResult() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSingleResult() => $_clearField(3);
 }
 
 class GetVersionRequest extends $pb.GeneratedMessage {
