@@ -239,6 +239,30 @@ void main() async {
 The server pushes new results to the client whenever the watched tables change.
 Changes made by other clients are detected and propagated in real time.
 
+### Export/Backup/CSV (v0.7.0+)
+
+The gRPC implementation exposes three additional methods on `SqliteWrapperGRPC`
+for backup, restore, and CSV export — useful for web clients that cannot access
+the local filesystem.
+
+```dart
+// Export the entire database as raw bytes (download as .sqlite)
+final backupBytes = await db.exportBackup();
+
+// Import/restore a database from raw bytes
+final response = await db.importBackup(Uint8List.fromList(bytes));
+if (response.success) {
+  print('Restore succeeded');
+}
+
+// Export query results as a CSV string
+final csv = await db.exportCSV('SELECT * FROM books');
+```
+
+These methods call the corresponding `ExportBackup`, `ImportBackup`, and
+`ExportCSV` RPCs on the server. See the server README for details on the
+server-side implementation.
+
 ### Regenerate protobuf stubs
 
 After changing the `.proto` files, run:

@@ -106,6 +106,30 @@ class SqliteWrapperServiceClient extends $grpc.Client {
         options: options);
   }
 
+  /// Exports the entire database file as bytes (backup).
+  $grpc.ResponseFuture<$0.ExportBackupResponse> exportBackup(
+    $0.ExportBackupRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$exportBackup, request, options: options);
+  }
+
+  /// Imports a database file from bytes (restore).
+  $grpc.ResponseFuture<$0.ImportBackupResponse> importBackup(
+    $0.ImportBackupRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$importBackup, request, options: options);
+  }
+
+  /// Exports query results as CSV.
+  $grpc.ResponseFuture<$0.ExportCSVResponse> exportCSV(
+    $0.ExportCSVRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$exportCSV, request, options: options);
+  }
+
   // method descriptors
 
   static final _$openDB =
@@ -151,6 +175,21 @@ class SqliteWrapperServiceClient extends $grpc.Client {
       '/sqlite_wrapper.SqliteWrapperService/Watch',
       ($0.WatchRequest value) => value.writeToBuffer(),
       $0.WatchResponse.fromBuffer);
+  static final _$exportBackup =
+      $grpc.ClientMethod<$0.ExportBackupRequest, $0.ExportBackupResponse>(
+          '/sqlite_wrapper.SqliteWrapperService/ExportBackup',
+          ($0.ExportBackupRequest value) => value.writeToBuffer(),
+          $0.ExportBackupResponse.fromBuffer);
+  static final _$importBackup =
+      $grpc.ClientMethod<$0.ImportBackupRequest, $0.ImportBackupResponse>(
+          '/sqlite_wrapper.SqliteWrapperService/ImportBackup',
+          ($0.ImportBackupRequest value) => value.writeToBuffer(),
+          $0.ImportBackupResponse.fromBuffer);
+  static final _$exportCSV =
+      $grpc.ClientMethod<$0.ExportCSVRequest, $0.ExportCSVResponse>(
+          '/sqlite_wrapper.SqliteWrapperService/ExportCSV',
+          ($0.ExportCSVRequest value) => value.writeToBuffer(),
+          $0.ExportCSVResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('sqlite_wrapper.SqliteWrapperService')
@@ -221,6 +260,31 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.WatchRequest.fromBuffer(value),
         ($0.WatchResponse value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ExportBackupRequest, $0.ExportBackupResponse>(
+            'ExportBackup',
+            exportBackup_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ExportBackupRequest.fromBuffer(value),
+            ($0.ExportBackupResponse value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ImportBackupRequest, $0.ImportBackupResponse>(
+            'ImportBackup',
+            importBackup_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ImportBackupRequest.fromBuffer(value),
+            ($0.ImportBackupResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ExportCSVRequest, $0.ExportCSVResponse>(
+        'ExportCSV',
+        exportCSV_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ExportCSVRequest.fromBuffer(value),
+        ($0.ExportCSVResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.OpenDBResponse> openDB_Pre(
@@ -294,4 +358,30 @@ abstract class SqliteWrapperServiceBase extends $grpc.Service {
 
   $async.Stream<$0.WatchResponse> watch(
       $grpc.ServiceCall call, $0.WatchRequest request);
+
+  $async.Future<$0.ExportBackupResponse> exportBackup_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ExportBackupRequest> $request) async {
+    return exportBackup($call, await $request);
+  }
+
+  $async.Future<$0.ExportBackupResponse> exportBackup(
+      $grpc.ServiceCall call, $0.ExportBackupRequest request);
+
+  $async.Future<$0.ImportBackupResponse> importBackup_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ImportBackupRequest> $request) async {
+    return importBackup($call, await $request);
+  }
+
+  $async.Future<$0.ImportBackupResponse> importBackup(
+      $grpc.ServiceCall call, $0.ImportBackupRequest request);
+
+  $async.Future<$0.ExportCSVResponse> exportCSV_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ExportCSVRequest> $request) async {
+    return exportCSV($call, await $request);
+  }
+
+  $async.Future<$0.ExportCSVResponse> exportCSV(
+      $grpc.ServiceCall call, $0.ExportCSVRequest request);
 }

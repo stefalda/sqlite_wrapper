@@ -1,3 +1,12 @@
+## 0.7.0
+
+- **New**: `ExportBackup` RPC — export the entire database file as bytes.
+- **New**: `ImportBackup` RPC — import/restore a database from bytes.
+- **New**: `ExportCSV` RPC — execute a SQL query and return results as CSV.
+- Added `ExportBackupRequest`/`ExportBackupResponse`, `ImportBackupRequest`/`ImportBackupResponse`,
+  and `ExportCSVRequest`/`ExportCSVResponse` messages to proto.
+- Updated generated Dart stubs from proto.
+
 ## 0.6.1
 
 - **Fixed**: Web build failure `GrpcOrGrpcWebClientChannel can't be assigned to ClientChannel`.

@@ -1420,6 +1420,378 @@ class EchoResponse extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(1);
 }
 
+class ExportBackupRequest extends $pb.GeneratedMessage {
+  factory ExportBackupRequest({
+    $core.String? dbName,
+  }) {
+    final result = create();
+    if (dbName != null) result.dbName = dbName;
+    return result;
+  }
+
+  ExportBackupRequest._();
+
+  factory ExportBackupRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExportBackupRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExportBackupRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportBackupRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportBackupRequest copyWith(void Function(ExportBackupRequest) updates) =>
+      super.copyWith((message) => updates(message as ExportBackupRequest))
+          as ExportBackupRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ExportBackupRequest create() => ExportBackupRequest._();
+  @$core.override
+  ExportBackupRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ExportBackupRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExportBackupRequest>(create);
+  static ExportBackupRequest? _defaultInstance;
+
+  /// The database name to export.
+  @$pb.TagNumber(1)
+  $core.String get dbName => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set dbName($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDbName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDbName() => $_clearField(1);
+}
+
+class ExportBackupResponse extends $pb.GeneratedMessage {
+  factory ExportBackupResponse({
+    $core.List<$core.int>? data,
+  }) {
+    final result = create();
+    if (data != null) result.data = data;
+    return result;
+  }
+
+  ExportBackupResponse._();
+
+  factory ExportBackupResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExportBackupResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExportBackupResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportBackupResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportBackupResponse copyWith(void Function(ExportBackupResponse) updates) =>
+      super.copyWith((message) => updates(message as ExportBackupResponse))
+          as ExportBackupResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ExportBackupResponse create() => ExportBackupResponse._();
+  @$core.override
+  ExportBackupResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ExportBackupResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExportBackupResponse>(create);
+  static ExportBackupResponse? _defaultInstance;
+
+  /// The raw database file content.
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get data => $_getN(0);
+  @$pb.TagNumber(1)
+  set data($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasData() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearData() => $_clearField(1);
+}
+
+class ImportBackupRequest extends $pb.GeneratedMessage {
+  factory ImportBackupRequest({
+    $core.String? dbName,
+    $core.List<$core.int>? data,
+  }) {
+    final result = create();
+    if (dbName != null) result.dbName = dbName;
+    if (data != null) result.data = data;
+    return result;
+  }
+
+  ImportBackupRequest._();
+
+  factory ImportBackupRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImportBackupRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImportBackupRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportBackupRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportBackupRequest copyWith(void Function(ImportBackupRequest) updates) =>
+      super.copyWith((message) => updates(message as ImportBackupRequest))
+          as ImportBackupRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImportBackupRequest create() => ImportBackupRequest._();
+  @$core.override
+  ImportBackupRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ImportBackupRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImportBackupRequest>(create);
+  static ImportBackupRequest? _defaultInstance;
+
+  /// The database name to import into.
+  @$pb.TagNumber(1)
+  $core.String get dbName => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set dbName($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDbName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDbName() => $_clearField(1);
+
+  /// The raw database file content to restore.
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get data => $_getN(1);
+  @$pb.TagNumber(2)
+  set data($core.List<$core.int> value) => $_setBytes(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasData() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearData() => $_clearField(2);
+}
+
+class ImportBackupResponse extends $pb.GeneratedMessage {
+  factory ImportBackupResponse({
+    $core.bool? success,
+    $core.String? message,
+  }) {
+    final result = create();
+    if (success != null) result.success = success;
+    if (message != null) result.message = message;
+    return result;
+  }
+
+  ImportBackupResponse._();
+
+  factory ImportBackupResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImportBackupResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImportBackupResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'success')
+    ..aOS(2, _omitFieldNames ? '' : 'message')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportBackupResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportBackupResponse copyWith(void Function(ImportBackupResponse) updates) =>
+      super.copyWith((message) => updates(message as ImportBackupResponse))
+          as ImportBackupResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImportBackupResponse create() => ImportBackupResponse._();
+  @$core.override
+  ImportBackupResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ImportBackupResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImportBackupResponse>(create);
+  static ImportBackupResponse? _defaultInstance;
+
+  /// Whether the import succeeded.
+  @$pb.TagNumber(1)
+  $core.bool get success => $_getBF(0);
+  @$pb.TagNumber(1)
+  set success($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSuccess() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSuccess() => $_clearField(1);
+
+  /// A human-readable message in case of failure.
+  @$pb.TagNumber(2)
+  $core.String get message => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set message($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMessage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMessage() => $_clearField(2);
+}
+
+class ExportCSVRequest extends $pb.GeneratedMessage {
+  factory ExportCSVRequest({
+    $core.String? dbName,
+    $core.String? sql,
+  }) {
+    final result = create();
+    if (dbName != null) result.dbName = dbName;
+    if (sql != null) result.sql = sql;
+    return result;
+  }
+
+  ExportCSVRequest._();
+
+  factory ExportCSVRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExportCSVRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExportCSVRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'dbName', protoName: 'dbName')
+    ..aOS(2, _omitFieldNames ? '' : 'sql')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportCSVRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportCSVRequest copyWith(void Function(ExportCSVRequest) updates) =>
+      super.copyWith((message) => updates(message as ExportCSVRequest))
+          as ExportCSVRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ExportCSVRequest create() => ExportCSVRequest._();
+  @$core.override
+  ExportCSVRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ExportCSVRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExportCSVRequest>(create);
+  static ExportCSVRequest? _defaultInstance;
+
+  /// The database name to query.
+  @$pb.TagNumber(1)
+  $core.String get dbName => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set dbName($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDbName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDbName() => $_clearField(1);
+
+  /// The SQL query to execute (client-built with locale suffixes).
+  @$pb.TagNumber(2)
+  $core.String get sql => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set sql($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSql() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSql() => $_clearField(2);
+}
+
+class ExportCSVResponse extends $pb.GeneratedMessage {
+  factory ExportCSVResponse({
+    $core.List<$core.int>? data,
+  }) {
+    final result = create();
+    if (data != null) result.data = data;
+    return result;
+  }
+
+  ExportCSVResponse._();
+
+  factory ExportCSVResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExportCSVResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExportCSVResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'sqlite_wrapper'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportCSVResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExportCSVResponse copyWith(void Function(ExportCSVResponse) updates) =>
+      super.copyWith((message) => updates(message as ExportCSVResponse))
+          as ExportCSVResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ExportCSVResponse create() => ExportCSVResponse._();
+  @$core.override
+  ExportCSVResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ExportCSVResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExportCSVResponse>(create);
+  static ExportCSVResponse? _defaultInstance;
+
+  /// The CSV file content.
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get data => $_getN(0);
+  @$pb.TagNumber(1)
+  set data($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasData() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearData() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

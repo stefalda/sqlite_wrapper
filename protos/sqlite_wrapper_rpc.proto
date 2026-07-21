@@ -35,6 +35,15 @@ service SqliteWrapperService {
   // Watches a query for real-time updates.
   // This is a server-streaming RPC where the server will push new results.
   rpc Watch(WatchRequest) returns (stream WatchResponse);
+
+  // Exports the entire database file as bytes (backup).
+  rpc ExportBackup(ExportBackupRequest) returns (ExportBackupResponse);
+
+  // Imports a database file from bytes (restore).
+  rpc ImportBackup(ImportBackupRequest) returns (ImportBackupResponse);
+
+  // Exports query results as CSV.
+  rpc ExportCSV(ExportCSVRequest) returns (ExportCSVResponse);
 }
 
 // ==================== Core types ====================
@@ -178,4 +187,42 @@ message EchoRequest {
 
 message EchoResponse {
   string message = 1;
+}
+
+// ==================== Export/Backup Operations ====================
+
+message ExportBackupRequest {
+  // The database name to export.
+  string dbName = 1;
+}
+
+message ExportBackupResponse {
+  // The raw database file content.
+  bytes data = 1;
+}
+
+message ImportBackupRequest {
+  // The database name to import into.
+  string dbName = 1;
+  // The raw database file content to restore.
+  bytes data = 2;
+}
+
+message ImportBackupResponse {
+  // Whether the import succeeded.
+  bool success = 1;
+  // A human-readable message in case of failure.
+  string message = 2;
+}
+
+message ExportCSVRequest {
+  // The database name to query.
+  string dbName = 1;
+  // The SQL query to execute (client-built with locale suffixes).
+  string sql = 2;
+}
+
+message ExportCSVResponse {
+  // The CSV file content.
+  bytes data = 1;
 }

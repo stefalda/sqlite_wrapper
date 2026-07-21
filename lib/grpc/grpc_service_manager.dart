@@ -47,7 +47,9 @@ class GrpcServiceManager {
   SqliteWrapperServiceClient get sqliteService =>
       _sqliteClient ??= SqliteWrapperServiceClient(_channel,
           interceptors: [AuthInterceptor(getToken)],
-          options: CallOptions(compression: GzipCodec()));
+          options: CallOptions(
+            compression: GzipCodec(),
+          ));
 
   String? getToken() {
     return token;

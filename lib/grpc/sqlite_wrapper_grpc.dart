@@ -1,6 +1,8 @@
 // ignore: depend_on_referenced_packages
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:sqlite_wrapper/grpc/grpc_helper.dart';
 import 'package:sqlite_wrapper/grpc/grpc_service_manager.dart';
@@ -215,6 +217,33 @@ class SqliteWrapperGRPC extends SQLiteWrapperBase {
     return response.responses
         .map((r) => dartFromValue(r.result))
         .toList();
+  }
+
+  /// Export the entire database as raw bytes (backup).
+  Future<List<int>> exportBackup({String? dbName}) async {
+    final response = await client.exportBackup(ExportBackupRequest(
+      dbName: dbName ?? defaultDBName,
+    ));
+    return response.data;
+  }
+
+  /// Import a database from raw bytes (restore).
+  /// Returns [ImportBackupResponse] with success status and message.
+  Future<ImportBackupResponse> importBackup(Uint8List data,
+      {String? dbName}) async {
+    return await client.importBackup(ImportBackupRequest(
+      dbName: dbName ?? defaultDBName,
+      data: data,
+    ));
+  }
+
+  /// Execute a SQL query and return the result as a CSV string.
+  Future<String> exportCSV(String sql, {String? dbName}) async {
+    final response = await client.exportCSV(ExportCSVRequest(
+      dbName: dbName ?? defaultDBName,
+      sql: sql,
+    ));
+    return utf8.decode(response.data);
   }
 
   @override

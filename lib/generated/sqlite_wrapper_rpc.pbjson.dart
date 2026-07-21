@@ -377,3 +377,82 @@ const EchoResponse$json = {
 /// Descriptor for `EchoResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List echoResponseDescriptor = $convert
     .base64Decode('CgxFY2hvUmVzcG9uc2USGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZQ==');
+
+@$core.Deprecated('Use exportBackupRequestDescriptor instead')
+const ExportBackupRequest$json = {
+  '1': 'ExportBackupRequest',
+  '2': [
+    {'1': 'dbName', '3': 1, '4': 1, '5': 9, '10': 'dbName'},
+  ],
+};
+
+/// Descriptor for `ExportBackupRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exportBackupRequestDescriptor =
+    $convert.base64Decode(
+        'ChNFeHBvcnRCYWNrdXBSZXF1ZXN0EhYKBmRiTmFtZRgBIAEoCVIGZGJOYW1l');
+
+@$core.Deprecated('Use exportBackupResponseDescriptor instead')
+const ExportBackupResponse$json = {
+  '1': 'ExportBackupResponse',
+  '2': [
+    {'1': 'data', '3': 1, '4': 1, '5': 12, '10': 'data'},
+  ],
+};
+
+/// Descriptor for `ExportBackupResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exportBackupResponseDescriptor = $convert
+    .base64Decode('ChRFeHBvcnRCYWNrdXBSZXNwb25zZRISCgRkYXRhGAEgASgMUgRkYXRh');
+
+@$core.Deprecated('Use importBackupRequestDescriptor instead')
+const ImportBackupRequest$json = {
+  '1': 'ImportBackupRequest',
+  '2': [
+    {'1': 'dbName', '3': 1, '4': 1, '5': 9, '10': 'dbName'},
+    {'1': 'data', '3': 2, '4': 1, '5': 12, '10': 'data'},
+  ],
+};
+
+/// Descriptor for `ImportBackupRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List importBackupRequestDescriptor = $convert.base64Decode(
+    'ChNJbXBvcnRCYWNrdXBSZXF1ZXN0EhYKBmRiTmFtZRgBIAEoCVIGZGJOYW1lEhIKBGRhdGEYAi'
+    'ABKAxSBGRhdGE=');
+
+@$core.Deprecated('Use importBackupResponseDescriptor instead')
+const ImportBackupResponse$json = {
+  '1': 'ImportBackupResponse',
+  '2': [
+    {'1': 'success', '3': 1, '4': 1, '5': 8, '10': 'success'},
+    {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
+  ],
+};
+
+/// Descriptor for `ImportBackupResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List importBackupResponseDescriptor = $convert.base64Decode(
+    'ChRJbXBvcnRCYWNrdXBSZXNwb25zZRIYCgdzdWNjZXNzGAEgASgIUgdzdWNjZXNzEhgKB21lc3'
+    'NhZ2UYAiABKAlSB21lc3NhZ2U=');
+
+@$core.Deprecated('Use exportCSVRequestDescriptor instead')
+const ExportCSVRequest$json = {
+  '1': 'ExportCSVRequest',
+  '2': [
+    {'1': 'dbName', '3': 1, '4': 1, '5': 9, '10': 'dbName'},
+    {'1': 'sql', '3': 2, '4': 1, '5': 9, '10': 'sql'},
+  ],
+};
+
+/// Descriptor for `ExportCSVRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exportCSVRequestDescriptor = $convert.base64Decode(
+    'ChBFeHBvcnRDU1ZSZXF1ZXN0EhYKBmRiTmFtZRgBIAEoCVIGZGJOYW1lEhAKA3NxbBgCIAEoCV'
+    'IDc3Fs');
+
+@$core.Deprecated('Use exportCSVResponseDescriptor instead')
+const ExportCSVResponse$json = {
+  '1': 'ExportCSVResponse',
+  '2': [
+    {'1': 'data', '3': 1, '4': 1, '5': 12, '10': 'data'},
+  ],
+};
+
+/// Descriptor for `ExportCSVResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exportCSVResponseDescriptor = $convert
+    .base64Decode('ChFFeHBvcnRDU1ZSZXNwb25zZRISCgRkYXRhGAEgASgMUgRkYXRh');
