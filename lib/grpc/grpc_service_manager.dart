@@ -4,7 +4,7 @@ import 'package:sqlite_wrapper/grpc/authentication_interceptor.dart';
 import 'package:sqlite_wrapper/sqlite_wrapper.dart';
 
 class GrpcServiceManager {
-  late final ClientChannel _channel;
+  late final GrpcOrGrpcWebClientChannel _channel;
 
   String? token;
   // Lazy-initialized service clients

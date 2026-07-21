@@ -1,3 +1,10 @@
+## 0.6.1
+
+- **Fixed**: Web build failure `GrpcOrGrpcWebClientChannel can't be assigned to ClientChannel`.
+  Changed `_channel` type from `ClientChannel` to `GrpcOrGrpcWebClientChannel` in
+  `GrpcServiceManager` to fix a type mismatch on web caused by importing the concrete
+  `ClientChannel` class instead of the abstract one.
+
 ## 0.6.0
 
 - **Breaking**: `SqlQueryRequest.params` changed from `repeated google.protobuf.Any`
